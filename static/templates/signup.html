@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preload" href="/static/imgs/Bg2.jpg" as="image" />
+    <link rel="icon" type="image/x-icon" href="static/imgs/icons/fav-icon-nobg.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/css/SignUp.css"/>
+</head>
+<body>
+
+    <header>
+        <!-- <a href="/" class="logo">CHAHBANDER</a> -->
+             <a href="/" class="logo">
+        <img src="static/imgs/logo/logo.png" alt="Chahbander" class="logo-img">
+    </a>
+        <div class="menu-toggle" id="menu-toggle">
+            <div class="hamburger"></div>
+        </div>
+        <div class="nav-container" id="nav-container">
+            <div class="nav-center">
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="/#about">About</a></li>
+                    <li><a href="/#features">Features</a></li>
+                    <li><a href="/#why">Why Chahbander?</a></li>
+                    <li><a href="/#clients">Clients</a></li>
+                </ul>
+            </div>
+            <div class="auth-buttons">
+                <a href="/login" class="btn btn-login">Login</a>
+                <a href="/signup_page" class="btn btn-signup active">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="auth-container">
+        <div class="auth-header">
+            <h2>Create Account</h2>
+            <p>Sign up to get started with Chahbander 🤖</p>
+        </div>
+        
+        <form id="signupForm" method="post" action="/signup" novalidate>
+            <div class="form-columns">
+                <!-- Left Column -->
+                <div class="form-column">
+                    <div class="form-group">
+                        <label for="full_name">Full Name</label>
+                        <div class="input-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="full_name" name="full_name" required title="Enter Your Full Name" placeholder="Full Name">
+                        </div>
+                        <div class="error-message" id="full_name-error"></div>
+                    </div>
+                
+                    <div class="form-group">
+                        <label for="company_name">Company's Name</label>
+                        <div class="input-icon">
+                            <i class="fas fa-building"></i>
+                            <input type="text" id="company_name" name="company_name" required title="Enter Your Company's Name" placeholder="Company">
+                        </div>
+                        <div class="error-message" id="company_name-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="company_website">Company Website or LinkedIn</label>
+                        <div class="input-icon">
+                            <i class="fas fa-globe"></i>
+                            <input type="url" id="company_website" name="company_website" 
+                                   title="Enter Your Company Website or LinkedIn URL" 
+                                   placeholder="https://example.com or https://linkedin.com/company/name">
+                        </div>
+                         <div class="error-message" id="company_website-error"></div>
+                        <div class="help-text">Optional - provide your website or LinkedIn page</div>
+                       
+                    </div>
+                    
+                    <!-- Add this to the left column in your signup form -->
+                    <div class="form-group">
+                        <label for="company_phone">Company Phone Number</label>
+                        <div class="input-icon">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" id="company_phone" name="company_phone" 
+                                required title="Enter Your Company Phone Number" 
+                                placeholder="+1 (555) 123-4567">
+                        </div>
+                        <div class="error-message" id="company_phone-error"></div>
+                        <div class="help-text">Required - include country code (e.g., +1 for US)</div>
+                    </div>
+                    
+                </div>
+                
+                <!-- Right Column -->
+                <div class="form-column">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <div class="input-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="email" name="email" required title="Enter Your E-mail Address" placeholder="E-mail Address">
+                        </div>
+                        <div class="error-message" id="email-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-icon password-field">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" required title="Enter Your Password" placeholder="Type Password">
+                            <i class="fas fa-eye toggle-password" data-target="password" style="cursor:pointer;"></i>
+                        </div>
+                        <div class="error-message" id="password-error"></div>
+                    </div>
+                
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password</label>
+                        <div class="input-icon password-field">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="confirm_password" name="confirm_password" required title="Confirm Your Password" placeholder="Confirm Password">
+                            <i class="fas fa-eye toggle-password" data-target="confirm_password" style="cursor:pointer;"></i>
+                        </div>
+                        <div class="error-message" id="confirm_password-error"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn_signup">Sign Up</button>
+        </form>
+        
+        <div class="auth-footer">
+            <p>Already have an account? <a href="/login_page">Login</a></p>
+        </div>
+    </div>
+
+    <script src="/static/js/Signup.js"></script>
+</body>
+</html>

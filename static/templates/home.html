@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Marketing Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="static/imgs/icons/fav-icon-nobg.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/css/Home.css" />
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <button class="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                   <!-- <a href="/" target="_blank" class="logo"> CHAHBANDER </a> -->
+                <a href="/" target="_blank" class="logo">
+                    <img src="static/imgs/logo/logo.png" alt="Chahbander" class="logo-img">
+                </a>
+            </div>
+            <div class="nav-right">
+                <a href="/Company_form" class="btn-primary" style="display:none;"><i class="fas fa-plus"></i> Add New Service</a>
+             
+                <div class="user-menu">
+                    <div class="user-avatar" data-name="{{ user.full_name }}" id="userAvatar" title="{{ user.full_name }}">
+                        {{ user.full_name[0] }}
+                    </div>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="/home" class="dropdown-item">
+                            <i class="fas fa-user"></i> {{ user.full_name }}
+                        </a>
+                        <a href="/user_settings" class="dropdown-item">
+                            <i class="fas fa-cog"></i> User Settings
+                        </a>
+                        <a href="/logout" class="dropdown-item logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="/home" class="nav-link active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            
+            {% if companies %}
+                {% for company in companies %}
+                    <li><a href="/company/{{ company.id }}" class="nav-link"><i class="fas fa-building"></i> Company</a></li>
+                    <li><a href="/company/{{ company.id }}#Strategies" class="nav-link"><i class="fas fa-lightbulb"></i> Generated Strategies</a></li>
+                {% endfor %}
+            {% endif %}
+            
+            <li><a href="/user_settings" class="nav-link"><i class="fas fa-cog"></i> User Settings</a></li>
+            <li><a href="/logout" class="nav-link-logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+                <div class="header">
+                <h1 id="timeGreeting" style="font-size: 1.8rem;">Welcome, <b>{{ user.full_name }}</b></h1>
+                </div>
+                
+       <div class="dashboard-container">
+        <!-- Company Card -->
+        {% if companies %}
+            {% for company in companies %}
+            <div class="stat-card">
+                <div class="card-icon company"><i class="fas fa-building"></i></div>
+                <a href="/company/{{ company.id }}" style="text-decoration:none;">
+                    <div class="card-content">
+                        <div class="card-title">Company</div>
+                        <div class="card-main">{{ company.name }}</div>
+                        <div class="card-subtitle">Created on: {{ company.created_at }}</div> <!-- • Strategies: {{ company.strategy_count }} • Approved: {{ company.approved_count }} -->
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="stat-card">
+                <div class="card-icon company"><i class="fas fa-building"></i></div>
+                <div class="card-content">
+                    <a href="/Company_form" style="text-decoration:none;">
+                        <div class="card-title">Company</div>
+                        <div class="card-main">No companies yet</div>
+                        <div class="card-subtitle">Create your business profile</div>
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Strategies Card -->
+        <div class="stat-card">
+            <div class="card-icon strategies"><i class="fas fa-rocket"></i></div>
+            {% if companies %}
+                {% for company in companies %}
+                <a href="/company/{{ company.id }}#Strategies" class="nav-link" style="text-decoration:none;">
+                    <div class="card-content">
+                        <div class="card-title">Generated Strategies</div>
+                        <div class="card-main">{{ companies | sum(attribute='strategy_count') }}</div>
+                        <div class="card-subtitle"> {{ total_approved }} Approved <i class="fas fa-check" style="color:green;"></i> &nbsp; • &nbsp; {{ total_archived }} Archived <i class="fas fa-archive"></i> </div>
+                    </div>
+                </a>
+                {% endfor %}
+            {% endif %}
+
+        </div>
+
+        <!-- Budget Card -->
+        <div class="stat-card">
+            <div class="card-icon budget"><i class="fa-solid fa-money-bill"></i></div>
+            <div class="card-content">
+                <div class="card-title">Budget</div>
+                <div class="card-main">{{ "%.2f"|format(total_budget) }} TND</div>
+                <div class="card-subtitle">Total allocated budget</div>
+            </div>
+        </div>
+    </div>
+
+            <!-- Updated graphs container with interactive charts -->
+        <!-- Analytics Toggle Menu -->
+        <div class="analytics-header">
+            <h2><i class="fas fa-chart-network"></i> Social Media Analytics</h2>
+            <div class="platform-toggle">
+                <button class="toggle-btn active" data-platform="facebook">
+                    <i class="fab fa-facebook"></i> Facebook
+                </button>
+                <button class="toggle-btn" data-platform="instagram">
+                    <i class="fab fa-instagram"></i> Instagram
+                </button>
+                        
+                <!-- Add this to your platform toggle buttons -->
+                <button class="toggle-btn" data-platform="linkedin">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </button>
+            </div>
+        </div>
+
+        <!-- Analytics Dashboard -->
+        <div class="analytics-dashboard">
+            <!-- Facebook Analytics -->
+        <div class="platform-analytics active" id="facebook-analytics">
+            <div class="facebook-controls">
+                <div class="period-selector">
+                    <label for="facebook-period">Analytics Period:</label>
+                    <select id="facebook-period">
+                        <option value="7">Last 7 days</option>
+                        <option value="14">Last 14 days</option>
+                        <option value="30" selected>Last 30 days</option>
+                        <option value="60">Last 60 days</option>
+                        <option value="90">Last 90 days</option>
+                    </select>
+                    <button id="refresh-facebook" class="refresh-btn-fb">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="analytics-summary">
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3 id="fb-total-fans">--</h3>
+                        <p>Total Fans</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3 id="fb-total-impressions">--</h3>
+                        <p>Impressions (<span id="fb-period-days">30</span>d)</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-chart-area"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3 id="fb-total-engagement">--</h3>
+                        <p>Engagement (<span id="fb-engagement-days">30</span>d)</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3 id="fb-growth-rate">--%</h3>
+                        <p>Growth Rate</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analytics-charts">
+                <div class="chart-container">
+                    <h3>Page Fans Growth</h3>
+                    <canvas id="fb-fans-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Impressions vs Engagement</h3>
+                    <canvas id="fb-engagement-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Reach & Views</h3>
+                    <canvas id="fb-reach-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+            <!-- Instagram Analytics -->
+            <div class="platform-analytics" id="instagram-analytics">
+                <div class="instagram-controls">
+                    <div class="period-selector">
+                        <label for="instagram-period">Analytics Period:</label>
+                        <select id="instagram-period">
+                            <option value="7">Last 7 days</option>
+                            <option value="14" selected>Last 14 days</option>
+                            <option value="30">Last 30 days</option>
+                            <option value="60" hidden>Last 60 days</option>
+                            <option value="90" hidden>Last 90 days</option>
+                        </select>
+                        <button id="refresh-instagram" class="refresh-btn">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="analytics-summary">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ig-total-followers">--</h3>
+                            <p>Total Followers</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ig-total-views">--</h3>
+                            <p>Total Views</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-chart-area"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ig-accounts-reached">--</h3>
+                            <p>Accounts Reached</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ig-growth-rate">--%</h3>
+                            <p>Growth Rate</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="instagram-insights">
+                    <div class="insight-card">
+                        <h4><i class="fas fa-user-circle"></i> Profile Activity</h4>
+                        <div class="insight-stat">
+                            <span class="stat-number" id="ig-profile-views">--</span>
+                            <span class="stat-label">Profile Views</span>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <h4><i class="fas fa-chart-pie"></i> Content Breakdown</h4>
+                        <div class="content-stats">
+                            <div class="content-stat">
+                                <span class="content-percentage" id="ig-stories-percent">--</span>
+                                <span class="content-label">Stories</span>
+                            </div>
+                            <div class="content-stat">
+                                <span class="content-percentage" id="ig-posts-percent">--</span>
+                                <span class="content-label">Posts</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-charts">
+                    <div class="chart-container">
+                        <h3>Followers Growth Trend</h3>
+                        <canvas id="ig-followers-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Views & Reach</h3>
+                        <canvas id="ig-views-reach-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Profile Activity</h3>
+                        <canvas id="ig-profile-activity-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+                <!-- Add this LinkedIn analytics section after Instagram section -->
+            <div class="platform-analytics" id="linkedin-analytics">
+                <div class="linkedin-controls">
+                    <div class="period-selector">
+                        <label for="linkedin-period">Analytics Period:</label>
+                        <select id="linkedin-period">
+                            <option value="7">Last 7 days</option>
+                            <option value="14">Last 14 days</option>
+                            <option value="30" selected>Last 30 days</option>
+                            <option value="60">Last 60 days</option>
+                            <option value="90">Last 90 days</option>
+                        </select>
+                        <button id="refresh-linkedin" class="refresh-btn-li">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="analytics-summary">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ln-connections">--</h3>
+                            <p>Total Connections</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ln-profile-views">--</h3>
+                            <p>Profile Views</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ln-post-impressions">--</h3>
+                            <p>Post Impressions</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-thumbs-up"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ln-engagement-rate">--%</h3>
+                            <p>Engagement Rate</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="linkedin-insights">
+                    <div class="insight-card">
+                        <h4><i class="fas fa-chart-line"></i> Network Growth</h4>
+                        <div class="insight-stat">
+                            <span class="stat-number" id="ln-growth-rate">--</span>
+                            <span class="stat-label">Growth Rate</span>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <h4><i class="fas fa-industry"></i> Industry Breakdown</h4>
+                        <div class="content-stats">
+                            <div class="content-stat">
+                                <span class="content-percentage" id="ln-tech-percent">--</span>
+                                <span class="content-label">Tech</span>
+                            </div>
+                            <div class="content-stat">
+                                <span class="content-percentage" id="ln-finance-percent">--</span>
+                                <span class="content-label">Finance</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-charts">
+                    <div class="chart-container">
+                        <h3>Connections Growth</h3>
+                        <canvas id="ln-connections-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Profile Views & Impressions</h3>
+                        <canvas id="ln-views-impressions-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- add other platforms here -->
+
+        <!-- Chart.js CDN -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+        <script src="/static/js/Analytics-dashboard.js"></script>
+
+    </main>
+
+
+    <!-- User Greeting -->
+    <script>
+        // Time-based greeting
+        function updateGreeting() {
+            const now = new Date();
+            const hour = now.getHours();
+            const userName = "{{ user.full_name }}";
+            let greeting;
+            
+            if (hour < 12) {
+                greeting = `Good morning, <b>${userName}</b>`;
+            } else if (hour < 18) {
+                greeting = `Good afternoon, <b>${userName}</b>`;
+            } else {
+                greeting = `Good evening, <b>${userName}</b>`;
+            }
+            
+            document.getElementById('timeGreeting').innerHTML = greeting;
+        }
+
+    </script>
+
+<!-- This is for strategy gen bg event & notif -->
+<link rel="stylesheet" href="/static/css/Strategy_generation_notif.css">
+<script src="/static/js/Generating_strategy_utils.js"></script>
+<!-- This is for strategy gen bg event & notif -->
+
+</body>
+</html>

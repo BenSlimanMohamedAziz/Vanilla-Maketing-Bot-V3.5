@@ -1,0 +1,554 @@
+/* Login CSS */
+
+:root {
+  --primary-color: #e9e9f0;
+  --primary-hover: #d4d4e2;
+  --background-color: #111827;
+  --card-bg: #1b222c7c;
+  --text-color: #f9fafb;
+  --text-light: #9ca3af;
+  --border-color: #374151;
+  --shadow: 0 10px 15px -3px rgba(90, 90, 90, 0.1), 0 4px 6px -2px rgba(82, 81, 81, 0.05);
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+body {
+  background: url(../imgs/Bg2.jpg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.auth-container {
+  background-color: var(--card-bg);
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 400px;
+  padding: 2.5rem;
+  transition: var(--transition);
+}
+
+.auth-container:hover {
+  box-shadow: 0 20px 25px -5px rgba(44, 44, 44, 0.1), 0 10px 10px -5px rgba(34, 34, 34, 0.04);
+  transform: translateY(-4px);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-header h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 0.75rem;
+}
+
+.auth-header p {
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(88, 88, 88, 0.2);
+}
+
+.btn_login {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--primary-color);
+  color: #1d1d1d;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn_login:hover {
+  background-color: #5775fa;
+  color: rgb(243, 235, 235);
+  transform: translateY(-1px);
+}
+
+.btn_login:active {
+  transform: translateY(0);
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--primary-color);
+  color: #1d1d1d;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--text-light);
+}
+
+.auth-footer a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 1.5rem;
+  }
+
+  .auth-header h2 {
+    font-size: 1.5rem;
+  }
+}
+
+.input-icon {
+  position: relative;
+}
+
+.input-icon input {
+  padding-left: 2.5rem;
+  width: 100%;
+}
+
+.input-icon i {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  display: none;
+}
+
+.shake {
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  50% {
+    transform: translateX(5px);
+  }
+
+  75% {
+    transform: translateX(-5px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Navbar Styles */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 1.1rem 4%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(27, 34, 44, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+/*.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #e9e9f0;
+  text-decoration: none;
+  z-index: 1001;
+}*/
+
+/* Update existing .logo class */
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #e9e9f0;
+  text-decoration: none;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+}
+
+/* New logo image styles */
+.logo-img {
+  height: 60px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+}
+
+.logo:hover .logo-img {
+  transform: scale(1.05);
+}
+
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-grow: 1;
+  margin-left: 2.1rem;
+}
+
+.nav-center {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0 auto;
+}
+
+.nav-links li {
+  margin: 0 1.25rem;
+}
+
+.nav-links a {
+  color: #e9e9f0;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  position: relative;
+  opacity: 0.9;
+}
+
+.nav-links a:hover {
+  color: #5674f8;
+  opacity: 1;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #4361ee;
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* Updated Button Styles */
+/* Update the button styles to prevent text wrapping */
+.auth-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: 2rem;
+  align-items: center;
+  white-space: nowrap;
+  /* Add this to prevent wrapping */
+}
+
+.btn-login,
+.btn-signup {
+  margin-left: 1.5rem;
+  padding: 0.6rem 1.5rem;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  /* Add this to prevent text wrapping */
+  min-width: max-content;
+  /* Ensures button doesn't shrink too much */
+}
+
+.btn-login {
+  background: transparent;
+  border: 2px solid #e9e9f0;
+  color: #e9e9f0;
+  display: none;
+}
+
+.btn-login:hover {
+  background: rgba(233, 233, 240, 0.1);
+}
+
+.btn-login.active {
+  background: #e9e9f0;
+  color: #1d1d1d;
+}
+
+.btn-signup {
+  background: transparent;
+  color: #e9e9f0;
+  border: 2px solid #e9e9f0;
+}
+
+.btn-signup:hover {
+  background: rgba(178, 178, 221, 0.445);
+}
+
+/* Burger Menu */
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+  width: 30px;
+  height: 24px;
+  position: relative;
+  z-index: 1001;
+}
+
+.hamburger {
+  position: absolute;
+  width: 30px;
+  height: 3px;
+  background: #e9e9f0;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.hamburger:before,
+.hamburger:after {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 3px;
+  background: #e9e9f0;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.hamburger:before {
+  top: -10px;
+}
+
+.hamburger:after {
+  top: 10px;
+}
+
+.menu-toggle.active .hamburger {
+  background: transparent;
+}
+
+.menu-toggle.active .hamburger:before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.menu-toggle.active .hamburger:after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+/* Mobile Styles */
+@media (max-width: 992px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-container {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 300px;
+    height: 100vh;
+    background: rgba(27, 34, 44, 0.98);
+    backdrop-filter: blur(10px);
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 6rem 2rem 2rem;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+    transition: right 0.4s ease;
+    margin-left: 0;
+  }
+
+  .nav-center {
+    justify-content: flex-start;
+    flex-grow: 0;
+    width: 100%;
+  }
+
+  .nav-container.active {
+    right: 0;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+    margin: 2rem 0;
+  }
+
+  .nav-links li {
+    margin: 1rem 0;
+  }
+
+  .auth-buttons {
+    flex-direction: column;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .btn-login,
+  .btn-signup {
+    width: 100%;
+    text-align: center;
+    margin: 0.5rem 0;
+  }
+}
+
+/* Password field container */
+.password-field {
+    position: relative;
+}
+
+/* Input field styling */
+.password-field input {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 2.5rem; /* Right and left padding for icons */
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+/* Lock icon - left side */
+.password-field .fa-lock {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+/* Eye icon - right side */
+.password-field .toggle-password {
+    position: absolute;
+    right: 0.75rem;  /* This positions it on the right */
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    cursor: pointer;
+    display: none; /* Hidden by default */
+}
+
+/* Show eye icon when typing */
+.password-field input:not(:placeholder-shown) + .toggle-password {
+    display: block;
+}
+
+
+
+/* Mobile adjustments (below 785px) */
+@media (max-height: 785px) {
+    body {
+        padding-top: 90px; /* Adjust if mobile header is shorter */
+    }
+    .auth-container {
+        margin-top: 3rem;
+    }
+}
+
+
+/* Mobile responsive adjustments */
+@media (max-width: 992px) {
+  .logo-img {
+    height: 50px;
+    max-width: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-img {
+    height: 45px;
+    max-width: 140px;
+  }
+}

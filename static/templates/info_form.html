@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/static/imgs/icons/fav-icon-nobg.png">
+    <title>Welcome to Chahbander Your Smart Marketing Assistant</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/Form.css">
+</head>
+<body>
+    <div class="header-actions">
+        <a href="/logout" class="btn btn-danger">Logout</a>
+        <a href="/home" class="btn btn-secondary">Cancel</a>
+    </div>
+
+    <div id="companyFormContainer">
+        <h1>Welcome {{ user.full_name }}</h1>
+        <h2>Chahbander, Your Smart Marketing Assistant 🤖</h2>
+
+        <form action="/submit_company" method="post" id="companyForm" enctype="multipart/form-data">
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <p class="step-indicator" id="stepIndicator">Page 1 of 4</p>
+
+            <!-- Company Name -->
+            <div class="company-name-banner">
+                Additional details for:
+                <strong>
+                    <span id="displayCompanyName">
+                        {{ company_name }}
+                    </span>
+                </strong>
+            </div>
+            
+            <!-- Step 1 -->
+            <div class="step active">
+
+                <!-- Company Name -->
+                <input type="hidden" name="name" value="{{ user.company_name }}" title="Company's Name">
+
+                <!-- Add this after the company name banner -->
+                <div class="form-group">
+                    <label for="website">
+                        Company Website or LinkedIn
+                        <span class="tooltip">(Optional - your website or LinkedIn page URL)</span>
+                    </label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-globe"></i>
+                        <input type="text" name="website" id="website" 
+                            value="{{ company_website }}"
+                            placeholder="https://example.com or https://linkedin.com/company/name"
+                            title="Company Website">
+                    </div>
+                    <div class="error-message" id="website-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="slogan">
+                        1. Do you have a slogan or tagline?
+                        <span class="tooltip">(e.g., "Just Do It", "Think Different")</span>
+                    </label>
+                    <input type="text" name="slogan" id="slogan" placeholder="Enter your company slogan" title="Company slogan" required>
+                    <div class="error-message" id="slogan-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="logo">
+                        2. Your Company's Logo
+                        <span class="tooltip">(Preferred format: PNG or JPG, max 5MB)</span>
+                    </label>
+                    <div class="file-upload">
+                        <input type="file" name="logo" id="logo" accept="image/png, image/jpeg" title="Company's Logo" placeholder="Company's Logo" required>
+                        <label for="logo" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Choose a file</span>
+                        </label>
+                        <span class="file-name" id="fileName">No file chosen</span>
+                    </div>
+                    <div class="error-message" id="logo-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">
+                        3. Briefly describe your company
+                        <span class="tooltip">(Short description about the business, vision, or values)</span>
+                    </label>
+                    <textarea name="description" id="description" placeholder="Describe what your company does and what makes it unique" title="Brief Description" required></textarea>
+                    <div class="error-message" id="description-error"></div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step">
+                <div class="form-group">
+                    <label for="products">
+                        4. What type of products do you offer?
+                        <span class="tooltip">(Separate multiple products with commas)</span>
+                    </label>
+                    <textarea name="products" id="products" placeholder="e.g., Smartphones, Laptops, Accessories" required title="Products" ></textarea>
+                    <div class="error-message" id="products-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="services">
+                        5. What type of services do you offer?
+                        <span class="tooltip">(Separate multiple services with commas)</span>
+                    </label>
+                    <textarea name="services" id="services" placeholder="e.g., Web Design, Digital Marketing, Consulting" required title="Services"></textarea>
+                    <div class="error-message" id="services-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        6. Which marketing channels do you want to prioritize?
+                        <span class="tooltip">(Select all that apply)</span>
+                    </label>
+                    <div class="checkbox-group required-checkbox" title="Marketing Channels">
+                        <label class="checkbox-container"> Instagram
+                            <input type="checkbox" name="channels" value="Instagram">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> LinkedIn
+                            <input type="checkbox" name="channels" value="LinkedIn">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> YouTube
+                            <input type="checkbox" name="channels" value="YouTube">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Facebook
+                            <input type="checkbox" name="channels" value="Facebook">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> TikTok <span style="font-size:0.6em;">(Soon)</span>
+                            <input type="checkbox" name="channels" value="TikTok" disabled>
+                            <span class="checkmark"></span>
+                        </label>
+                     
+                        <label class="checkbox-container"> WhatsApp <span style="font-size:0.6em;">(Soon)</span>
+                            <input type="checkbox" name="channels" value="WhatsApp" disabled>
+                            <span class="checkmark"></span>
+                        </label>
+                       
+                        <label class="checkbox-container">Telegram <span style="font-size:0.6em;">(Soon)</span>
+                            <input type="checkbox" name="channels" value="Telegram" disabled>
+                            <span class="checkmark"></span>
+                        </label>
+                        
+                        <label class="checkbox-container">Snapchat <span style="font-size:0.6em;">(Soon)</span>
+                            <input type="checkbox" name="channels" value="Snapchat" disabled>
+                            <span class="checkmark"></span>
+                        </label>
+                         <label class="checkbox-container">Threads <span style="font-size:0.6em;">(Soon)</span>
+                            <input type="checkbox" name="channels" value="Threads" disabled>
+                            <span class="checkmark"></span>
+                        </label>
+
+                           <label class="checkbox-container"> X <span style="font-size:0.6em;">(Soon)</span>
+                            <input type="checkbox" name="channels" value="X" disabled>
+                            <span class="checkmark"></span>
+                        </label>
+                        
+                    </div>
+                    <div class="error-message" id="channels-error"></div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step">
+                <div class="form-group">
+                    <label>
+                        7. What are your primary marketing goals?
+                        <span class="tooltip">(Select all that apply)</span>
+                    </label>
+                    <div class="checkbox-group required-checkbox" title="Marketing Goals">
+                        <label class="checkbox-container" >Brand Awareness
+                            <input type="checkbox" name="goals" value="Brand Awareness">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Lead Generation
+                            <input type="checkbox" name="goals" value="Lead Generation">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Sales Conversion
+                            <input type="checkbox" name="goals" value="Sales Conversion">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Customer Loyalty
+                            <input type="checkbox" name="goals" value="Customer Loyalty">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Website Traffic
+                            <input type="checkbox" name="goals" value="Website Traffic">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Product Launch
+                            <input type="checkbox" name="goals" value="Product Launch">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div class="error-message" id="goals-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        8. Who is your ideal customer or target audience?
+                        <span class="tooltip">(Select at least one from each category)</span>
+                    </label>
+                    
+                    <!-- Age Group Category -->
+                    <div class="audience-category required-checkbox" data-category="age" title="Demographics">
+                        <h4><i class="fas fa-user-friends"></i> Demographics </h4>
+                        <div class="checkbox-group">
+                            <label class="checkbox-container"> Teens (13-19)
+                                <input type="checkbox" name="target_age" value="Teens">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Young Adults (20-29)
+                                <input type="checkbox" name="target_age" value="Young Adults">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Adults (30-45)
+                                <input type="checkbox" name="target_age" value="Adults">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Middle-Aged (46-64)
+                                <input type="checkbox" name="target_age" value="Middle-Aged">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Seniors (65+)
+                                <input type="checkbox" name="target_age" value="Seniors">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Men
+                                <input type="checkbox" name="target_age" value="Men">
+                                <span class="checkmark"></span>
+                            </label>
+                                  <label class="checkbox-container"> Women
+                                <input type="checkbox" name="target_age" value="Women">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="error-message" id="target_age-error"></div>
+                    </div>
+                    
+                    <!-- Audience Type Category -->
+                    <div class="audience-category required-checkbox" data-category="type" title="Customer Types (B2C)">
+                        <h4><i class="fas fa-users"></i> Customer Types (B2C)</h4>
+                        <div class="checkbox-group">
+                            <label class="checkbox-container"> Families
+                                <input type="checkbox" name="target_type" value="Families">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Health-conscious
+                                <input type="checkbox" name="target_type" value="Health-conscious">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Fitness Enthusiasts
+                                <input type="checkbox" name="target_type" value="Fitness Enthusiasts">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Students
+                                <input type="checkbox" name="target_type" value="Students">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Content Creators
+                                <input type="checkbox" name="target_type" value="Content Creators">
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label class="checkbox-container"> Working Professionals
+                                <input type="checkbox" name="target_type" value="Working Professionals">
+                                <span class="checkmark"></span>
+                            </label>
+
+                              <label class="checkbox-container"> Luxury Shoppers
+                                <input type="checkbox" name="target_type" value="Luxury Shoppers">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Gamers
+                                <input type="checkbox" name="target_type" value="Gamers">
+                                <span class="checkmark"></span>
+                            </label>
+                             <label class="checkbox-container"> Anime Enthusiasts
+                                <input type="checkbox" name="target_type" value="Anime Fans">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Travelers 
+                                <input type="checkbox" name="target_type" value="Travelers">
+                                <span class="checkmark"></span>
+                            </label>
+                             <label class="checkbox-container"> Tech Enthusiasts 
+                                <input type="checkbox" name="target_type" value="Tech Enthusiasts">
+                                <span class="checkmark"></span>
+                            </label>
+                            
+                            <label class="checkbox-container"> Beauty/Fashion Enthusiasts
+                                <input type="checkbox" name="target_type" value="Beauty/Fashion Enthusiasts">
+                                <span class="checkmark"></span>
+                            </label>
+                                <label class="checkbox-container"> Pet Owners
+                                <input type="checkbox" name="target_type" value="Pet Owners">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Sports Fans
+                                <input type="checkbox" name="target_type" value="Sports Fans">
+                                <span class="checkmark"></span>
+                            </label>
+                               <label class="checkbox-container"> Art & Design Enthusiasts
+                                <input type="checkbox" name="target_type" value="Art & Design Enthusiasts">
+                                <span class="checkmark"></span>
+                            </label>
+                             <label class="checkbox-container"> Deal Seekers / Discount Hunters
+                                <input type="checkbox" name="target_type" value="Deal Seekers / Discount Hunters">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Social Media Active Users
+                                <input type="checkbox" name="target_type" value="Social Media Active Users">
+                                <span class="checkmark"></span>
+                            </label>
+                                 <label class="checkbox-container"> Foodies
+                                <input type="checkbox" name="target_type" value="Foodies">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Investors / Finance Enthusiasts
+                                <input type="checkbox" name="target_type" value="Investors / Finance Enthusiasts">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="error-message" id="target_type-error"></div>
+                    </div>
+                    
+                    <!-- Business/Organization Category -->
+                    <div class="audience-category required-checkbox" data-category="business" title="Businesses & Organizations (B2B)">
+                        <h4><i class="fas fa-building"></i> Businesses & Organizations (B2B)</h4>
+                        <div class="checkbox-group">
+                            <label class="checkbox-container"> Hotels & Hospitality
+                                <input type="checkbox" name="target_business" value="Hotels & Hospitality">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Restaurants & Cafés
+                                <input type="checkbox" name="target_business" value="Restaurants">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Retail Stores
+                                <input type="checkbox" name="target_business" value="Retailers">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Corporate Offices
+                                <input type="checkbox" name="target_business" value="Corporate">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Educational Institutions
+                                <input type="checkbox" name="target_business" value="Educational">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Startups
+                                <input type="checkbox" name="target_business" value="Startups">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Freelancers / Solopreneurs
+                                <input type="checkbox" name="target_business" value="Freelancers / Solopreneurs">
+                                <span class="checkmark"></span>
+                            </label>
+                                   <label class="checkbox-container"> Healthcare Organizations
+                                <input type="checkbox" name="target_business" value="Healthcare Organizations">
+                                <span class="checkmark"></span>
+                            </label>
+                                  <label class="checkbox-container"> Manufacturers
+                                <input type="checkbox" name="target_business" value="Manufacturers">
+                                <span class="checkmark"></span>
+                            </label>
+                                 <label class="checkbox-container"> Tech Companies
+                                <input type="checkbox" name="target_business" value="Tech Companies">
+                                <span class="checkmark"></span>
+                            </label>
+                                 <label class="checkbox-container"> Government/Public Sector 
+                                <input type="checkbox" name="target_business" value="Government/Public Sector">
+                                <span class="checkmark"></span>
+                            </label>
+                                  <label class="checkbox-container"> Enterprise Corporations
+                                <input type="checkbox" name="target_business" value="Enterprise Corporations (Large organizations)">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Small and Medium-sized Enterprises (SMEs)
+                                <input type="checkbox" name="target_business" value="Small and Medium-sized Enterprises (SMEs)">
+                                <span class="checkmark"></span>
+                            </label>
+                        
+                        </div>
+                        <div class="error-message" id="target_business-error"></div>
+                    </div>
+                </div>
+
+                <!-- Geographics -->
+                    
+                <!-- Fixed Geographics Section -->
+                <div class="audience-category required-checkbox" data-category="geography" title="Geographics">
+                    <h4><i class="fas fa-earth"></i> Geographics </h4>
+                    <div class="checkbox-group">
+                        <label class="checkbox-container"> Local Market (city/town specific)
+                            <input type="checkbox" name="target_geographic" value="Local Market (city/town specific)">
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label class="checkbox-container"> Regional (state/province)
+                            <input type="checkbox" name="target_geographic" value="Regional (state/province)">
+                            <span class="checkmark"></span>
+                        </label>
+                        
+                        <label class="checkbox-container"> National
+                            <input type="checkbox" name="target_geographic" value="National">
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label class="checkbox-container"> International
+                            <input type="checkbox" name="target_geographic" value="International">
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label class="checkbox-container"> Remote / Digital-Only 
+                            <input type="checkbox" name="target_geographic" value="Remote / Digital-Only">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div class="error-message" id="target_geographic-error"></div>
+                </div>
+               
+
+                <div class="form-group" style="margin-top:37px;">
+                    <label for="brandTone">
+                        9. What is your brand's personality or tone of voice?
+                        <span class="tooltip">(Professional, friendly, bold, luxurious, playful, etc.)</span>
+                    </label>
+                    <div class="select-wrapper" title="Brand's Tone">
+                        <select name="brand_tone" id="brandTone" required>
+                            <option value="" disabled selected>Select your brand tone</option>
+                            <option value="Professional">Professional</option>
+                            <option value="Friendly">Friendly</option>
+                            <option value="Bold">Bold</option>
+                            <option value="Luxurious">Luxurious</option>
+                            <option value="Playful">Playful</option>
+                            <option value="Innovative">Innovative</option>
+                            <option value="Trustworthy">Trustworthy</option>
+                        </select>
+                    </div>
+                    <div class="error-message" id="brandTone-error"></div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step">
+                <div class="form-group">
+                    <label>
+                        10. Are there any important dates, seasons, or events we should plan around?
+                        <span class="tooltip">(Select all that apply)</span>
+                    </label>
+                    
+                    <div class="checkbox-group required-checkbox" title="Special Events">
+                        <label class="checkbox-container"> White Friday
+                            <input type="checkbox" name="special_events" value="White Friday">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Ramadan
+                            <input type="checkbox" name="special_events" value="Ramadan">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Winter Sales
+                            <input type="checkbox" name="special_events" value="Winter Sales">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> New Year's Sales
+                            <input type="checkbox" name="special_events" value="New Year's Sales">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Halloween Specials
+                            <input type="checkbox" name="special_events" value="Halloween Specials">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Summer Sales
+                            <input type="checkbox" name="special_events" value="Summer Sales">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="error-message" id="special_events-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        11. What challenges or obstacles are you currently facing in marketing?
+                        <span class="tooltip">(Select all that apply)</span>
+                    </label>
+                    <div class="checkbox-group required-checkbox" title="Marketing Challenges">
+                        <label class="checkbox-container"> Low Engagement
+                            <input type="checkbox" name="challenges" value="Low Engagement">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Budget Issues
+                            <input type="checkbox" name="challenges" value="Budget Issues">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Competition
+                            <input type="checkbox" name="challenges" value="Strong Competition">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Lack of Strategy
+                            <input type="checkbox" name="challenges" value="Lack of Strategy">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Poor Online Presence
+                            <input type="checkbox" name="challenges" value="Poor Online Presence">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> No Challenges At The Moment
+                            <input type="checkbox" name="challenges" value="No Marketing obstacles or challenges at the moment">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div class="error-message" id="challenges-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="budget">
+                        12. What is your available marketing budget?
+                        <span class="tooltip">(Please specify currency if not USD)</span>
+                    </label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                        <input type="number" name="budget" id="budget" placeholder="e.g., 500 or 5000 TND" required title="Budget">
+                    </div>
+                    <div class="error-message" id="budget-error"></div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="navigation">
+                <button type="button" id="prevBtn" onclick="changeStep(-1)" style="display:none;">Previous</button>
+                <button type="button" id="nextBtn" onclick="changeStep(1)">Next</button>
+                <button type="submit" id="submitBtn">Generate Your Strategy With Chahbander</button>
+            </div>
+        </form>
+
+
+        <!-- Social Account Linking Modal -->
+        <div id="socialLinkingModal" class="modal">
+            <div class="modal-content social-linking-modal">
+                <div class="modal-header">
+                    <h2>Connect Your Social Accounts</h2>
+                        <p class="modal-subtitle">Link the platforms you selected for your strategy!</p>
+                    <span class="close-modal">&times;</span>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="selected-platforms-container" id="selectedPlatformsContainer">
+                        <!-- Platforms will be dynamically inserted here -->
+                    </div>
+                    
+                    <div class="progress-section">
+                        <div class="progress-header">
+                            <h4>Linking Progress &nbsp;</h4>
+                            <div class="progress-text" id="progressText"> 0 of 0 connected</div>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div id="linkingProgressBar" class="progress-bar"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="button" id="skipLinkingBtn" class="btn-secondary" style="display:none;">
+                           Cancel
+                        </button>
+                        <button type="button" id="proceedToGenerateBtn" class="btn-primary" disabled>
+                            <i class="fas fa-rocket"></i> Generate Marketing Strategy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <script src="/static/js/Script.js"></script>
+</body>
+</html>

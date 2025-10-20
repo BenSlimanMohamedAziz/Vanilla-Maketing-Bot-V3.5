@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ company.name }} - Details</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/Pages.css" />
+    <link rel="icon" type="image/x-icon" href="/static/imgs/icons/fav-icon-nobg.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+     <div class="nav-container">
+            <div class="nav-left">
+                <button class="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+              <!--  {% if company.logo_url %}
+            <img src="{{ company.logo_url }}" alt="{{ company.name }} Logo" class="company-logo">
+            {% endif %}-->
+                      <a href="/" target="_blank" class="logo">
+        <img src="/static/imgs/logo/logo.png" alt="Chahbender" class="logo-img">
+        </a>
+            </div>
+    <div class="nav-right">
+        <!-- User Menu with Dropdown -->
+        <div class="user-menu">
+            <div class="user-avatar" data-name="{{ user.full_name }}" id="userAvatar" title="{{ user.full_name }}">
+                {{ user.full_name[0]}}
+            </div>
+            <div class="dropdown-menu" id="dropdownMenu">
+                  <a href="/home" class="dropdown-item">
+                            <i class="fas fa-user"></i> {{ user.full_name }}
+                        </a>
+                <a href="/user_settings" class="dropdown-item">
+                    <i class="fas fa-cog"></i> User Settings
+                </a>
+                <a href="/logout" class="dropdown-item logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+    
+   <!-- In your sidebar menu -->
+        <ul class="sidebar-menu">
+            <li> <a href="/home" class="nav-link {% if active_page == 'home' %}active{% endif %}"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#company-profile" class="{% if active_page == 'company-profile' %}active{% endif %}"><i class="fas fa-building"></i> Company Profile</a></li>
+            <li><a href="/edit_company/{{ company.id }}" class="{% if active_page == 'edit-company' %}active{% endif %}">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </a></li>
+            <li><a href="/company/{{ company.id }}#Strategies" class="{% if active_page == 'strategies' %}active{% endif %}"><i class="fas fa-lightbulb"></i>Generated Strategy</a></li>
+            <li><a href="/user_settings" class="{% if active_page == 'settings' %}active{% endif %}">
+                    <i class="fas fa-cog"></i> User Settings
+                </a></li>
+            <li><a href="/logout" class="nav-link-logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+   <br>   <br>
+
+    <!-- Main Content -->
+    <main class="main-content" id="company-profile">
+        <div class="company-info" id="company-profile">
+                <div class="company-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <h2><i class="fas fa-building"></i> Company Profile</h2>
+    
+    <div class="company-actions">
+        <form action="/delete_company/{{ company.id }}" method="post" style="display: inline;">
+            <button type="submit" class="btn-remove-profile"
+                onclick="return confirm('Are you sure? This will delete all associated strategies too.')">
+                <i class="fas fa-trash"></i> Delete Profile
+            </button>
+        </form>
+    </div>
+</div>
+            
+            <!-- Company Name and Website Section -->
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4><i class="fas fa-signature"></i> Company Information</h4>
+
+                        {% if company.logo_url %}
+                            <div class="company-logo-container">
+                                <img src="{{ company.logo_url }}" alt="{{ company.name }} Logo" class="company-profile-logo">
+                            </div>
+                        {% endif %}
+
+                    <p><strong>Name:</strong> {{ company.name }}</p>             
+                        {% if company.website and company.website != "Not provided" %}
+                        <p><strong>Website:</strong> 
+                            <a href="{% if not company.website.startswith('http') %}http://{% endif %}{{ company.website }}" 
+                            target="_blank" rel="noopener noreferrer" class="website-link">
+                                {{ company.website }}
+                                <i class="fas fa-external-link-alt" style="font-size: 0.8em; margin-left: 5px;"></i>
+                            </a>
+                        </p>
+                        {% else %}
+                        <p><strong>Website:</strong> Not provided</p>
+                        {% endif %}
+
+                    {% if company.phone_number and company.phone_number != "Not provided" %}
+                              <a href="https://wa.me/{{ company.phone_number }}" target="_blank" class="whatsapp-link"> 
+                                 <p><strong>Phone Number:</strong> {{ company.phone_number }}
+                                <i class="fab fa-whatsapp" style="font-size: 1.2em;"></i>
+                            </a>
+                        </p>   
+                        {% else %}
+                        <p><strong>Phone Number:</strong> Not provided</p>
+                        {% endif %}
+                </div>
+                
+                <div class="info-card">
+                    <h4><i class="fas fa-quote-left"></i> Brand Identity</h4>
+                    <p><strong>Slogan:</strong> {{ company.slogan }}</p>
+                    <p><strong>Description:</strong> {{ company.description }}</p>
+                    <p><strong>Brand Tone:</strong> {{ company.brand_tone }}</p>
+                </div>
+                
+                <div class="info-card">
+                    <h4><i class="fas fa-boxes"></i> Products & Services</h4>
+                    <p><strong>Products:</strong> 
+                        {% if company.products and company.products != "Not provided" %}
+                            <div class="tags-container">
+                                {% for product in company.products.split(',') %}
+                                    <span class="tag product-tag">{{ product.strip() }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            Not provided
+                        {% endif %}
+                    </p>
+                    <p><strong>Services:</strong> 
+                        {% if company.services and company.services != "Not provided" %}
+                            <div class="tags-container">
+                                {% for service in company.services.split(',') %}
+                                    <span class="tag service-tag">{{ service.strip() }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            Not provided
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <div class="info-card">
+                    <h4><i class="fas fa-bullseye"></i> Marketing Details</h4>
+                    <p><strong>Marketing Goals:</strong> 
+                        {% if company.marketing_goals and company.marketing_goals != "Not provided" %}
+                            <div class="tags-container">
+                                {% for goal in company.marketing_goals.split(',') %}
+                                    <span class="tag goal-tag">{{ goal.strip() }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            Not provided
+                        {% endif %}
+                    </p>
+                    <p><strong>Monthly Budget:</strong> 
+                        {% if company.monthly_budget and company.monthly_budget != "Not provided" %}
+                             <span class="tag budget-tag"> {{ company.monthly_budget }} TND</span> 
+                        {% else %}
+                            Not provided
+                        {% endif %}
+                    </p>
+                    <p><strong>Challenges:</strong> 
+                        {% if company.marketing_challenges and company.marketing_challenges != "Not provided" %}
+                            <div class="tags-container">
+                                {% for challenge in company.marketing_challenges.split(',') %}
+                                    <span class="tag challenge-tag">{{ challenge.strip() }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            Not provided
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <div class="info-card">
+                    <h4><i class="fas fa-users"></i> Target Audience</h4>
+                    {% if company.target_audience and company.target_audience != "Not provided" %}
+                        <div class="audience-details">
+                            {% for part in company.target_audience.split('|') %}
+                                {% if part.strip() %}
+                                    <div class="audience-section">
+                                        {% if ':' in part %}
+                                            <strong>{{ part.split(':')[0].strip() }}:</strong>
+                                            <div class="tags-container">
+                                                {% for item in part.split(':')[1].split(',') %}
+                                                    {% if item.strip() %}
+                                                        <span class="tag audience-tag">{{ item.strip() }}</span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            <div class="tags-container">
+                                                {% for item in part.split(',') %}
+                                                    {% if item.strip() %}
+                                                        <span class="tag audience-tag">{{ item.strip() }}</span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>Not specified</p>
+                    {% endif %}
+                </div>
+                
+                <div class="info-card">
+                    <h4><i class="fas fa-globe"></i> Geographic Targeting</h4>
+                    {% if company.target_audience and 'Geographics:' in company.target_audience %}
+                        {% set parts = company.target_audience.split('Geographics:') %}
+                        {% if parts|length > 1 %}
+                            {% set geographics = parts[1].split('|')[0] %}
+                            <div class="tags-container">
+                                {% for geo in geographics.split(',') %}
+                                    {% if geo.strip() %}
+                                        <span class="tag geo-tag">{{ geo.strip() }}</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p>Not specified</p>
+                        {% endif %}
+                    {% else %}
+                        <p>Not specified</p>
+                    {% endif %}
+                </div>
+                
+                <div class="info-card">
+                    <h4><i class="fas fa-share-alt"></i> Platforms</h4>
+                    {% if company.preferred_platforms and company.preferred_platforms != "Not provided" %}
+                        <div class="tags-container">
+                            {% for platform in company.preferred_platforms.split(',') %}
+                                <span class="tag platform-tag">{{ platform.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>Not provided</p>
+                    {% endif %}
+                </div>
+                
+                <div class="info-card">
+                    <h4><i class="fas fa-calendar-alt"></i> Special Events</h4>
+                    {% if company.special_events and company.special_events != "Not provided" %}
+                        <div class="tags-container">
+                            {% for event in company.special_events.split(',') %}
+                                <span class="tag event-tag">{{ event.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>Not provided</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <hr>
+            <br>
+
+        <div class="strategies-header" id="Strategies">
+                <!-- Notification area - shows if archived parameter exists -->
+            {% if request.query_params.get('archived') == 'true' %}
+                <div class="notification-toast">
+                    <i class="fas fa-check-circle"></i> Archived successfully! You can generate a new strategy here !
+                </div>
+            {% endif %}
+            
+            <h2><i class="fas fa-chart-line"></i> Generated Strategy</h2>
+            <form action="/strategy/new/{{ company.id }}" method="get">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-magic"></i> Generate New Strategy With Chahbander
+                </button>
+            </form>
+        </div>
+        
+        <!-- Strategy Stats Section -->
+        {% if strategy_counts %}
+        <div class="strategy-stats">
+            <div class="stats-container">
+                <div class="stat-box">
+                    <span class="stat-number">{{ strategy_counts.total }}</span>
+                    <span class="stat-label">Generated</span>
+                </div>
+                <div class="stat-box approved">
+                    <span class="stat-number">{{ strategy_counts.approved }}</span>
+                    <span class="stat-label">Approved</span>
+                </div>
+                <div class="stat-box archived">
+                    <span class="stat-number">{{ strategy_counts.archived }}</span>
+                    <span class="stat-label">Archived</span>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Approved Strategy Section -->
+        {% if approved_strategy %}
+        <div class="approved-strategy-section" id="approved-strategy">
+            <div class="section-header">
+                <h3><i class="fas fa-check-circle"></i> Approved Strategy</h3>
+                <span class="badge approved-badge">ACTIVE</span>
+            </div>
+            <div class="strategy-card approved">
+                <div class="strategy-header">
+                    <h4><i class="fas fa-calendar-day"></i> {{ approved_strategy.created_at }}</h4>
+                    <div class="strategy-preview">{{ approved_strategy.content[:300]|safe }}...</div>
+                </div>
+                <br>
+                <div class="strategy-actions">
+                    <a href="/launch_strategy/{{ approved_strategy.id }}" class="btn btn-launch" target="_blank">
+                        <i class="fas fa-rocket"></i> Launch Strategy
+                    </a>
+                    <a href="/strategy/{{ approved_strategy.id }}" class="btn btn-primary">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                    <a href="/edit_strategy/{{ approved_strategy.id }}" class="btn btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <form action="/delete_strategy/{{ approved_strategy.id }}" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this strategy?')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </main>
+
+<script src="/static/js/CompanyDetails.js"></script>
+
+
+<!-- This is for strategy gen bg event & notif -->
+<link rel="stylesheet" href="/static/css/Strategy_generation_notif.css">
+<script src="/static/js/Generating_strategy_utils.js"></script>
+<!-- This is for strategy gen bg event & notif -->
+ 
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preload" href="/static/imgs/Bg2.jpg" as="image" />
+    <link rel="icon" type="image/x-icon" href="static/imgs/icons/fav-icon-nobg.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/Login.css" />
+</head>
+<body>
+    
+    <header>
+    <!-- <a href="/" class="logo">CHAHBANDER</a> -->
+    <a href="/" class="logo">
+        <img src="static/imgs/logo/logo.png" alt="Chahbander" class="logo-img">
+    </a>
+    <div class="menu-toggle" id="menu-toggle">
+        <div class="hamburger"></div>
+    </div>
+    <div class="nav-container" id="nav-container">
+        <div class="nav-center">
+            <ul class="nav-links" id="nav-links">
+                <li><a href="/#about">About</a></li>
+                <li><a href="/#features">Features</a></li>
+                <li><a href="/#why">Why Chahbander?</a></li>
+                <li><a href="/#clients">Clients</a></li>
+            </ul>
+        </div>
+        <div class="auth-buttons">
+            <a href="/login" class="btn btn-login active">Login</a>
+            <a href="/signup_page" class="btn btn-signup">Sign Up</a>
+        </div>
+    </div>
+</header>
+
+    <div class="auth-container">
+        <div class="auth-header">
+            <h2>Welcome Back</h2>
+            <p>Enter your credentials to access your account</p>
+        </div>
+        <form id="loginForm" method="post" action="/login" novalidate>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <div class="input-icon">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" name="email" required title="Enter Your E-mail Address" placeholder="E-mail Address">
+                </div>
+                <div class="error-message" id="email-error"></div>
+            </div>
+        
+            <div class="form-group">
+            <label for="password">Password</label>
+            <div class="password-field">  <!-- Changed from input-icon to password-field -->
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" name="password" required placeholder="Your Password">
+                <i class="fas fa-eye toggle-password"></i>
+            </div>
+            <div class="error-message" id="password-error"></div>
+        </div>
+        
+            <button type="submit" class="btn_login">Login</button>
+        </form>
+
+            {% if request.cookies.get("login_error") %}
+            <div class="login-error shake" style="color: #f44336; text-align:center; margin-bottom:0.3rem; margin-top:1rem;">
+                {{ request.cookies.get("login_error") }}
+            </div>
+            {% endif %}
+
+        <div class="auth-footer">
+            <p>Don't have an account? <a href="/signup_page">Sign up</a></p>
+        </div>
+    </div>
+    <script src="/static/js/Login.js"></script>
+</body>
+</html>

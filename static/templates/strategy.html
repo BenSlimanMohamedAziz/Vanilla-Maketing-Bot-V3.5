@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Marketing Strategy</title>
+    <link rel="icon" type="image/x-icon" href="/static/imgs/icons/fav-icon-nobg.png">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="/static/css/Strategy.css" />
+    
+  </head>
+  <body>
+    <div class="header">
+      {% if strategy %}
+        <div style="display: flex; align-items: center;">
+        <img src="../../static/imgs/logo/logo.png" alt="Chahbander Logo" style="height: 55px; width: auto;">
+    </div>
+     <!-- <h1>Generated Marketing Strategy for {{ strategy.company_name }}</h1>-->
+      {% else %}
+      <h1>Generating Marketing Strategy for {{ company_name }}</h1>
+      {% endif %}
+      <div>
+        <a href="javascript:history.back()" class="btn-secondary">Back</a>
+        {% if strategy %}
+        <a href="/company/{{ strategy.company_id }}" class="btn-secondary"
+          >Company</a
+        >
+        {% else %}
+        <a href="/company/{{ company_id }}" class="btn-secondary">Company</a>
+        {% endif %}
+        <a href="/home" class="btn-secondary">Home</a>
+        <a href="/logout" class="btn-danger">Logout</a>
+      </div>
+    </div>
+
+    {% if strategy %}
+    <p>Generated on: {{ strategy.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+
+
+        <!-- Generated Strategy -->
+    <div class="strategy-content">{{ strategy.content|safe }}</div>
+
+    <!-- Improve strategy visuals -->
+          <script>
+              document.addEventListener('DOMContentLoaded', function() {
+                  function transformInfluencerLabels() {
+                      const influencerCards = document.querySelectorAll('.influencer-card');
+                      
+                      influencerCards.forEach(card => {
+                          // Transform h3 (INFLUENCER_NAME -> Influencer)
+                          const h3 = card.querySelector('h3');
+                          if (h3 && h3.textContent.includes('INFLUENCER_NAME:')) {
+                              h3.textContent = h3.textContent.replace('INFLUENCER_NAME:', 'Influencer:');
+                          }
+                          
+                          // Transform all p tags
+                          const pTags = card.querySelectorAll('p');
+                          pTags.forEach(p => {
+                              // Hide engagement rate if it's "Not disclosed", empty, or "none"
+                              if (p.textContent.includes('ENGAGEMENT_RATE:')) {
+                                  const engagementMatch = p.textContent.match(/ENGAGEMENT_RATE:\s*(.*)/);
+                                  if (engagementMatch) {
+                                      const engagementValue = engagementMatch[1].trim().toLowerCase();
+                                      if (engagementValue === 'not disclosed' || engagementValue === '' || engagementValue === 'none' || engagementValue === 'n/a') {
+                                          p.style.display = 'none';
+                                          return; // Skip further processing for this element
+                                      }
+                                  }
+                              }
+                              
+                              // Replace underscores with spaces in labels (only if not hidden)
+                              p.textContent = p.textContent
+                                  .replace('ENGAGEMENT_RATE:', 'ENGAGEMENT RATE:')
+                                  .replace('COLLABORATION_TYPE:', 'COLLABORATION TYPE:')
+                                  .replace('FOLLOWERS:', 'FOLLOWERS:')
+                                  .replace('EMAIL:', 'EMAIL:')
+                                  .replace('HANDLE:', 'HANDLE:')
+                                  .replace('NICHE:', 'NICHE:');
+                              
+                              // Make handle clickable Instagram link
+                              if (p.textContent.includes('HANDLE:')) {
+                                  const handleMatch = p.textContent.match(/HANDLE:\s*@([^\s]+)/);
+                                  if (handleMatch) {
+                                      const handle = handleMatch[1];
+                                      const instagramUrl = `https://www.instagram.com/${handle}/`;
+                                      p.innerHTML = p.innerHTML.replace(
+                                          `HANDLE: @${handle}`,
+                                          `HANDLE: <a href="${instagramUrl}" target="_blank" style="color: #0f4085; text-decoration: none; font-weight: 500;">&nbsp;@${handle}</a>`
+                                      );
+                                  }
+                              }
+                              
+                              // Make email clickable mailto link
+                              if (p.textContent.includes('EMAIL:')) {
+                                  const emailMatch = p.textContent.match(/EMAIL:\s*([^\s]+@[^\s]+)/);
+                                  if (emailMatch) {
+                                      const email = emailMatch[1];
+                                      p.innerHTML = p.innerHTML.replace(
+                                          `EMAIL: ${email}`,
+                                          `EMAIL: <a href="mailto:${email}" style="color: #0f4085; text-decoration: none; font-weight: 500;">&nbsp;${email}</a>`
+                                      );
+                                  }
+                              }
+                          });
+                      });
+                  }
+                  
+                  transformInfluencerLabels();
+              });
+
+              document.addEventListener('DOMContentLoaded', function () {
+                  function transformSocialMediaLabels() {
+                      const paragraphs = document.querySelectorAll('p');
+
+                      paragraphs.forEach(p => {
+                          let html = p.innerHTML;
+
+                          // Replace labels with styled spans
+                          html = html
+                              .replace(/POST_IDEA:/g, '<span class="label-tag">Idea:</span>')
+                              .replace(/STORY_IDEA:/g, '<span class="label-tag">Idea:</span>')
+                              .replace(/PLATFORM:/g, '<span class="label-tag">Platform:</span>')
+                              .replace(/DESCRIPTION:/g, '<span class="label-tag">Description:</span>')
+                              .replace(/FREQUENCY:/g, '<span class="label-tag">Frequency:</span>')
+                              .replace(/BEST TIME:/g, '<span class="label-tag">Best Time:</span>')
+                              .replace(/Schedule:/g, '<span class="label-tag">Schedule:</span>');
+
+                          p.innerHTML = html;
+                      });
+                  }
+
+                  transformSocialMediaLabels();
+              });
+
+          </script>
+
+
+    <br />
+
+    <br />
+
+
+<!-- Replace the strategy-actions div with this: -->
+<div class="strategy-actions">
+
+  {% if strategy.status == 'new' %}
+
+  <form id="approve-form" action="/approve_strategy/{{ strategy.id }}" method="post">
+      <button type="submit" class="btn-approve">
+          <i class="fas fa-check-circle"></i> Approve Strategy
+      </button>
+  </form>
+
+  <form action="/archive_and_regenerate/{{ strategy.id }}" method="post" style="display: inline">
+      <button type="submit" class="btn-secondary-regen">
+          <i class="fas fa-sync-alt"></i> Generate Another Strategy
+      </button>
+  </form>
+  
+  <script>
+   
+    //
+    document.getElementById('approve-form').addEventListener('submit', function(e) {
+        console.log('Form submission started'); // Debug log
+        
+        // Collect all edited emails
+        const emailTextareas = document.querySelectorAll('.editable-email');
+        console.log('Found textareas:', emailTextareas.length); // Debug log
+        
+        emailTextareas.forEach((textarea, index) => {
+            // Create a hidden input for each email
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = `email_${index}`;
+            input.value = textarea.value;
+            
+            console.log(`Email ${index}:`, textarea.value); // Debug log
+            console.log(`Input name: email_${index}`); // Debug log
+            
+            // Make sure appending to the form element
+            this.appendChild(input);
+        });
+        
+        // Log all form data before submission
+        const formData = new FormData(this);
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
+    });
+
+  </script>
+
+  {% else %}
+  
+  <div class="strategy-status-badge">
+      Status: {{ strategy.status|title }} 
+      {% if strategy.status == 'denied - archived' %} 
+      (On {{ strategy.archived_at.strftime('%Y-%m-%d %H:%M')}})    
+      {% endif %}
+      {% if strategy.approved_at and not strategy.archived_at %}
+      (On {{ strategy.approved_at.strftime('%Y-%m-%d %H:%M')}})
+      {% endif %}
+  </div>
+
+  {% endif %}
+  
+</div>
+
+    {% else %}
+
+    <!-- Loading spinner and message -->
+    <!-- Progress Bar (only shown during generation) -->
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Enhanced Loading Container with Progress Steps -->
+    <div class="loading-container">
+      <div class="main-loading-text" id="mainLoadingText">
+        Chahbander is generating your marketing strategy, this may take some time...
+               <div class="loading-spinner"></div>
+      </div>
+
+      <div class="steps-container">
+        <div class="step pending" id="step-summary">
+          <div class="step-icon">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Executive Summary</div>
+            <div class="step-description">Analyzing company data and creating overview</div>
+          </div>
+        </div>
+
+        <div class="step pending" id="step-budget">
+          <div class="step-icon">
+            <i class="fas fa-calculator"></i>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Budget Plan</div>
+            <div class="step-description">Optimizing budget allocation across channels</div>
+          </div>
+        </div>
+
+        <div class="step pending" id="step-events">
+          <div class="step-icon">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Event Marketing</div>
+            <div class="step-description">Identifying relevant events and collaborations</div>
+          </div>
+        </div>
+
+        <div class="step pending" id="step-calendar">
+          <div class="step-icon">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Content Calendar</div>
+            <div class="step-description">Creating monthly content schedule</div>
+          </div>
+        </div>
+
+        <div class="step pending" id="step-influencer">
+          <div class="step-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Influencer Recommendations</div>
+            <div class="step-description">Finding perfect brand ambassadors</div>
+          </div>
+        </div>
+
+        <div class="step platforms" id="step-platforms">
+          <div class="step-icon">
+            <i class="fas fa-share-alt"></i>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Platform Strategies</div>
+            <div class="step-description">Tailoring content for each social media platform</div>
+          </div>
+        </div>
+
+        <div class="step pending" id="step-tips">
+          <div class="step-icon">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Marketing Tips & Advice</div>
+            <div class="step-description">Providing expert insights and recommendations</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="loading-spinner" id="loadingSpinner"></div>
+      
+      <div class="success-checkmark" id="successCheckmark"></div>
+      <div class="final-message" id="finalMessage">
+        Strategy Generated Successfully! Loading...
+      </div>
+
+      <!-- Auto-submit form to generate strategy 
+      <form
+        id="generate-form"
+        action="/generate_strategy/{{ company_id }}"
+        method="post"
+        style="display: none"
+      >
+      No form fields needed, just auto-submit
+      </form> -->
+    </div>
+
+    <!-- Error Dialog -->
+    <div id="errorDialog" class="error-dialog">
+      <div class="error-content">
+        <div class="error-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="error-title">Generation Failed</div>
+        <div class="error-message" id="errorMessage">
+          We encountered an issue while generating your strategy. This might be due to high server load or API rate limits.
+        </div>
+        <button class="error-button" onclick="goBack()">
+          <i class="fas fa-arrow-left"></i> Go Back
+        </button>
+      </div>
+    </div>
+
+
+
+
+    
+    <!-- Scripts - Functions -->
+
+    <!-- <script>
+      const steps = [
+        { id: 'step-summary', duration: 10000, title: 'Executive Summary' },
+        { id: 'step-budget', duration: 11000, title: 'Budget Plan' },
+        { id: 'step-events', duration: 14500, title: 'Event Marketing' },
+        { id: 'step-calendar', duration: 22000, title: 'Content Calendar' },
+        { id: 'step-influencer', duration: 25500, title: 'Influencer Recommendations' },
+        { id: 'step-platforms', duration: 30000, title: 'Platform Strategies' },
+        { id: 'step-tips', duration: 18000, title: 'Marketing Tips & Advice' }
+      ];
+
+      let currentStepIndex = 0;
+      let progressBar = document.getElementById('progressBar');
+      let mainLoadingText = document.getElementById('mainLoadingText');
+      let hasStarted = false;
+      let formSubmitted = false;
+
+      function updateProgressBar(percentage) {
+        progressBar.style.width = percentage + '%';
+      }
+
+      function setStepStatus(stepId, status) {
+        const step = document.getElementById(stepId);
+        step.className = `step ${status}`;
+        
+        const icon = step.querySelector('.step-icon i');
+        if (status === 'loading') {
+          icon.className = 'fas fa-spinner';
+        } else if (status === 'completed') {
+          icon.className = 'fas fa-check';
+        }
+      }
+
+      function updateMainText(text) {
+        mainLoadingText.textContent = text;
+      }
+
+      function startNextStep() {
+        if (currentStepIndex >= steps.length) {
+          completeGeneration();
+          return;
+        }
+
+        const currentStep = steps[currentStepIndex];
+        const progressPercentage = ((currentStepIndex + 1) / steps.length) * 100;
+        
+        // Update progress bar
+        updateProgressBar(progressPercentage);
+        
+        // Update main text
+        updateMainText(`Now generating ${currentStep.title}...`);
+        
+        // Set current step to loading
+        setStepStatus(currentStep.id, 'loading');
+        
+        // After duration, complete current step and start next
+        setTimeout(() => {
+          setStepStatus(currentStep.id, 'completed');
+          currentStepIndex++;
+          
+          // Small delay before starting next step
+          setTimeout(() => {
+            startNextStep();
+          }, 500);
+          
+        }, currentStep.duration);
+      }
+
+      function completeGeneration() {
+        updateProgressBar(100);
+        updateMainText('Finalizing your marketing strategy...');
+        
+        setTimeout(() => {
+          document.getElementById('loadingSpinner').style.display = 'none';
+          document.getElementById('successCheckmark').style.display = 'block';
+          document.getElementById('finalMessage').style.display = 'block';
+          
+          // Submit the form immediately after showing success (like your original code)
+          setTimeout(() => {
+           /* if (!formSubmitted) {
+              formSubmitted = true;
+              document.getElementById('generate-form').submit();
+            }*/
+          }, 1500);
+        }, 1500);
+      }
+
+      function showError(message) {
+        document.getElementById('errorMessage').textContent = message;
+        document.getElementById('errorDialog').style.display = 'block';
+      }
+
+      function goBack() {
+        window.history.back();
+      }
+
+      // Auto-start the process when page loads (only in generation mode)
+      document.addEventListener('DOMContentLoaded', function() {
+        // Only run the progress animation if we're in generation mode (no strategy exists)
+        if (!hasStarted && document.getElementById('generate-form')) {
+          hasStarted = true;
+          
+          // Start the progress simulation
+          setTimeout(() => {
+            startNextStep();
+          }, 500);
+          
+          // Also submit the actual form immediately (like your original code)
+          // This ensures the backend starts processing while we show the animation
+          setTimeout(() => {
+           /* if (!formSubmitted) {
+              formSubmitted = true;
+              document.getElementById('generate-form').submit();
+            }*/
+          }, 1500);
+          
+          // Set a maximum timeout to prevent infinite loading
+          setTimeout(() => {
+            if (currentStepIndex < steps.length && !formSubmitted) {
+              showError("Generation is taking longer than expected. Please try again.");
+            }
+          }, 75000); // 1 m and 15 s timeout
+        }
+      });
+    </script> -->
+
+    {% endif %}
+
+
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          // Only add email save functionality for approved strategies
+          const strategyStatus = '{{ strategy.status if strategy else "" }}';
+          
+          if (strategyStatus === 'approved') {
+              initializeEmailSaveFunctionality();
+          }
+      });
+
+      function initializeEmailSaveFunctionality() {
+          const emailTextareas = document.querySelectorAll('.editable-email');
+          const strategyId = {{ strategy.id if strategy else 'null' }};
+          
+          // Store for auto-save timeouts
+          const autoSaveTimeouts = {};
+          
+          emailTextareas.forEach((textarea, index) => {
+              // Add save button after each textarea
+              addSaveButton(textarea, index, strategyId);
+              
+              // Add auto-save functionality
+              textarea.addEventListener('input', function() {
+                  // Clear existing timeout
+                  if (autoSaveTimeouts[index]) {
+                      clearTimeout(autoSaveTimeouts[index]);
+                  }
+                  
+                  // Set new timeout for auto-save (2 seconds after user stops typing)
+                  autoSaveTimeouts[index] = setTimeout(() => {
+                      autoSaveEmail(index, textarea.value, strategyId);
+                  }, 2000);
+              });
+              
+              // Add visual feedback for unsaved changes
+              textarea.addEventListener('input', function() {
+                  markAsUnsaved(index);
+              });
+          });
+      }
+
+      function addSaveButton(textarea, index, strategyId) {
+          // Create save button container
+          const buttonContainer = document.createElement('div');
+          buttonContainer.className = 'email-save-container';
+          buttonContainer.style.cssText = `
+              margin-top: 8px;
+              display: flex;
+              align-items: center;
+              gap: 10px;
+          `;
+          
+          // Create save button
+          const saveButton = document.createElement('button');
+          saveButton.type = 'button';
+          saveButton.className = 'btn-save-email';
+          saveButton.id = `save-email-${index}`;
+          saveButton.innerHTML = '<i class="fas fa-save"></i>Edit & Save Email';
+          saveButton.style.cssText = `
+              background: #28a745;
+              color: white;
+              border: none;
+              padding: 6px 12px;
+              border-radius: 4px;
+              cursor: pointer;
+              font-size: 12px;
+              display: flex;
+              align-items: center;
+              gap: 5px;
+          `;
+          
+          // Create status indicator
+          const statusIndicator = document.createElement('span');
+          statusIndicator.id = `status-${index}`;
+          statusIndicator.className = 'save-status';
+          statusIndicator.style.cssText = `
+              font-size: 12px;
+              color: #666;
+          `;
+          
+          // Add click event to save button
+          saveButton.addEventListener('click', function() {
+              manualSaveEmail(index, textarea.value, strategyId);
+          });
+          
+          // Append elements
+          buttonContainer.appendChild(saveButton);
+          buttonContainer.appendChild(statusIndicator);
+          
+          // Insert after textarea
+          textarea.parentNode.insertBefore(buttonContainer, textarea.nextSibling);
+      }
+
+      function autoSaveEmail(emailIndex, emailContent, strategyId) {
+          saveEmailToServer(emailIndex, emailContent, strategyId, true);
+      }
+
+      function manualSaveEmail(emailIndex, emailContent, strategyId) {
+          saveEmailToServer(emailIndex, emailContent, strategyId, false);
+      }
+
+      function saveEmailToServer(emailIndex, emailContent, strategyId, isAutoSave) {
+          const saveButton = document.getElementById(`save-email-${emailIndex}`);
+          const statusIndicator = document.getElementById(`status-${emailIndex}`);
+          
+          // Show loading state
+          if (!isAutoSave) {
+              saveButton.disabled = true;
+              saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+          }
+          
+          if (isAutoSave) {
+              statusIndicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Auto-saving...';
+              statusIndicator.style.color = '#007bff';
+          }
+          
+          // Make API call
+          fetch(`/save_email/${strategyId}`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  email_index: emailIndex,
+                  email_content: emailContent
+              })
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  markAsSaved(emailIndex, isAutoSave);
+              } else {
+                  markAsError(emailIndex, data.error, isAutoSave);
+              }
+          })
+          .catch(error => {
+              console.error('Error saving email:', error);
+              markAsError(emailIndex, 'Network error', isAutoSave);
+          })
+          .finally(() => {
+              // Reset button state
+              if (!isAutoSave) {
+                  saveButton.disabled = false;
+                  saveButton.innerHTML = '<i class="fas fa-save"></i> Save Email';
+              }
+          });
+      }
+
+      function markAsUnsaved(emailIndex) {
+          const statusIndicator = document.getElementById(`status-${emailIndex}`);
+          const saveButton = document.getElementById(`save-email-${emailIndex}`);
+          
+          statusIndicator.innerHTML = '<i class="fas fa-exclamation-circle"></i> Unsaved changes';
+          statusIndicator.style.color = '#ffc107';
+          
+          saveButton.style.background = '#dc3545';
+          saveButton.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+      }
+
+      function markAsSaved(emailIndex, isAutoSave) {
+          const statusIndicator = document.getElementById(`status-${emailIndex}`);
+          const saveButton = document.getElementById(`save-email-${emailIndex}`);
+          
+          const message = isAutoSave ? 'Auto-saved' : 'Saved successfully';
+          statusIndicator.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+          statusIndicator.style.color = '#28a745';
+          
+          saveButton.style.background = '#28a745';
+          saveButton.innerHTML = '<i class="fas fa-save"></i> Save Email';
+          
+          // Clear status after 3 seconds
+          setTimeout(() => {
+              statusIndicator.innerHTML = '';
+          }, 3000);
+      }
+
+      function markAsError(emailIndex, errorMessage, isAutoSave) {
+          const statusIndicator = document.getElementById(`status-${emailIndex}`);
+          const saveButton = document.getElementById(`save-email-${emailIndex}`);
+          
+          const prefix = isAutoSave ? 'Auto-save failed' : 'Save failed';
+          statusIndicator.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${prefix}: ${errorMessage}`;
+          statusIndicator.style.color = '#dc3545';
+          
+          saveButton.style.background = '#dc3545';
+          
+          // Clear error after 5 seconds
+          setTimeout(() => {
+              statusIndicator.innerHTML = '';
+              saveButton.style.background = '#28a745';
+          }, 5000);
+      }
+      // Add this script to strategy.html before </body>
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if this is a completed strategy that matches the current notification
+    const strategyId = {{ strategy.id if strategy else 'null' }};
+    const strategyStatus = '{{ strategy.status if strategy else "" }}';
+    
+    console.log('Strategy page loaded:', { strategyId, strategyStatus });
+    
+    if (strategyId && window.strategyNotification) {
+        const generationData = window.strategyNotification.getGenerationData();
+        console.log('Generation data:', generationData);
+        
+        // If notification exists and matches this strategy
+        if (generationData) {
+            // Check if strategy has been approved or archived
+            if (strategyStatus === 'approved' || strategyStatus === 'denied - archived') {
+                console.log('Strategy action taken, clearing notification');
+                // Clear the notification immediately
+                window.strategyNotification.clearNotification();
+            } else if (generationData.strategyId === strategyId && strategyStatus === 'new') {
+                console.log('Strategy is new and ready for action');
+                // Keep showing the completed notification
+            }
+        }
+    }
+    
+    // Intercept form submissions to clear notification BEFORE redirect
+    const approveForm = document.getElementById('approve-form');
+    if (approveForm) {
+        approveForm.addEventListener('submit', function(e) {
+            console.log('Approve form submitted, clearing notification');
+            // Clear notification immediately
+            if (window.strategyNotification) {
+                window.strategyNotification.clearNotification();
+            }
+            // Form will continue to submit normally
+        });
+    }
+    
+    const archiveForms = document.querySelectorAll('form[action*="/archive_and_regenerate/"]');
+    archiveForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            console.log('Archive form submitted, clearing notification');
+            if (window.strategyNotification) {
+                window.strategyNotification.clearNotification();
+            }
+            // Form will continue to submit normally
+        });
+    });
+    
+    // Also handle the "Generate New Strategy" button if present
+    const generateButtons = document.querySelectorAll('button[type="submit"]');
+    generateButtons.forEach(button => {
+        if (button.textContent.includes('Generate New Strategy') || 
+            button.closest('form')?.action?.includes('/strategy/new/')) {
+            button.closest('form')?.addEventListener('submit', function() {
+                console.log('Generating new strategy, keeping notification cleared');
+                if (window.strategyNotification) {
+                    window.strategyNotification.clearNotification();
+                }
+            });
+        }
+    });
+});
+  </script>
+<button id="backToTopBtn" class="back-to-top" title="Go to top">
+  <i class="fas fa-chevron-up"></i>
+</button>
+
+<script>
+  // Back to Top Button functionality
+  const backToTopButton = document.getElementById('backToTopBtn');
+  
+  // Show/hide button based on scroll position
+  window.addEventListener('scroll', function() {
+    if (window.pageYOffset > 300) {
+      backToTopButton.classList.add('show');
+    } else {
+      backToTopButton.classList.remove('show');
+    }
+  });
+  
+  // Smooth scroll to top when clicked
+  backToTopButton.addEventListener('click', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+</script>
+
+  </body>
+</html>

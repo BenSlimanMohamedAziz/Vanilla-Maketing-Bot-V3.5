@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit {{ company.name }} - Chahbander Marketing Assistant</title>
+    <link rel="icon" type="image/x-icon" href="/static/imgs/icons/fav-icon-nobg.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/Form.css">
+</head>
+<body>
+    <div class="header-actions">
+        <a href="/company/{{ company.id }}" class="btn btn-secondary">Cancel</a>
+    </div>
+
+     <div id="companyFormContainer">
+        <h1>Editing Company Profile</h1>
+        <h2>Update your company details <i class="fas fa-edit"></i></h2>
+
+        <form action="/update_company/{{ company.id }}" method="post" id="companyForm" enctype="multipart/form-data">
+            <!-- Add this hidden input to simulate PUT method -->
+            <input type="hidden" name="_method" value="PUT">
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <p class="step-indicator" id="stepIndicator">Phase 1 of 5</p>
+
+            <!-- Step 1 - Company Basic Info -->
+            <div class="step active">
+                <!-- Company Name Banner -->
+                <div class="company-name-banner">
+                    Editing Company's Profile</strong>
+                </div>
+
+                <!-- Company Name and Website in a grid -->
+                <div class="company-info-grid">
+                    <div class="company-info-item">
+                        <label for="name">
+                           1. Company Name
+                            <span class="tooltip">(Your company's official name)</span>
+                        </label>
+                        <input type="text" name="name" id="name" value="{{ company.name }}" 
+                               class="editable-text-field" required title="Company Name">
+                        <div class="error-message" id="name-error"></div>
+                    </div>
+
+                    <div class="company-info-item">
+                        <label for="website">
+                          2. Company Website/LinkedIn
+                            <span class="tooltip">(Optional)</span>
+                        </label>
+                        <input type="text" name="website" id="website" 
+                               value="{{ company.website }}"
+                               class="editable-text-field" 
+                               placeholder="example.com"
+                               title="Company Website">
+                        <div class="error-message" id="website-error"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                        <label for="phone_number">
+                        3. Company Phone Number
+                        <span class="tooltip">(Required - include country code, e.g., +216 12 456 789)</span>
+                    </label>
+                    <div class="input-icon">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" name="phone_number" id="phone_number" 
+                            value="{{ company.phone_number }}"
+                            class="editable-text-field" 
+                            placeholder="+1 (555) 123-4567"
+                            title="Company Phone Number"
+                            required>
+                    </div>
+                    <div class="error-message" id="phone_number-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="slogan">
+                        4. Company Slogan/Tagline
+                        <span class="tooltip">(e.g., "Just Do It", "Think Different")</span>
+                    </label>
+                    <input type="text" name="slogan" id="slogan" value="{{ company.slogan }}" placeholder="Enter your company slogan" required>
+                    <div class="error-message" id="slogan-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">
+                        5. Company Description
+                        <span class="tooltip">(What makes your business unique)</span>
+                    </label>
+                    <textarea name="description" id="description" required>{{ company.description }}</textarea>
+                    <div class="error-message" id="description-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="products">
+                        6. Products Offered
+                        <span class="tooltip">(Separate with commas)</span>
+                    </label>
+                    <textarea name="products" id="products" required>{{ company.products }}</textarea>
+                    <div class="error-message" id="products-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="services">
+                        7. Services Offered
+                        <span class="tooltip">(Separate with commas)</span>
+                    </label>
+                    <textarea name="services" id="services" required>{{ company.services }}</textarea>
+                    <div class="error-message" id="services-error"></div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step">
+                <div class="form-group">
+                    <label>
+                        8. Marketing Goals
+                        <span class="tooltip">(Select all that apply)</span>
+                    </label>
+                    <div class="checkbox-group required-checkbox">
+                        {% set goals_list = company.marketing_goals.split(',') if company.marketing_goals else [] %}
+                        <label class="checkbox-container"> Brand Awareness
+                            <input type="checkbox" name="goals" value="Brand Awareness" {% if 'Brand Awareness' in goals_list %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Lead Generation
+                            <input type="checkbox" name="goals" value="Lead Generation" {% if 'Lead Generation' in goals_list %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Sales Conversion
+                            <input type="checkbox" name="goals" value="Sales Conversion" {% if 'Sales Conversion' in goals_list %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Customer Loyalty
+                            <input type="checkbox" name="goals" value="Customer Loyalty" {% if 'Customer Loyalty' in goals_list %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Website Traffic
+                            <input type="checkbox" name="goals" value="Website Traffic" {% if 'Website Traffic' in goals_list %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Product Launch
+                            <input type="checkbox" name="goals" value="Product Launch" {% if 'Product Launch' in goals_list %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div class="error-message" id="goals-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        9. Target Audience - Demographics
+                        <span class="tooltip">(Select all that apply)</span>
+                    </label>
+                    <div class="audience-category required-checkbox">
+                        <h4><i class="fas fa-user-friends"></i> Demographics</h4>
+                        <div class="checkbox-group">
+                            {% set age_groups = company.target_age_groups.split(',') if company.target_age_groups else [] %}
+                            <label class="checkbox-container"> Teens (13-19)
+                                <input type="checkbox" name="target_age" value="Teens" {% if 'Teens' in age_groups %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Young Adults (20-29)
+                                <input type="checkbox" name="target_age" value="Young Adults" {% if 'Young Adults' in age_groups %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Adults (30-45)
+                                <input type="checkbox" name="target_age" value="Adults" {% if 'Adults' in age_groups %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Middle-Aged (46-64)
+                                <input type="checkbox" name="target_age" value="Middle-Aged" {% if 'Middle-Aged' in age_groups %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Seniors (65+)
+                                <input type="checkbox" name="target_age" value="Seniors" {% if 'Seniors' in age_groups %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Men
+                                <input type="checkbox" name="target_age" value="Men" {% if 'Men' in age_groups %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Women
+                                <input type="checkbox" name="target_age" value="Women" {% if 'Women' in age_groups %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="error-message" id="target_age-error"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step">
+                <div class="form-group">
+                    <label>
+                        10. Target Audience - Customer Types (B2C)
+                        <span class="tooltip">(Select all that apply)</span>
+                    </label>
+                    <div class="audience-category required-checkbox">
+                        <h4><i class="fas fa-users"></i> Customer Types (B2C)</h4>
+                        <div class="checkbox-group">
+                            {% set audience_types = company.target_audience_types.split(',') if company.target_audience_types else [] %}
+                            <label class="checkbox-container"> Families
+                                <input type="checkbox" name="target_type" value="Families" {% if 'Families' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Health-conscious
+                                <input type="checkbox" name="target_type" value="Health-conscious" {% if 'Health-conscious' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Fitness Enthusiasts
+                                <input type="checkbox" name="target_type" value="Fitness Enthusiasts" {% if 'Fitness Enthusiasts' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Students
+                                <input type="checkbox" name="target_type" value="Students" {% if 'Students' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Content Creators
+                                <input type="checkbox" name="target_type" value="Content Creators" {% if 'Content Creators' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Working Professionals
+                                <input type="checkbox" name="target_type" value="Working Professionals" {% if 'Working Professionals' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Luxury Shoppers
+                                <input type="checkbox" name="target_type" value="Luxury Shoppers" {% if 'Luxury Shoppers' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Gamers
+                                <input type="checkbox" name="target_type" value="Gamers" {% if 'Gamers' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Anime Enthusiasts
+                                <input type="checkbox" name="target_type" value="Anime Fans" {% if 'Anime Fans' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Travelers 
+                                <input type="checkbox" name="target_type" value="Travelers" {% if 'Travelers' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Tech Enthusiasts 
+                                <input type="checkbox" name="target_type" value="Tech Enthusiasts" {% if 'Tech Enthusiasts' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Beauty/Fashion Enthusiasts
+                                <input type="checkbox" name="target_type" value="Beauty/Fashion Enthusiasts" {% if 'Beauty/Fashion Enthusiasts' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Pet Owners
+                                <input type="checkbox" name="target_type" value="Pet Owners" {% if 'Pet Owners' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Sports Fans
+                                <input type="checkbox" name="target_type" value="Sports Fans" {% if 'Sports Fans' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Art & Design Enthusiasts
+                                <input type="checkbox" name="target_type" value="Art & Design Enthusiasts" {% if 'Art & Design Enthusiasts' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Deal Seekers / Discount Hunters
+                                <input type="checkbox" name="target_type" value="Deal Seekers / Discount Hunters" {% if 'Deal Seekers / Discount Hunters' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Social Media Active Users
+                                <input type="checkbox" name="target_type" value="Social Media Active Users" {% if 'Social Media Active Users' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Foodies
+                                <input type="checkbox" name="target_type" value="Foodies" {% if 'Foodies' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Investors / Finance Enthusiasts
+                                <input type="checkbox" name="target_type" value="Investors / Finance Enthusiasts" {% if 'Investors / Finance Enthusiasts' in audience_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="error-message" id="target_type-error"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step">
+                <div class="form-group">
+                    <label>
+                        11. Target Audience - Businesses & Organizations (B2B)
+                        <span class="tooltip">(Select all that apply)</span>
+                    </label>
+                    <div class="audience-category required-checkbox">
+                        <h4><i class="fas fa-building"></i> Businesses & Organizations (B2B)</h4>
+                        <div class="checkbox-group">
+                            {% set business_types = company.target_business_types.split(',') if company.target_business_types else [] %}
+                            <label class="checkbox-container"> Hotels & Hospitality
+                                <input type="checkbox" name="target_business" value="Hotels & Hospitality" {% if 'Hotels & Hospitality' in business_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Restaurants & Cafés
+                                <input type="checkbox" name="target_business" value="Restaurants" {% if 'Restaurants' in business_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Retail Stores
+                                <input type="checkbox" name="target_business" value="Retailers" {% if 'Retailers' in business_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Corporate Offices
+                                <input type="checkbox" name="target_business" value="Corporate" {% if 'Corporate' in business_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Educational Institutions
+                                <input type="checkbox" name="target_business" value="Educational" {% if 'Educational' in business_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Startups
+                                <input type="checkbox" name="target_business" value="Startups" {% if 'Startups' in business_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Freelancers / Solopreneurs
+                                <input type="checkbox" name="target_business" value="Freelancers / Solopreneurs" {% if 'Freelancers / Solopreneurs' in business_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Healthcare Organizations
+                                <input type="checkbox" name="target_business" value="Healthcare Organizations" {% if 'Healthcare Organizations' in business_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Manufacturers
+                                <input type="checkbox" name="target_business" value="Manufacturers" {% if 'Manufacturers' in business_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Tech Companies
+                                <input type="checkbox" name="target_business" value="Tech Companies" {% if 'Tech Companies' in business_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Government/Public Sector 
+                                <input type="checkbox" name="target_business" value="Government/Public Sector" {% if 'Government/Public Sector' in business_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Enterprise Corporations
+                                <input type="checkbox" name="target_business" value="Enterprise Corporations (Large organizations)" {% if 'Enterprise Corporations (Large organizations)' in business_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Small and Medium-sized Enterprises (SMEs)
+                                <input type="checkbox" name="target_business" value="Small and Medium-sized Enterprises (SMEs)" {% if 'Small and Medium-sized Enterprises (SMEs)' in business_types %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="error-message" id="target_business-error"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        12. Target Audience - Geographics
+                        <span class="tooltip">(Select all that apply)</span>
+                    </label>
+                    <div class="audience-category required-checkbox" data-category="geography" title="Geographics">
+                        <h4><i class="fas fa-earth"></i> Geographics</h4>
+                        <div class="checkbox-group">
+                            {% set geographics = company.target_geographics.split(',') if company.target_geographics else [] %}
+                            <label class="checkbox-container"> Local Market (city/town specific)
+                                <input type="checkbox" name="target_geographic" value="Local Market (city/town specific)" {% if 'Local Market (city/town specific)' in geographics %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Regional (state/province)
+                                <input type="checkbox" name="target_geographic" value="Regional (state/province)" {% if 'Regional (state/province)' in geographics %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> National
+                                <input type="checkbox" name="target_geographic" value="National" {% if 'National' in geographics %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> International
+                                <input type="checkbox" name="target_geographic" value="International" {% if 'International' in geographics %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkbox-container"> Remote / Digital-Only 
+                                <input type="checkbox" name="target_geographic" value="Remote / Digital-Only" {% if 'Remote / Digital-Only' in geographics %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="error-message" id="target_geographic-error"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        13. Preferred Marketing Platforms
+                        <span class="tooltip">(Select all that apply)</span>
+                    </label>
+                    <div class="checkbox-group required-checkbox">
+                        {% set platforms = company.preferred_platforms.split(',') if company.preferred_platforms else [] %}
+                        <label class="checkbox-container"> Instagram
+                            <input type="checkbox" name="channels" value="Instagram" {% if 'Instagram' in platforms %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> LinkedIn
+                            <input type="checkbox" name="channels" value="LinkedIn" {% if 'LinkedIn' in platforms %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> YouTube
+                            <input type="checkbox" name="channels" value="YouTube" {% if 'YouTube' in platforms %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Facebook
+                            <input type="checkbox" name="channels" value="Facebook" {% if 'Facebook' in platforms %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> TikTok <span style="font-size:0.6em;">(Soon)</span>
+                            <input type="checkbox" name="channels" value="TikTok" {% if 'TikTok' in platforms %}checked{% endif %} disabled>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> WhatsApp <span style="font-size:0.6em;">(Soon)</span>
+                            <input type="checkbox" name="channels" value="WhatsApp" {% if 'WhatsApp' in platforms %}checked{% endif %} disabled>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Telegram <span style="font-size:0.6em;">(Soon)</span>
+                            <input type="checkbox" name="channels" value="Telegram" {% if 'Telegram' in platforms %}checked{% endif %} disabled>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Snapchat <span style="font-size:0.6em;">(Soon)</span>
+                            <input type="checkbox" name="channels" value="Snapchat" {% if 'Snapchat' in platforms %}checked{% endif %} disabled>
+                            <span class="checkmark"></span>
+                        </label> 
+                        <label class="checkbox-container"> Threads <span style="font-size:0.6em;">(Soon)</span>
+                            <input type="checkbox" name="channels" value="Threads" {% if 'Threads' in platforms %}checked{% endif %} disabled>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> X <span style="font-size:0.6em;">(Soon)</span>
+                            <input type="checkbox" name="channels" value="X" {% if 'X' in platforms %}checked{% endif %} disabled>
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div class="error-message" id="channels-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="brand_tone">
+                        14. Brand Tone/Voice
+                        <span class="tooltip">(Select your brand's personality)</span>
+                    </label>
+                    <div class="select-wrapper">
+                        <select name="brand_tone" id="brand_tone" required>
+                            <option value="" disabled>Select brand tone</option>
+                            <option value="Professional" {% if company.brand_tone == 'Professional' %}selected{% endif %}>Professional</option>
+                            <option value="Friendly" {% if company.brand_tone == 'Friendly' %}selected{% endif %}>Friendly</option>
+                            <option value="Bold" {% if company.brand_tone == 'Bold' %}selected{% endif %}>Bold</option>
+                            <option value="Luxurious" {% if company.brand_tone == 'Luxurious' %}selected{% endif %}>Luxurious</option>
+                            <option value="Playful" {% if company.brand_tone == 'Playful' %}selected{% endif %}>Playful</option>
+                            <option value="Innovative" {% if company.brand_tone == 'Innovative' %}selected{% endif %}>Innovative</option>
+                            <option value="Trustworthy" {% if company.brand_tone == 'Trustworthy' %}selected{% endif %}>Trustworthy</option>
+                        </select>
+                    </div>
+                    <div class="error-message" id="brand_tone-error"></div>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step">
+                <div class="form-group">
+                    <label>
+                        15. Special Events/Seasons
+                        <span class="tooltip">(Select all that apply)</span>
+                    </label>
+                    <div class="checkbox-group">
+                        {% set events = company.special_events.split(',') if company.special_events else [] %}
+                        <label class="checkbox-container"> White Friday
+                            <input type="checkbox" name="special_events" value="White Friday" {% if 'White Friday' in events %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Ramadan
+                            <input type="checkbox" name="special_events" value="Ramadan" {% if 'Ramadan' in events %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Winter Sales
+                            <input type="checkbox" name="special_events" value="Winter Sales" {% if 'Winter Sales' in events %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> New Year's Sales
+                            <input type="checkbox" name="special_events" value="New Year's Sales" {% if 'New Years Sales' in events %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Halloween Specials
+                            <input type="checkbox" name="special_events" value="Halloween Specials" {% if 'Halloween Specials' in events %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Summer Sales
+                            <input type="checkbox" name="special_events" value="Summer Sales" {% if 'Summer Sales' in events %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div class="error-message" id="special_events-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        16. Marketing Challenges
+                        <span class="tooltip">(Select all that apply)</span>
+                    </label>
+                    <div class="checkbox-group">
+                        {% set challenges = company.marketing_challenges.split(',') if company.marketing_challenges else [] %}
+                        <label class="checkbox-container"> Low Engagement
+                            <input type="checkbox" name="challenges" value="Low Engagement" {% if 'Low Engagement' in challenges %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Budget Issues
+                            <input type="checkbox" name="challenges" value="Budget Issues" {% if 'Budget Issues' in challenges %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Strong Competition
+                            <input type="checkbox" name="challenges" value="Strong Competition" {% if 'Strong Competition' in challenges %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Lack of Strategy
+                            <input type="checkbox" name="challenges" value="Lack of Strategy" {% if 'Lack of Strategy' in challenges %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> Poor Online Presence
+                            <input type="checkbox" name="challenges" value="Poor Online Presence" {% if 'Poor Online Presence' in challenges %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container"> No Challenges At The Moment
+                            <input type="checkbox" name="challenges" value="No Marketing obstacles or challenges at the moment" {% if 'No Marketing obstacles or challenges at the moment' in challenges or 'No challenges at the moment' in challenges %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div class="error-message" id="challenges-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="budget">
+                        17. Monthly Marketing Budget
+                        <span class="tooltip">(Please specify currency if not USD)</span>
+                    </label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                        <input type="number" name="budget" id="budget" value="{{ company.monthly_budget }}" required>
+                    </div>
+                    <div class="error-message" id="budget-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="logo">
+                        18. Update Company Logo
+                        <span class="tooltip">(Leave empty to keep current logo)</span>
+                    </label>
+                    <div class="file-upload">
+                        <input type="file" name="logo" id="logo" accept="image/png, image/jpeg">
+                        <label for="logo" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Choose new logo</span>
+                        </label>
+                        <span class="file-name" id="fileName">No file chosen</span>
+                    </div>
+                    {% if company.logo_url %}
+                    <div class="current-logo">
+                        <p>Current Logo:</p>
+                        <img src="{{ company.logo_url }}" alt="Current Logo" style="max-height: 100px;">
+                    </div>
+                    {% endif %}
+                    <div class="error-message" id="logo-error"></div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="navigation">
+                <button type="button" id="prevBtn" onclick="changeStep(-1)" style="display:none;">Previous</button>
+                <button type="button" id="nextBtn" onclick="changeStep(1)">Next</button>
+                <button type="submit" id="saveBtn" class="btn-save">Save Changes</button>
+                <button type="button" id="prevBtn" onclick="window.location.href='/company/{{ company.id }}';">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="/static/js/EditCompany.js"></script>
+    <script src="/static/js/Script.js"></script>
+
+<!-- This is for strategy gen bg event & notif -->
+<link rel="stylesheet" href="/static/css/Strategy_generation_notif.css">
+<script src="/static/js/Generating_strategy_utils.js"></script>
+<!-- This is for strategy gen bg event & notif -->
+
+<!-- Social Account Linking Modal for Edit -->
+<div id="socialLinkingModal" class="modal">
+    <div class="modal-content social-linking-modal">
+        <div class="modal-header">
+            <h2>Connect New Social Accounts</h2>
+                <p class="modal-subtitle">Link the new platforms you selected for your strategy!</p>
+            <span class="close-modal">&times;</span>
+        </div>
+        
+        <div class="modal-body">
+            <div class="selected-platforms-container" id="selectedPlatformsContainer">
+                <!-- Newly selected platforms will be dynamically inserted here -->
+            </div>
+            
+            <div class="progress-section">
+                <div class="progress-header">
+                     <h4>Linking Progress &nbsp;</h4>
+                    <div class="progress-text" id="progressText">0 of 0 connected</div>
+                </div>
+                <div class="progress-bar-container">
+                    <div id="linkingProgressBar" class="progress-bar"></div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" id="skipLinkingBtn" class="btn-secondary">
+                    <i class="fas fa-arrow-right"></i> &nbsp; Skip & Save Anyway
+                </button>
+                <button type="button" id="proceedToSaveBtn" class="btn-primary" disabled>
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

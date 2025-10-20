@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Strategy - {{ strategy.company_name }}</title>
+
+    <link rel="icon" type="image/x-icon" href="/static/imgs/icons/fav-icon-nobg.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/css/Pages.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/EditStrategy.css" />
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <button class="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="/" target="_blank" class="logo">
+                    <img src="/static/imgs/logo/logo.png" alt="Chahbender" class="logo-img">
+                </a>
+            </div>
+            <div class="nav-right">
+                <!-- User Menu with Dropdown -->
+                <div class="user-menu">
+                    <div class="user-avatar" data-name="{{ user.full_name }}" id="userAvatar" title="{{ user.full_name }}">
+                        {{ user.full_name[0] }}
+                    </div>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="/home" class="dropdown-item">
+                            <i class="fas fa-user"></i> {{ user.full_name }}
+                        </a>
+                        <a href="/user_settings" class="dropdown-item">
+                            <i class="fas fa-cog"></i> User Settings
+                        </a>
+                        <a href="/logout" class="dropdown-item logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="/home" class="nav-link {% if active_page == 'home' %}active{% endif %}"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="/company/{{ strategy.company_id }}" class="{% if active_page == 'company-profile' %}active{% endif %}"><i class="fas fa-building"></i> Company Profile</a></li>
+            <li><a href="/edit_company/{{ strategy.company_id }}" class="{% if active_page == 'edit-company' %}active{% endif %}">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </a></li>
+
+                 <li><a href="/edit_strategy/{{ strategy.strategy_id }}" class="{% if active_page == 'edit-strategy' %}active{% endif %}">
+                    <i class="fas fa-edit"></i> Edit Strategy
+                </a></li>
+
+            <li><a href="/company/{{ strategy.company_id }}#Strategies" class="{% if active_page == 'strategies' %}active{% endif %}"><i class="fas fa-lightbulb"></i> Generated Strategy</a></li>
+            <li><a href="/user_settings" class="{% if active_page == 'settings' %}active{% endif %}">
+                    <i class="fas fa-cog"></i> User Settings
+                </a></li>
+            <li><a href="/logout" class="nav-link-logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <br><br>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="edit-strategy-container">
+            <div class="edit-strategy-header">
+                <h1><i class="fas fa-edit"></i> Edit Marketing Strategy</h1>
+                <div class="form-actions">
+                    <a href="/strategy/{{ strategy.id }}" class="btn-cancel">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </div>
+            
+            <div class="strategy-meta">
+                <p><strong>Company:</strong> {{ strategy.company_name }}</p>
+                <p><strong>Created:</strong> {{ strategy.created_at }}</p>
+            </div>
+            
+            <div class="edit-form-container">
+                <form action="/update_strategy/{{ strategy.id }}" method="post">
+                    <label for="strategy-content" style="display: block; margin-bottom: 10px; font-weight: 500;">
+                        <i class="fas fa-file-alt"></i> Strategy Content (HTML)
+                    </label>
+                    <textarea id="strategy-content" name="content" required>{{ strategy.content }}</textarea>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+         
+        </div>
+    </main>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" title="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+    
+    <script src="/static/js/CompanyDetails.js"></script>
+    <script  src="/static/js/EditStrategy.js"></script>
+
+<!-- This is for strategy gen bg event & notif -->
+<link rel="stylesheet" href="/static/css/Strategy_generation_notif.css">
+<script src="/static/js/Generating_strategy_utils.js"></script>
+<!-- This is for strategy gen bg event & notif -->
+</body>
+</html>

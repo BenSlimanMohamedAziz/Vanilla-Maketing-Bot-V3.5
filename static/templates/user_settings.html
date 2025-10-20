@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>User Settings</title>
+    <link rel="icon" type="image/x-icon" href="static/imgs/icons/fav-icon-nobg.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/css/Home.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/UserSettings.css" />
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <button class="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <!-- <a href="/" target="_blank" class="logo">CHAHBANDER</a> -->
+             <a href="/" target="_blank" class="logo">
+                    <img src="static/imgs/logo/logo.png" alt="Chahbander" class="logo-img">
+                </a>
+            </div>
+            <div class="nav-right">
+                
+                <!-- Remove the logout button from here -->
+                <div class="user-menu">
+                    <div class="user-avatar" data-name="{{ user.full_name }}" id="userAvatar" title="{{ user.full_name }}">
+                        {{ user.full_name[0] }}
+                    </div>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="/home" class="dropdown-item">
+                            <i class="fas fa-user"></i> {{ user.full_name }}
+                        </a>
+                        <a href="/user_settings" class="dropdown-item">
+                            <i class="fas fa-cog"></i> User Settings
+                        </a>
+                        <a href="/logout" class="dropdown-item logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="/home" class="nav-link"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            
+        
+            
+            {% if companies %}
+                {% for company in companies %}
+                    <li><a href="/company/{{ company.id }}" class="nav-link"><i class="fas fa-building"></i> Company</a></li>
+                    <li><a href="/company/{{ company.id }}#Strategies" class="nav-link"><i class="fas fa-lightbulb"></i> Generated Strategies</a></li>
+                {% endfor %}
+            {% endif %}
+            
+            
+            <li><a href="/user_settings" class="nav-link active"><i class="fas fa-cog"></i> User Settings</a></li>
+            <li><a href="/logout" class="nav-link-logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header">
+            <h1>User Profile - Settings</h1>
+        </div>
+
+        <div class="settings-container">
+
+        <!-- Profile Settings -->
+            <div class="settings-section">
+                <h2><i class="fas fa-user-cog"></i> Profile Settings</h2>
+                <form id="profile-form" class="settings-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" value="{{ user.full_name }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="current_password">Current Password</label>
+                        <input type="password" id="current_password" name="current_password" placeholder="Enter current password if changing email or password">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new_password">New Password (leave blank to keep current)</label>
+                        <input type="password" id="new_password" name="new_password">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm New Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password">
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Update Profile</button>
+                </form>
+            </div>
+
+            <!-- Linked Accounts Section -->
+            <div class="settings-section">
+                <h2><i class="fas fa-link"></i> Linked Accounts</h2>
+                
+                <div class="linked-accounts-container">
+                    {% if linked_accounts %}
+                    <div class="accounts-grid">
+                        {% for account in linked_accounts %}
+                        <div class="account-card">
+                        <div class="account-platform {{ account.platform }}">
+                            <i class="fab fa-{{ 'instagram' if account.platform == 'instagram' else account.platform }}"></i>
+                        </div>
+                        <div class="account-details">
+                            <h3>{{ account.account_name }}</h3>
+                            <div class="account-meta">
+                                <span class="platform-badge {{ account.platform }}">
+                                    {{ 'Instagram' if account.platform == 'instagram' else account.platform|capitalize }}
+                                </span>
+                                <span class="connection-date">{{ account.created_at }}</span>
+                            </div>
+                        </div>
+                        <button onclick="disconnectAccount('{{ account.platform }}', '{{ account.id }}')" 
+                                class="btn-disconnect" title="Disconnect account">
+                            <i class="fas fa-unlink"></i>
+                        </button>
+                    </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="no-accounts">
+                        <i class="fas fa-unlink"></i>
+                        <p>No accounts linked yet</p>
+                    </div>
+                    {% endif %}
+                    
+                    <button id="link-account-btn" class="btn-primary">
+                        <i class="fas fa-plus"></i> Link New Account
+                    </button>
+                </div>
+            </div>
+
+            <!-- Link Account Modal -->
+            <div id="link-account-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h2>Connect Social Account</h2>
+                    <p class="modal-subtitle">Select a platform to connect</p>
+                    
+                    <div class="platform-options">
+                        <!-- LinkedIn -->
+                        <div class="platform-option" onclick="linkAccount('linkedin')">
+                            <div class="platform-icon linkedin">
+                                <i class="fab fa-linkedin"></i>
+                            </div>
+                            <span>LinkedIn</span>
+                        </div>
+                        
+                        <!-- Meta -->
+                        <!-- Facebook (Meta) -->
+                        <div class="platform-option" onclick="linkAccount('meta')">
+                            <div class="platform-icon facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </div>
+                            <span>Facebook</span>
+                        </div>
+
+                        <!-- Instagram (same function as Facebook/Meta) -->
+                        <div class="platform-option" onclick="linkAccount('meta')">
+                            <div class="platform-icon instagram">
+                                <i class="fab fa-instagram"></i>
+                            </div>
+                            <span>Instagram</span>
+                        </div>
+                                             
+
+                        <!-- Google -->
+                        <div class="platform-option" onclick="linkAccount('google')">
+                            <div class="platform-icon google">
+                                <i class="fab fa-google"></i>
+                            </div>
+                            <span>Google</span>
+                        </div>
+                                                
+                        <!-- Telegram -->
+                        <div class="platform-option coming-soon">
+                            <div class="platform-icon telegram">
+                                <i class="fab fa-telegram"></i>
+                            </div>
+                            <span>Telegram</span>
+                            <small>Coming Soon</small>
+                        </div>
+                        
+                        <!-- Snapchat -->
+                        <div class="platform-option coming-soon">
+                            <div class="platform-icon snapchat">
+                                <i class="fab fa-snapchat-ghost"></i>
+                            </div>
+                            <span>Snapchat</span>
+                            <small>Coming Soon</small>
+                        </div>
+                        
+                        <!-- Twitter / X -->
+                        <div class="platform-option coming-soon">
+                            <div class="platform-icon x">
+                                <i class="fa-brands fa-x-twitter"></i>
+                            </div>
+                            <span>X</span>
+                            <small>Coming Soon</small>
+                        </div>
+
+                        <!-- TikTok -->
+                        <div class="platform-option coming-soon">
+                            <div class="platform-icon tiktok">
+                                <i class="fab fa-tiktok"></i>
+                            </div>
+                            <span>TikTok</span>
+                            <small>Coming Soon</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notification System -->
+            <div id="notification-center"></div>
+
+            <!-- Subscription Status -->
+            <div class="settings-section">
+                <div class="subscription-status">
+                    <div>
+                        <h2>Current Plan: <span class="plan-name">{{ user.plan|capitalize }}</span>
+                            {% if not user.is_subscription_active and user.plan != 'free' %}
+                                <span class="status-canceled">(Canceled)</span>
+                            {% endif %}
+                        </h2>
+                        <p>
+                            Status: 
+                            <span class="{% if user.is_subscription_active %}status-active{% else %}status-inactive{% endif %}">
+                                {% if user.is_subscription_active %}Active{% else %}Inactive{% endif %}
+                            </span>
+                        </p>
+                    </div>
+                    {% if user.is_subscription_active %}
+                        <button id="open-cancel-modal" class="btn-danger">
+                            <i class="fas fa-times-circle"></i> Cancel Subscription
+                        </button>
+                    {% endif %}
+                </div>
+
+                {% if pending_subscription.plan %}
+                <div class="pending-subscription">
+                    <h3><i class="fas fa-clock"></i> Pending Plan Change</h3>
+                    <p>Your plan will change to <strong>{{ pending_subscription.plan|capitalize }}</strong> 
+                    on {{ pending_subscription.start_date }}</p>
+                </div>
+                {% endif %}
+                <div class="plan-details">
+                    <div class="plan-detail-card">
+                        <h3>Plan Details</h3>
+                        <p><strong>Current Plan:</strong> {{ user.plan|capitalize }}
+                            {% if not user.is_subscription_active and user.plan != 'free' %}
+                                <span class="status-canceled">(Canceled)</span>
+                            {% endif %}
+                        </p>
+                        {% if current_subscription.plan %}
+                            <p><strong>Start Date:</strong> {{ current_subscription.start_date }}</p>
+                            <p><strong>End Date:</strong> {{ current_subscription.end_date }}</p>
+                            {% if user.is_subscription_active %}
+                                <p><strong>Next Payment:</strong> {{ user.next_payment_date.strftime('%Y-%m-%d') if user.next_payment_date else 'N/A' }}</p>
+                            {% endif %}
+                        {% else %}
+                            <p>Free plan - no subscription</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="plan-detail-card">
+                        <h3>Payment Method</h3>
+                        {% if user.payment_method %}
+                            <div class="payment-method">
+                                <span>{{ user.payment_method }}</span>
+                                <button id="remove-payment-method" class="btn-danger">
+                                    <i class="fas fa-trash-alt"></i> Remove
+                                </button>
+                            </div>
+                        {% else %}
+                            <p>No payment method on file</p>
+                            <button id="open-payment-modal" class="btn-primary">
+                                <i class="fas fa-credit-card"></i> Add Payment Method
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Plan Change Form -->
+                <h2>Change Plan</h2>
+                <form id="plan-change-form" class="settings-form">
+                    <div class="form-group">
+                        <label for="new_plan">Select New Plan</label>
+                        <select id="new_plan" name="new_plan" required>
+                            <option value="free" {% if user.plan == 'free' %}selected{% endif %}>Free ($0/month)</option>
+                            <option value="plus" {% if user.plan == 'plus' %}selected{% endif %}>Plus ($50/month)</option>
+                            <option value="pro" {% if user.plan == 'pro' %}selected{% endif %}>Pro ($100/month)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-sync-alt"></i> Change Plan
+                    </button>
+                </form>
+            </div>
+
+            
+
+            <!-- Subscription History -->
+            <div class="settings-section subscription-history">
+                <h2><i class="fas fa-history"></i> Subscription History</h2>
+                {% if subscriptions %}
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Plan</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Canceled</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sub in subscriptions %}
+                                <tr>
+                                    <td>{{ sub.plan|capitalize }}</td>
+                                    <td>{{ sub.amount }} TND</td>
+                                    <td class="status-{{ sub.payment_status }}">
+                                        {{ sub.payment_status|capitalize }}
+                                    </td>
+                                    <td>{{ sub.start_date }}</td>
+                                    <td>{{ sub.end_date }}</td>
+                                    <td>{{ sub.canceled_at if sub.canceled_at else 'No' }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No subscription history found</p>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <!-- Payment Method Modal -->
+    <div class="modal" id="payment-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Add Payment Method</h2>
+            <form id="payment-form">
+                <div class="form-group">
+                    <label for="card-name">Name on Card</label>
+                    <input type="text" id="card-name" name="card_name" required placeholder="Full Name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="card-type">Card Type</label>
+                    <select id="card-type" name="card_type" required>
+                        <option value="">Select Card Type</option>
+                        <option value="visa">Visa</option>
+                        <option value="mastercard">Mastercard</option>
+                        <option value="amex">American Express</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="card-number">Card Number</label>
+                    <input type="text" id="card-number" name="card_number" required placeholder="1234 5678 9012 3456">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expiry-date">Expiry Date</label>
+                        <input type="text" id="expiry-date" name="expiry_date" required placeholder="MM/YY">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" name="cvv" required placeholder="123">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="postcode">Billing Postcode</label>
+                    <input type="text" id="postcode" name="postcode" required placeholder="Postal Code">
+                </div>
+                <br/>
+                <button type="submit" class="btn-primary">Save Payment Method</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Plan Change Confirmation Modal -->
+    <div class="modal" id="plan-change-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Plan Change Confirmation</h2>
+            <div id="plan-change-message"></div>
+            <div class="form-row" style="justify-content: flex-end; margin-top: 1rem;">
+                <button id="confirm-plan-change" class="btn-primary">Confirm</button>
+                <button id="cancel-plan-change" class="btn-secondary" style="margin-left: 0.5rem;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Subscription Modal -->
+    <div class="modal" id="cancel-subscription-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Cancel Subscription</h2>
+            <div id="cancel-subscription-message">
+                <p>By canceling your subscription, you will lose all premium features on your plan's end date (<span id="subscription-end-date"></span>).</p>
+                <p>To keep the premium features, you'll need to resubscribe before that date.</p>
+                <p>Are you sure you want to cancel?</p>
+            </div>
+            <div class="form-row" style="justify-content: flex-end; margin-top: 1rem;">
+                <button id="confirm-cancel-subscription" class="btn-danger">Yes, Cancel</button>
+                <button id="cancel-cancel-subscription" class="btn-secondary" style="margin-left: 0.5rem;">No, Keep Subscription</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/static/js/UserSettings.js"></script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Notification system
+            function showNotification(message, type = 'success') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+
+            // Check for upcoming expiration notification
+            {% if user.plan != 'free' and user.plan_expires_at %}
+                const expiresAt = new Date("{{ user.plan_expires_at.strftime('%Y-%m-%d') }}");
+                const today = new Date();
+                const daysLeft = Math.floor((expiresAt - today) / (1000 * 60 * 60 * 24));
+                
+                if (daysLeft <= 7 && daysLeft >= 0) {
+                    showNotification(
+                        `Your ${'{{ user.plan }}'} plan expires in ${daysLeft} day${daysLeft !== 1 ? 's' : ''}. Renew to keep premium features.`,
+                        'warning'
+                    );
+                }
+            {% endif %}
+
+            // Modal elements
+            const paymentModal = document.getElementById('payment-modal');
+            const planChangeModal = document.getElementById('plan-change-modal');
+            const cancelSubscriptionModal = document.getElementById('cancel-subscription-modal');
+            const openPaymentModal = document.getElementById('open-payment-modal');
+            const closeModals = document.querySelectorAll('.close-modal');
+            
+            // Open payment modal
+            if (openPaymentModal) {
+                openPaymentModal.addEventListener('click', function() {
+                    paymentModal.style.display = 'flex';
+                });
+            }
+            
+            // Close modals
+            closeModals.forEach(closeBtn => {
+                closeBtn.addEventListener('click', function() {
+                    paymentModal.style.display = 'none';
+                    planChangeModal.style.display = 'none';
+                    cancelSubscriptionModal.style.display = 'none';
+                });
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === paymentModal) {
+                    paymentModal.style.display = 'none';
+                }
+                if (event.target === planChangeModal) {
+                    planChangeModal.style.display = 'none';
+                }
+                if (event.target === cancelSubscriptionModal) {
+                    cancelSubscriptionModal.style.display = 'none';
+                }
+            });
+            
+            // Payment form submission
+            const paymentForm = document.getElementById('payment-form');
+            if (paymentForm) {
+                paymentForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(paymentForm);
+                    const data = Object.fromEntries(formData.entries());
+                    
+                    fetch('/update_payment_method', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams(data).toString()
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            showNotification(data.message, 'success');
+                            paymentModal.style.display = 'none';
+                            setTimeout(() => location.reload(), 1000);
+                        } else {
+                            showNotification(data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        showNotification('An error occurred', 'error');
+                    });
+                });
+            }
+            
+            // Remove payment method
+            const removePaymentMethodBtn = document.getElementById('remove-payment-method');
+            if (removePaymentMethodBtn) {
+                removePaymentMethodBtn.addEventListener('click', function() {
+                    fetch('/remove_payment_method', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            showNotification(data.message, 'success');
+                            setTimeout(() => location.reload(), 1000);
+                        } else {
+                            showNotification(data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        showNotification('An error occurred', 'error');
+                    });
+                });
+            }
+            
+            // Cancel subscription
+            const openCancelModal = document.getElementById('open-cancel-modal');
+            if (openCancelModal) {
+                openCancelModal.addEventListener('click', function() {
+                    // Get the subscription end date
+                    {% for sub in subscriptions %}
+                        {% if sub.payment_status == 'paid' and not sub.canceled_at %}
+                            document.getElementById('subscription-end-date').textContent = '{{ sub.end_date }}';
+                        {% endif %}
+                    {% endfor %}
+                    
+                    cancelSubscriptionModal.style.display = 'flex';
+                });
+            }
+            
+            const confirmCancelSubscription = document.getElementById('confirm-cancel-subscription');
+            if (confirmCancelSubscription) {
+                confirmCancelSubscription.addEventListener('click', function() {
+                    fetch('/cancel_subscription', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            showNotification(data.message, 'success');
+                            cancelSubscriptionModal.style.display = 'none';
+                            setTimeout(() => location.reload(), 1000);
+                        } else {
+                            showNotification(data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        showNotification('An error occurred', 'error');
+                    });
+                });
+            }
+            
+            const cancelCancelSubscription = document.getElementById('cancel-cancel-subscription');
+            if (cancelCancelSubscription) {
+                cancelCancelSubscription.addEventListener('click', function() {
+                    cancelSubscriptionModal.style.display = 'none';
+                });
+            }
+            
+            // Plan change form
+            const planForm = document.getElementById('plan-change-form');
+            if (planForm) {
+                planForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const currentPlan = '{{ user.plan }}';
+                    const newPlan = document.getElementById('new_plan').value;
+                    const isActive = {{ 'true' if user.is_subscription_active else 'false' }};
+                    const expiresAt = '{{ user.plan_expires_at.strftime("%Y-%m-%d") if user.plan_expires_at else "" }}';
+                    const hasPaymentMethod = {{ 'true' if user.payment_method else 'false' }};
+                    
+                    // Check if payment method is required but missing
+                    if (newPlan !== 'free' && !hasPaymentMethod) {
+                        document.getElementById('plan-change-message').innerHTML = `
+                            <p>You need to add a payment method before changing to a paid plan.</p>
+                        `;
+                        planChangeModal.style.display = 'flex';
+                        
+                        // Confirm button will open payment modal
+                        document.getElementById('confirm-plan-change').textContent = 'Add Payment Method';
+                        document.getElementById('confirm-plan-change').onclick = function() {
+                            planChangeModal.style.display = 'none';
+                            paymentModal.style.display = 'flex';
+                        };
+                        
+                        // Cancel button
+                        document.getElementById('cancel-plan-change').onclick = function() {
+                            planChangeModal.style.display = 'none';
+                        };
+                        
+                        return;
+                    }
+                    
+                    let message = '';
+                    
+                    if (newPlan === 'free') {
+                        message = `You're downgrading to the Free plan. All premium features will be disabled on ${expiresAt}.`;
+                    } else if (!isActive || currentPlan === 'free') {
+                        message = `You're subscribing to the ${newPlan} plan. Your payment will be processed immediately.`;
+                    } else {
+                        message = `You're changing to the ${newPlan} plan. The change will take effect on your current plan's end date (${expiresAt}).`;
+                    }
+                    
+                    document.getElementById('plan-change-message').innerHTML = `
+                        <p>${message}</p>
+                        <p>Are you sure you want to proceed?</p>
+                    `;
+                    
+                    // Reset confirm button
+                    document.getElementById('confirm-plan-change').textContent = 'Confirm';
+                    
+                    planChangeModal.style.display = 'flex';
+                    
+                    // Confirm button
+                    document.getElementById('confirm-plan-change').onclick = function() {
+                        const formData = new FormData(planForm);
+                        const data = Object.fromEntries(formData.entries());
+                        
+                        fetch('/change_plan', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams(data).toString()
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                showNotification(data.message, 'success');
+                                planChangeModal.style.display = 'none';
+                                setTimeout(() => location.reload(), 1000);
+                            } else {
+                                showNotification(data.message, 'error');
+                            }
+                        })
+                        .catch(error => {
+                            showNotification('An error occurred', 'error');
+                        });
+                    };
+                    
+                    // Cancel button
+                    document.getElementById('cancel-plan-change').onclick = function() {
+                        planChangeModal.style.display = 'none';
+                    };
+                });
+            }
+            
+        // Profile form submission
+        const profileForm = document.getElementById('profile-form');
+        if (profileForm) {
+            profileForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(profileForm);
+                const data = Object.fromEntries(formData.entries());
+                
+                fetch('/update_profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(data).toString()
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        showNotification(data.message, 'success');
+                        // Simply reload the page to get fresh data
+                        setTimeout(() => location.reload(), 1000);
+                    } else {
+                        showNotification(data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    showNotification('An error occurred', 'error');
+                });
+            });
+        }
+            
+            // Card number formatting
+            const cardNumberInput = document.getElementById('card-number');
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\s+/g, '');
+                    if (value.length > 0) {
+                        value = value.match(new RegExp('.{1,4}', 'g')).join(' ');
+                    }
+                    e.target.value = value;
+                });
+            }
+            
+            // Expiry date formatting
+            const expiryInput = document.getElementById('expiry-date');
+            if (expiryInput) {
+                expiryInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 2) {
+                        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                    }
+                    e.target.value = value;
+                });
+            }
+        });
+    </script>
+
+<!-- This is for strategy gen bg event & notif -->
+<link rel="stylesheet" href="/static/css/Strategy_generation_notif.css">
+<script src="/static/js/Generating_strategy_utils.js"></script>
+<!-- This is for strategy gen bg event & notif -->
+
+</body>
+</html>

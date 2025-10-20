@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Choose Your Plan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/static/imgs/icons/fav-icon-nobg.png">
+    <link rel="preload" href="/static/imgs/Bg2.jpg" as="image" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/css/plans.css"/>
+</head>
+<body>
+    <header>
+       <!-- <a href="/" class="logo">CHAHBANDER</a>-->
+              <a href="/" class="logo">
+        <img src="static/imgs/logo/logo.png" alt="Chahbander" class="logo-img">
+    </a>
+        <div class="menu-toggle" id="menu-toggle">
+            <div class="hamburger"></div>
+        </div>
+        <div class="nav-container" id="nav-container">
+            <div class="nav-center">
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="/#about">About</a></li>
+                    <li><a href="/#features">Features</a></li>
+                    <li><a href="/#why">Why Chahbander?</a></li>
+                    <li><a href="/#clients">Clients</a></li>
+                </ul>
+            </div>
+            <div class="auth-buttons">
+                <a href="/login" class="btn btn-login">Login</a>
+                <a href="/signup_page" class="btn btn-signup active">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="plans-container">
+        <div class="plans-header">
+            <h1>Choose Your Plan</h1>
+            <p>Select the plan that fits your needs</p>
+        </div>
+        
+        <div class="plans-grid">
+            <!-- Free Plan -->
+            <div class="plan-card free-plan">
+                <h3>Free</h3>
+                <div class="price">0.00 TND<span>/month</span></div>
+                <ul class="features">
+                    <li><i class="fas fa-check"></i> 1 Strategy Limit</li>
+                    <li><i class="fas fa-check"></i> 1 Image Generation</li>
+                    <li><i class="fas fa-check"></i> Limited AI Model</li>
+                    <li><i class="fas fa-check"></i> Basic Support</li>
+                </ul>
+                <form action="/process_plan" method="post">
+                    <input type="hidden" name="plan" value="free">
+                    <button type="submit" class="btn-select">Select Free</button>
+                </form>
+            </div>
+            
+            <!-- Chahbander+ Plan -->
+            <div class="plan-card plus-plan">
+                <div class="popular-badge">Most Popular</div>
+                <h3>Chahbander+</h3>
+                <div class="price">50 TND<span>/month</span></div>
+                <ul class="features">
+                    <li><i class="fas fa-check"></i> 5 Strategies</li>
+                    <li><i class="fas fa-check"></i> 10 Image Generations</li>
+                    <li><i class="fas fa-check"></i> Advanced AI Model</li>
+                    <li><i class="fas fa-check"></i> Priority Support</li>
+                    <li><i class="fas fa-check"></i> API Access</li>
+                </ul>
+                <button type="button" class="btn-select" id="open-plus-modal">Select Chahbander+</button>
+            </div>
+            
+            <!-- Pro Plan -->
+            <div class="plan-card pro-plan">
+                <h3>Pro</h3>
+                <div class="price">100 TND<span>/month</span></div>
+                <ul class="features">
+                    <li><i class="fas fa-check"></i> Unlimited Strategies</li>
+                    <li><i class="fas fa-check"></i> Unlimited Image Generations</li>
+                    <li><i class="fas fa-check"></i> Premium AI Model</li>
+                    <li><i class="fas fa-check"></i> 24/7 Support</li>
+                    <li><i class="fas fa-check"></i> Full API Access</li>
+                    <li><i class="fas fa-check"></i> Dedicated Account Manager</li>
+                </ul>
+                <button type="button" class="btn-select" id="open-pro-modal">Select Pro</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Payment Modal -->
+    <div class="payment-modal" id="payment-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Payment Information</h2>
+            <form id="payment-form" action="/process_plan" method="post">
+                <input type="hidden" name="plan" id="selected-plan" value="">
+                
+                <div class="form-group">
+                    <label for="card-name">Name on Card</label>
+                    <input type="text" id="card-name" name="card_name" required placeholder="Full Name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="card-type">Card Type</label>
+                    <select id="card-type" name="card_type" required>
+                        <option value="">Select Card Type</option>
+                        <option value="visa">Visa</option>
+                        <option value="mastercard">Mastercard</option>
+                        <option value="amex">American Express</option>
+                    </select>
+                </div>
+
+
+                <input type="hidden" name="card_type" id="card-type-hidden" value="">
+                <input type="hidden" name="card_number" id="card-number-hidden" value="">
+
+                
+                <div class="form-group">
+                    <label for="card-number">Card Number</label>
+                    <input type="text" id="card-number" name="card_number" required placeholder="1234 5678 9012 3456">
+                    <div class="error-message" id="card-number-error"></div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expiry-date">Expiry Date</label>
+                        <input type="text" id="expiry-date" name="expiry_date" required placeholder="MM/YY">
+                        <div class="error-message" id="expiry-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" name="cvv" required placeholder="123">
+                        <div class="error-message" id="cvv-error"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="postcode">Billing Postcode</label>
+                    <input type="text" id="postcode" name="postcode" required placeholder="Postal Code">
+                </div>
+                
+                <div class="payment-info">
+                    <p>You'll pay <span id="payment-amount">50 TND</span> monthly on the <span id="payment-date">next billing date</span>.</p>
+                </div>
+                
+                <button type="submit" class="btn-subscribe">Subscribe</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/Plans.js"> </script>
+</body>
+</html>

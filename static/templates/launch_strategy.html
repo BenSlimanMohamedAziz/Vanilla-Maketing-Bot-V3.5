@@ -1,0 +1,4245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Launch Strategy - {{ strategy.company_name }}</title>
+    <link rel="icon" type="image/x-icon" href="/static/imgs/icons/fav-icon-nobg.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/Strategy.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/LaunchStrategy.css" />
+
+</head>
+<body>
+ <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <button class="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="/" target="_blank" class="logo">
+                    <img src="/static/imgs/logo/logo.png" alt="Chahbander" class="logo-img">
+                </a>
+            </div>
+            <div class="nav-right">
+                <a href="/home" class="home-icon" title="Home" target="_blank">
+                    <i class="fas fa-home"></i>
+                </a>
+                
+                <div class="notification-bell-container">
+                    <div class="notification-bell" id="notificationBell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count" id="notificationCount">0</span>
+                    </div>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="dropdown-header">
+                            <h4>Pending Posts</h4>
+                        </div>
+                        <div class="dropdown-content" id="storedNotifications">
+                            <div class="empty-notifications">No pending posts</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-menu">
+                    <div class="user-avatar" data-name="{{ user.full_name }}" id="userAvatar" title="{{ user.full_name }}">
+                        {{ user.full_name[0] }}
+                    </div>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="/home" class="dropdown-item">
+                            <i class="fas fa-user"></i> {{ user.full_name }}
+                        </a>
+                        <a href="/user_settings" class="dropdown-item">
+                            <i class="fas fa-cog"></i> User Settings
+                        </a>
+                        <a href="/logout" class="dropdown-item logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+    <div class="sidebar-menu">
+        <button class="sidebar-btn active" data-section="dashboard">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </button>
+         <button class="sidebar-btn" data-section="calendar">
+            <i class="fas fa-calendar"></i>
+            <span>Calendar</span>
+        </button>
+
+        <button class="sidebar-btn" data-section="influencers">
+            <i class="fas fa-users"></i>
+            <span>Influencers</span>
+        </button>
+
+        <button class="sidebar-btn" data-section="content">
+            <i class="fas fa-tasks"></i>
+            <span>Content Management</span>
+        </button>
+  
+        <button class="sidebar-btn" data-section="recommendations">
+            <i class="fas fa-lightbulb"></i>
+            <span>Tips & Advice</span>
+        </button>
+    </div>
+</div>
+
+
+<!-- Main Content Wrapper -->
+<div class="main-content-wrapper">
+
+<!-- Content modal approval -->
+<div id="approvalModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">Post Approval</h2>
+        <div class="post-meta">
+            <span id="postPlatform"></span>
+            <span id="postTime"></span>
+            <span id="postStatus"></span>
+            <span id="postCounter" class="post-counter"></span>
+        </div>
+        <div id="modalContent">
+            <!-- Content will be loaded here -->
+        </div>
+        <div class="modal-actions">
+            <button id="backBtn" class="btn-back" style="display: none;">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button id="approveBtn" class="btn-approve">
+                <i class="fas fa-check"></i> Approve
+            </button>
+            <button id="rejectBtn" class="btn-reject">
+                <i class="fas fa-times"></i> Reject
+            </button>
+            <button id="regenerateBtn" class="btn-regenerate">
+                <i class="fas fa-sync-alt"></i> Regenerate
+            </button>
+            <button id="nextBtn" class="btn-next" disabled>
+                <i class="fas fa-arrow-right"></i> Next
+            </button>
+        </div>
+    </div>
+</div>
+
+ <!-- Modal for content mgmnt--> <!-- Modal for content mgmnt--> <!-- Modal for content mgmnt-->
+<!-- Content Editor Modal -->
+<div id="contentEditorModal" class="modal-mgmt">
+    <div class="modal-content-mgmt" style="max-width: 700px;">
+        <span class="close_mgmt">&times;</span>
+        <h2 id="contentModalTitle">Add New Content</h2>
+        
+        <form id="contentForm">
+            <input type="hidden" id="contentId">
+            
+            <div class="form-group">
+                <label for="contentPlatform">Platform</label>
+                <select id="contentPlatform" required>
+                    <option value="">Select Platform</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="LinkedIn">LinkedIn</option>
+                    <option value="TikTok">TikTok</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="contentType">Content Type</label>
+                <select id="contentType" required>
+                    <option value="">Select Type</option>
+                    <!-- Options will be populated based on platform -->
+                </select>
+            </div>
+            
+            <!-- Status Field (shown only when editing) -->
+            <div id="statusField" class="form-group" style="display: none;">
+                <label for="contentStatus">Status</label>
+                <select id="contentStatus">
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="posted">Posted</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+            </div>
+            
+            <!-- Text Content Fields (shown only for text posts) -->
+            <div id="textContentFields" class="form-group" style="display: none;">
+                <label for="contentCaption">What's New?</label>
+                <textarea id="contentCaption" rows="3"></textarea>
+            </div>
+            
+            <!-- Regular Caption & Hashtags (shown for non-text, non-story posts) -->
+            <div id="regularCaptionFields" class="form-group" style="display: none;">
+                <label for="regularCaption">Caption</label>
+                <textarea id="regularCaption" rows="3"></textarea>
+                
+                <label for="contentHashtags">Hashtags (Type and press Enter/Space to add)</label>
+                <div class="hashtags-input-container">
+                    <input type="text" id="contentHashtags" placeholder="Type hashtags without # and press Enter/Space">
+                    <div id="hashtagsPreview" class="hashtags-preview"></div>
+                </div>
+            </div>
+            
+            <!-- Media Upload Section (shown for non-text posts) -->
+            <div id="mediaUploadSection" class="form-group" style="display: none;">
+                <label>Media</label>
+                <div class="media-upload">
+                    <label class="btn-upload">
+                        <i class="fas fa-cloud-upload-alt"></i> Upload Media
+                        <input type="file" id="contentMedia" accept="image/*,video/*" style="display: none;">
+                    </label>
+                    <span id="mediaFileName">No file selected</span>
+                    <div id="mediaPreview" class="media-preview"></div>
+                </div>
+            </div>
+            
+            <!-- Scheduled Time -->
+            <div class="form-group">
+                <label for="contentScheduled">Scheduled Time</label>
+                <div class="datetime-picker">
+                    <input type="text" id="contentScheduledDate" placeholder="Select date" readonly>
+                    <select id="contentScheduledTime">
+                        <option value="">Select time</option>
+                        <!-- Times will be populated by JavaScript -->
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" id="cancelContentBtn" class="btn-cancel">Cancel</button>
+                <button type="submit" id="saveContentBtn" class="btn-save">Save Content</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Simple View Modal -->
+<div id="viewModal" class="modal-mgmt">
+    <div class="modal-content-mgmt" style="max-width: 600px;">
+        <span class="close">&times;</span>
+        <h3>Content Preview</h3>
+        
+        <div class="content-preview">
+            <div class="preview-header">
+                <span id="previewPlatform" class="platform-tag"></span>
+                <span id="previewType" class="type-tag"></span>
+            </div>
+            
+            <div class="preview-content">
+                <h4>Content:</h4>
+                <div id="previewText">
+                    <!-- Combined caption + hashtags will go here -->
+                </div>
+            </div>
+            
+            <div class="preview-media">
+                <h4>Media:</h4>
+                <div id="previewMedia">
+                    <!-- Media will go here -->
+                </div>
+            </div>
+            
+            <div class="preview-meta">
+                <small>Scheduled: <span id="previewSchedule">Not scheduled</span></small>
+                <small>&nbsp; - Status: <span id="previewStatus">Pending</span></small>
+            </div>
+        </div>
+    </div>
+</div>
+ <!-- Modal for content mgmnt--> <!-- Modal for content mgmnt--> <!-- Modal for content mgmnt-->
+
+ <!-- Email Editor Modal -->
+<div id="emailEditorModal" class="modal-mail">
+    <div class="modal-content-mail" style="max-width: 700px;">
+        <span class="close_mgmt" id="closeEmailModal">&times;</span>
+        <h2 id="emailModalTitle">Edit Email Content</h2>
+        
+        <div class="email-editor-container">
+            <div class="form-group">
+                <label for="influencerName">Influencer</label>
+                <input type="text" id="influencerName" readonly class="readonly-input">
+            </div>
+            
+            <div class="form-group">
+                <label for="influencerEmail">Email Address</label>
+                <input type="email" id="influencerEmail" readonly class="readonly-input">
+            </div>
+            
+            <div class="form-group">
+                <label for="emailContent">Email Content</label>
+                <textarea id="emailContent" rows="12" placeholder="Write your email content here..."></textarea>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" id="cancelEmailBtn" class="btn-cancel">Cancel</button>
+                <button type="button" id="saveEmailBtn" class="btn-save">Save Email</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Email Editor Modal -->
+
+      <div class="launch-container">
+
+        <!-- Events Calendar Section -->
+        <div id="calendar-section" class="content-section">
+
+            <section class="events-calendar-section">
+                <h2><i class="fas fa-calendar-alt"></i> Upcoming Events Calendar</h2>
+                <div class="calendar-container">
+                    <div id="calendar-view">
+                        <div class="calendar-header">
+                            <button id="prev-month" class="calendar-nav"><i class="fa-solid fa-chevron-left"></i></button>
+                            <h3 id="current-month"></h3>
+                            <button id="next-month" class="calendar-nav"><i class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                        <div class="calendar-grid" id="calendar-grid"></div>
+                    </div>
+                    <div class="events-list" id="events-list">
+                        <h4>Upcoming Events</h4>
+                        <div id="upcoming-events-container"></div> <br>
+                    </div>
+                </div>
+            </section>
+
+        <!-- Marketing Blueprint Section -->
+        <section class="blueprint-section">
+            <h2><i class="fas fa-project-diagram"></i> Marketing Blueprint Timeline</h2>
+            <div class="blueprint-table-container">
+                <table class="blueprint-table">
+                    <thead>
+                        <tr>
+                            <th>Dates</th>
+                            <th>Campaign Theme</th>
+                            <th>Key Actions</th>
+                            <th>Platforms</th>
+                            <th>Targets</th>
+                        </tr>
+                    </thead>
+                    <tbody id="blueprint-content"></tbody>
+                </table>
+            </div>
+        </section>
+        </div>
+        
+
+        <!-- Media Platforms Insights -->
+        <!-- Analytics Toggle Menu -->
+         <div id="dashboard-section" class="content-section active">
+
+        <div class="analytics-header">
+            <h2><i class="fas fa-chart-network"></i> Social Media Analytics</h2>
+            <div class="platform-toggle">
+                <button class="toggle-btn active" data-platform="facebook">
+                    <i class="fab fa-facebook"></i> Facebook
+                </button>
+                <button class="toggle-btn" data-platform="instagram">
+                    <i class="fab fa-instagram"></i> Instagram
+                </button>
+                        
+                <!-- Add this to your platform toggle buttons -->
+                <button class="toggle-btn" data-platform="linkedin">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </button>
+            </div>
+        </div>
+
+        <!-- Analytics Dashboard -->
+        <div class="analytics-dashboard">
+            <!-- Facebook Analytics -->
+        <div class="platform-analytics active" id="facebook-analytics">
+            <div class="facebook-controls">
+                <div class="period-selector">
+                    <label for="facebook-period">Analytics Period:</label>
+                    <select id="facebook-period">
+                        <option value="7">Last 7 days</option>
+                        <option value="14">Last 14 days</option>
+                        <option value="30" selected>Last 30 days</option>
+                        <option value="60">Last 60 days</option>
+                        <option value="90">Last 90 days</option>
+                    </select>
+                    <button id="refresh-facebook" class="refresh-btn-fb">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="analytics-summary">
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3 id="fb-total-fans">--</h3>
+                        <p>Total Fans</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3 id="fb-total-impressions">--</h3>
+                        <p>Impressions (<span id="fb-period-days">30</span>d)</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-chart-area"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3 id="fb-total-engagement">--</h3>
+                        <p>Engagement (<span id="fb-engagement-days">30</span>d)</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3 id="fb-growth-rate">--%</h3>
+                        <p>Growth Rate</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analytics-charts">
+                <div class="chart-container">
+                    <h3>Page Fans Growth</h3>
+                    <canvas id="fb-fans-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Impressions vs Engagement</h3>
+                    <canvas id="fb-engagement-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Reach & Views</h3>
+                    <canvas id="fb-reach-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+            <!-- Instagram Analytics -->
+            <div class="platform-analytics" id="instagram-analytics">
+                <div class="instagram-controls">
+                    <div class="period-selector">
+                        <label for="instagram-period">Analytics Period:</label>
+                        <select id="instagram-period">
+                            <option value="7">Last 7 days</option>
+                            <option value="14" selected>Last 14 days</option>
+                            <option value="30">Last 30 days</option>
+                            <option value="60" hidden>Last 60 days</option>
+                            <option value="90" hidden>Last 90 days</option>
+                        </select>
+                        <button id="refresh-instagram" class="refresh-btn">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="analytics-summary">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ig-total-followers">--</h3>
+                            <p>Total Followers</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ig-total-views">--</h3>
+                            <p>Total Views</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-chart-area"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ig-accounts-reached">--</h3>
+                            <p>Accounts Reached</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ig-growth-rate">--%</h3>
+                            <p>Growth Rate</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="instagram-insights">
+                    <div class="insight-card">
+                        <h4><i class="fas fa-user-circle"></i> Profile Activity</h4>
+                        <div class="insight-stat">
+                            <span class="stat-number" id="ig-profile-views">--</span>
+                            <span class="stat-label">Profile Views</span>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <h4><i class="fas fa-chart-pie"></i> Content Breakdown</h4>
+                        <div class="content-stats">
+                            <div class="content-stat">
+                                <span class="content-percentage" id="ig-stories-percent">--</span>
+                                <span class="content-label">Stories</span>
+                            </div>
+                            <div class="content-stat">
+                                <span class="content-percentage" id="ig-posts-percent">--</span>
+                                <span class="content-label">Posts</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-charts">
+                    <div class="chart-container">
+                        <h3>Followers Growth Trend</h3>
+                        <canvas id="ig-followers-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Views & Reach</h3>
+                        <canvas id="ig-views-reach-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Profile Activity</h3>
+                        <canvas id="ig-profile-activity-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+                <!-- Add this LinkedIn analytics section after Instagram section -->
+            <div class="platform-analytics" id="linkedin-analytics">
+                <div class="linkedin-controls">
+                    <div class="period-selector">
+                        <label for="linkedin-period">Analytics Period:</label>
+                        <select id="linkedin-period">
+                            <option value="7">Last 7 days</option>
+                            <option value="14">Last 14 days</option>
+                            <option value="30" selected>Last 30 days</option>
+                            <option value="60">Last 60 days</option>
+                            <option value="90">Last 90 days</option>
+                        </select>
+                        <button id="refresh-linkedin" class="refresh-btn-li">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="analytics-summary">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ln-connections">--</h3>
+                            <p>Total Connections</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ln-profile-views">--</h3>
+                            <p>Profile Views</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ln-post-impressions">--</h3>
+                            <p>Post Impressions</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-thumbs-up"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="ln-engagement-rate">--%</h3>
+                            <p>Engagement Rate</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="linkedin-insights">
+                    <div class="insight-card">
+                        <h4><i class="fas fa-chart-line"></i> Network Growth</h4>
+                        <div class="insight-stat">
+                            <span class="stat-number" id="ln-growth-rate">--</span>
+                            <span class="stat-label">Growth Rate</span>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <h4><i class="fas fa-industry"></i> Industry Breakdown</h4>
+                        <div class="content-stats">
+                            <div class="content-stat">
+                                <span class="content-percentage" id="ln-tech-percent">--</span>
+                                <span class="content-label">Tech</span>
+                            </div>
+                            <div class="content-stat">
+                                <span class="content-percentage" id="ln-finance-percent">--</span>
+                                <span class="content-label">Finance</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-charts">
+                    <div class="chart-container">
+                        <h3>Connections Growth</h3>
+                        <canvas id="ln-connections-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Profile Views & Impressions</h3>
+                        <canvas id="ln-views-impressions-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- add other platforms here -->
+
+        <!-- Chart.js CDN -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+        <script src="/static/js/Analytics-dashboard.js"></script>
+
+
+
+
+          <!-- Content Management Section -->
+<div id="content-section" class="content-section">  
+<section class="content-management-section">
+    <h2><i class="fas fa-tasks"></i> Content Management</h2>
+    
+    <div class="content-actions">
+        <button id="addContentBtn" class="btn-add">
+            <i class="fas fa-plus"></i> Add New Content
+        </button>
+        <div class="content-filter">
+            <select id="contentFilter">
+                <option value="all">All Content</option>
+                <option value="instagram">Instagram</option>
+                <option value="facebook">Facebook</option>
+                <option value="linkedin">LinkedIn</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="content-table-container">
+        <table class="content-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Platform</th>
+                    <th>Caption</th>
+                    <th>Media</th>
+                    <th>Scheduled</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="contentTableBody">
+                <!-- Content will be loaded here -->
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+<!-- Add this after the content-table-container div -->
+<div class="pagination-container">
+    <div class="pagination-info">
+        <span id="paginationInfo">Showing 1-5 of 10 items</span>
+    </div>
+    <div class="pagination-controls">
+        <button id="prevPageBtn" class="btn-pagination" disabled>
+            <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <div class="pagination-numbers" id="paginationNumbers">
+            <!-- Page numbers will be inserted here -->
+        </div>
+        <button id="nextPageBtn" class="btn-pagination">
+            Next <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+</div>
+ </div>
+
+
+
+        <!-- Influencers section -->
+       
+        <div id="influencers-section" class="content-section">
+            <section class="influencers-section">
+                <h2><i class="fas fa-users"></i>Influencers</h2>
+                
+                <!-- Add this button container right after the heading -->
+                <div class="email-controls" style="margin-bottom: 20px; display: flex; justify-content: flex-end;">
+                    <button id="resendEmailsBtn" class="btn-resend-emails">
+                        <i class="fas fa-paper-plane"></i> Resend All Emails
+                    </button>
+                </div>
+                
+                <div class="influencers-grid" id="influencers-container"></div>
+            </section>
+        </div>
+
+
+       <!-- Marketing Recommendations Section -->
+        <div id="recommendations-section" class="content-section">
+        <section class="recommendations-section">
+        <h2><i class="fas fa-lightbulb"></i> Marketing Guide, Tips & Advices</h2>
+        <div class="recommendations-grid">
+            <div class="recommendation-card growth-card">
+                <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Growth & Trends</h3>
+            </div>
+            <div class="recommendation-content" id="growth-content"></div>
+        </div>
+        
+        <div class="recommendation-card budget-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <h3>Budget & Metrics</h3>
+            </div>
+            <div class="recommendation-content" id="budget-content"></div>
+        </div>
+        
+        <div class="recommendation-card advantage-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h3>Competitive Edge</h3>
+            </div>
+            <div class="recommendation-content" id="advantage-content"></div>
+        </div>
+        
+        <div class="recommendation-card outreach-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Influencers & Events</h3>
+            </div>
+            <div class="recommendation-content" id="outreach-content"></div>
+        </div>
+        
+        <div class="recommendation-card content-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-ad"></i>
+                </div>
+                <h3>Content & Ads</h3>
+            </div>
+            <div class="recommendation-content" id="content-content"></div>
+        </div>
+    
+        </section>
+    </div>
+ </div>
+
+        <!-- Notifications -->
+        <div id="notificationContainer" class="notification-container"></div>
+
+        <!-- Notifications Sound -->
+        <audio id="notificationSound" preload="auto">
+            <source src="/static/audio/kevin_notif01.mp3" type="audio/mpeg">
+        </audio>
+
+        <audio id="notificationSuccessSound" preload="auto">
+            <source src="/static/audio/success_notif.wav" type="audio/wav">
+        </audio>
+
+        <!-- Add this HTML after your existing notification container -->
+        <div id="topNotificationContainer" class="top-notification-container"></div>
+
+        <div id="emailNotificationContainer" class="email-notification-container"></div>
+        
+
+<!-- Fullscreen Image Modal -->
+<div id="fullscreenModal" class="fullscreen-modal">
+    <span class="close-fullscreen">&times;</span>
+    <div class="fullscreen-content">
+        <img id="fullscreenImage" src="" alt="Fullscreen view">
+    </div>
+</div>
+
+
+
+<!--  /////////////////////////////////////////////  All Scripts & Functions /////////////////////////////////////////////   -->
+<!--  /////////////////////////////////////////////  All Scripts & Functions /////////////////////////////////////////////   -->
+<!--  /////////////////////////////////////////////  All Scripts & Functions /////////////////////////////////////////////   -->
+<!--  /////////////////////////////////////////////  All Scripts & Functions /////////////////////////////////////////////   -->
+<!--  /////////////////////////////////////////////  All Scripts & Functions /////////////////////////////////////////////   -->
+<!--  /////////////////////////////////////////////  All Scripts & Functions /////////////////////////////////////////////   -->
+<!--  /////////////////////////////////////////////  All Scripts & Functions /////////////////////////////////////////////   -->
+<!--  /////////////////////////////////////////////  All Scripts & Functions /////////////////////////////////////////////   -->
+
+<script>
+// Global variables
+let currentPosts = [];
+let currentPostIndex = 0;
+let backgroundInterval;
+let displayedNotifications = new Set();
+
+// ADD THIS NEW GLOBAL VARIABLE at the top with your existing globals:
+let currentModalPostKey = null;
+
+
+// Global notification variables
+let allNotifications = [];
+let pendingCount = 0;
+
+// Initialize notification bell
+document.addEventListener('DOMContentLoaded', function() {
+    const notificationBell = document.getElementById('notificationBell');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    
+    // Toggle dropdown
+    notificationBell.addEventListener('click', function(e) {
+        e.stopPropagation();
+        notificationDropdown.classList.toggle('show');
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+    if (!notificationDropdown.contains(e.target) && 
+        !notificationBell.contains(e.target) && 
+        notificationDropdown.classList.contains('show')) {
+        notificationDropdown.classList.remove('show');
+        }
+    });
+});
+
+// Store notification in dropdown
+function storeNotification(notification) {
+    const storedNotifications = document.getElementById('storedNotifications');
+    const emptyMessage = storedNotifications.querySelector('.empty-notifications');
+    
+    // Check if this notification already exists
+    const existingNotification = document.querySelector(`.stored-notification[data-post-id="${notification.postId}"]`);
+    if (existingNotification) {
+        return; // Don't add duplicates
+    }
+    
+    if (emptyMessage) {
+        emptyMessage.remove();
+    }
+    
+    // Create notification element
+    const notificationElement = document.createElement('div');
+    notificationElement.className = 'stored-notification';
+    notificationElement.setAttribute('data-post-id', notification.postId);
+    
+    const currentTime = new Date().toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    notificationElement.innerHTML = `
+        <div class="stored-notification-header">
+            <div class="stored-notification-title">${notification.platform} - ${notification.contentType}</div>
+            <div class="stored-notification-time">${currentTime}</div>
+        </div>
+        <div class="stored-notification-content">Scheduled for ${notification.scheduledTime}</div>
+        <div class="stored-notification-status ${notification.isPastDue ? 'past-due' : 'upcoming'}">
+            ${notification.isPastDue ? 'PAST DUE' : 'PENDING'}
+        </div>
+    `;
+    
+    // Add click handler to open modal
+    notificationElement.addEventListener('click', function() {
+        const postIndex = currentPosts.findIndex(post => post.id == notification.postId);
+        if (postIndex !== -1) {
+            openPostModal(postIndex);
+        }
+        notificationDropdown.classList.remove('show');
+    });
+    
+    // Add to top of the list
+    storedNotifications.insertBefore(notificationElement, storedNotifications.firstChild);
+    
+    // Track notification
+    allNotifications.push({
+        element: notificationElement,
+        postId: notification.postId,
+        status: 'pending'
+    });
+    
+    // Update pending count
+    if (notification.status === 'pending') {
+        pendingCount++;
+        updateNotificationCount();
+    }
+}
+
+// Update the close modal functionality in DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('approvalModal');
+    const closeBtn = document.querySelector('.close');
+    
+    closeBtn.onclick = function() {
+        // Show the notification back when modal is closed
+        if (currentModalPostKey) {
+            showNotificationByKey(currentModalPostKey);
+            currentModalPostKey = null;
+        }
+        modal.style.display = 'none';
+    };
+    
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            // Show the notification back when modal is closed by clicking outside
+            if (currentModalPostKey) {
+                showNotificationByKey(currentModalPostKey);
+                currentModalPostKey = null;
+            }
+            modal.style.display = 'none';
+        }
+    };
+    
+    // Set up button handlers
+    document.getElementById('approveBtn').onclick = approveCurrentPost;
+    document.getElementById('regenerateBtn').onclick = regenerateCurrentPost;
+    document.getElementById('nextBtn').onclick = nextCurrentPost;
+    document.getElementById('backBtn').onclick = prevCurrentPost;
+    document.getElementById('rejectBtn').onclick = rejectCurrentPost;
+    
+    // Start the scheduling system
+    initializeSchedulingSystem();
+});
+
+function initializeSchedulingSystem() {
+    checkForPosts();
+    backgroundInterval = setInterval(checkForPosts, 5550);
+    setInterval(checkApprovedPosts, 8150);
+}
+
+function playNotificationSound() {
+    const sound = document.getElementById('notificationSound');
+    if (sound) {
+        sound.currentTime = 0;
+        sound.play().catch(e => console.log("Audio play failed:", e));
+    }
+}
+
+// FIXED: Refresh posts data and adjust index when going back
+async function prevCurrentPost() {
+    if (currentPostIndex > 0) {
+        // Refresh posts data first
+        // ADD these lines at the beginning of your prevCurrentPost function:
+        if (currentModalPostKey) {
+            showNotificationByKey(currentModalPostKey);
+        }
+        await refreshPostsData();
+        
+        if (currentPostIndex > 0 && currentPostIndex < currentPosts.length) {
+            currentPostIndex--;
+            // ADD these lines when setting the new post (after currentPostIndex--):
+            const newPost = currentPosts[currentPostIndex];
+            currentModalPostKey = `${newPost.id}_${newPost.status}_${newPost.scheduled_time}`;
+            hideNotificationByKey(currentModalPostKey);
+            showPostForApproval(currentPosts[currentPostIndex]);
+        } else {
+            // If index is out of bounds, show first available post
+            currentPostIndex = 0;
+            if (currentPosts.length > 0) {
+                showPostForApproval(currentPosts[currentPostIndex]);
+            } else {
+                // No posts left, close modal
+                document.getElementById('approvalModal').style.display = 'none';
+            }
+        }
+    }
+}
+
+// NEW: Function to refresh posts data from server
+async function refreshPostsData() {
+    try {
+        const response = await fetch(`/get_todays_posts/{{ strategy.company_id }}`);
+        const data = await response.json();
+        
+        if (data.error) {
+            console.error('Error refreshing posts:', data.error);
+            return false;
+        }
+        
+        if (data.posts && data.posts.length > 0) {
+            currentPosts = data.posts;
+            
+            // Reset index if it's out of bounds
+            if (currentPostIndex >= currentPosts.length) {
+                currentPostIndex = Math.max(0, currentPosts.length - 1);
+            }
+            
+            showNotifications(data.posts);
+            return true;
+        } else {
+            currentPosts = [];
+            currentPostIndex = 0;
+            clearAllNotifications();
+            displayedNotifications.clear();
+            return false;
+        }
+    } catch (error) {
+        console.error('Error refreshing posts:', error);
+        return false;
+    }
+}
+
+async function checkForPosts() {
+    try {
+        const response = await fetch(`/get_todays_posts/{{ strategy.company_id }}`);
+        const data = await response.json();
+        
+        if (data.error) {
+            console.error('Error fetching posts:', data.error);
+            return;
+        }
+        
+        if (data.posts && data.posts.length > 0) {
+            currentPosts = data.posts;
+            showNotifications(data.posts);
+        } else {
+            currentPosts = [];
+            clearAllNotifications();
+            displayedNotifications.clear();
+        }
+    } catch (error) {
+        console.error('Error checking for posts:', error);
+    }
+}
+
+// Modified showNotifications function
+function showNotifications(posts) {
+    const container = document.getElementById('notificationContainer');
+    if (!container) return;
+    
+    posts.forEach((post, index) => {
+        const postKey = `${post.id}_${post.status}_${post.scheduled_time}`;
+        
+        if (!displayedNotifications.has(postKey)) {
+            // Create temporary notification
+            const notification = createNotification(post, index);
+            
+            if (container.firstChild) {
+                container.insertBefore(notification, container.firstChild);
+            } else {
+                container.appendChild(notification);
+            }
+            playNotificationSound();
+            // Store notification in dropdown
+            storeNotification({
+                id: Date.now() + index,
+                postId: post.id,
+                platform: post.platform,
+                contentType: post.content_type,
+                scheduledTime: post.scheduled_time,
+                isPastDue: post.is_past_due,
+                status: 'pending'
+            });
+            
+            displayedNotifications.add(postKey);
+            
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                notification.classList.add('hide');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 10000);
+        }
+    });
+    
+    // Clean up old notifications
+    const currentPostKeys = new Set(posts.map(post => 
+        `${post.id}_${post.status}_${post.scheduled_time}`
+    ));
+    
+    Array.from(displayedNotifications).forEach(postKey => {
+        if (!currentPostKeys.has(postKey)) {
+            const notificationToRemove = container.querySelector(`[data-post-key="${postKey}"]`);
+            if (notificationToRemove) {
+                notificationToRemove.remove();
+            }
+            displayedNotifications.delete(postKey);
+        }
+    });
+}
+// Call these when posts are approved/rejected
+function onPostApproved(postId) {
+    updateNotificationStatus(postId, 'approved');
+}
+
+function onPostRejected(postId) {
+    updateNotificationStatus(postId, 'rejected');
+}
+
+async function rejectCurrentPost() {
+    // safety check at the beginning
+    if (!currentPosts.length || currentPostIndex >= currentPosts.length) {
+        console.error('No current post available for rejection');
+        showErrorMessage('No post available for rejection');
+        return;
+    }
+
+    const currentPost = currentPosts[currentPostIndex];
+    
+    // Additional check
+    if (!currentPost || !currentPost.id) {
+        console.error('Invalid current post data');
+        showErrorMessage('Invalid post data');
+        return;
+    }
+
+    const rejectBtn = document.getElementById('rejectBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const regenerateBtn = document.getElementById('regenerateBtn');
+    const approveBtn = document.getElementById('approveBtn');
+    const uploadBtn = document.getElementById('btn-upload');
+
+    rejectBtn.disabled = true;
+    rejectBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Rejecting...';
+    
+    try {
+        const response = await fetch(`/reject_post/${currentPost.id}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to reject post');
+        }
+        
+        rejectBtn.innerHTML = '<i class="fas fa-times"></i> Rejected';
+        rejectBtn.style.backgroundColor = '#dc3545';
+        nextBtn.disabled = false;
+        nextBtn.classList.remove('disabled');
+        regenerateBtn.disabled = true;
+        approveBtn.disabled = true;
+        
+        if (uploadBtn) {
+            uploadBtn.disabled = true;
+            uploadBtn.style.display = "none";
+        }
+
+        showSuccessMessage('Post rejected successfully!');
+        onPostRejected(currentPost.id);
+        
+        // Remove the rejected post from local array
+        currentPosts.splice(currentPostIndex, 1);
+        
+        // Adjust index if needed and refresh data
+        if (currentPostIndex > 0) {
+            currentPostIndex--;
+        }
+        
+        // Refresh posts data to ensure consistency
+        await refreshPostsData();
+        
+        // Update next button text if no more posts
+        const remainingPosts = currentPosts.length - currentPostIndex - 1;
+        if (remainingPosts === 0 || currentPosts.length === 0) {
+            nextBtn.innerHTML = '<i class="fas fa-check-circle"></i> Done';
+            // Close modal if no more posts
+            if (currentPosts.length === 0) {
+                setTimeout(() => {
+                document.getElementById('approvalModal').style.display = 'none';
+                },1000);
+            }
+        } else {
+            nextBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Next';
+        }
+        
+    } catch (error) {
+        console.error('Rejection error:', error);
+        showErrorMessage(`Rejection failed: ${error.message}`);
+        rejectBtn.disabled = false;
+        rejectBtn.innerHTML = '<i class="fas fa-times"></i> Reject';
+    }
+    
+    // Update back button visibility
+    setTimeout(() => {
+        const backBtn = document.getElementById('backBtn');
+        backBtn.style.display = currentPostIndex === 0 ? 'none' : 'flex';
+    }, 50);
+}
+
+
+function createNotification(post, index) {
+    const notification = document.createElement('div');
+    const postKey = `${post.id}_${post.status}_${post.scheduled_time}`;
+    
+    notification.className = `notification ${post.is_past_due ? 'past-due' : 'upcoming'}`;
+    notification.setAttribute('data-post-index', index);
+    notification.setAttribute('data-post-key', postKey);
+    
+    const statusText = post.is_past_due ? 'PAST DUE' : 'UPCOMING';
+    
+    notification.innerHTML = `
+        <div class="notification-content" onclick="openPostModal(${index})">
+            <div class="notification-header">
+                <span class="notification-status">${statusText}</span>
+            </div>
+            <div class="notification-body">
+                <strong>${post.platform} - ${post.content_type}</strong>
+                <div class="notification-time">${post.scheduled_time}</div>
+            </div>
+        </div>
+        <button class="notification-close" onclick="removeNotification('${postKey}', ${index})">&times;</button>
+    `;
+    
+    return notification;
+}
+
+// REPLACE your openPostModal function with this:
+async function openPostModal(index) {
+    const refreshed = await refreshPostsData();
+    
+    if (!refreshed || currentPosts.length === 0) {
+        clearAllNotifications();
+        showErrorMessage('No posts available for approval');
+        return;
+    }
+    
+    // Ensure index is within bounds
+    if (index >= currentPosts.length) {
+        index = 0;
+    }
+    
+    const post = currentPosts[index];
+    
+    // Additional safety check
+    if (!post || !post.id) {
+        showErrorMessage('Invalid post data');
+        return;
+    }
+    
+    currentPostIndex = index;
+    
+    // Set the current modal post key and hide its notification
+    currentModalPostKey = `${post.id}_${post.status}_${post.scheduled_time}`;
+    hideNotificationByKey(currentModalPostKey);
+    
+    showPostForApproval(post);
+}
+
+// ADD THESE NEW HELPER FUNCTIONS:
+function hideNotificationByKey(postKey) {
+    const notification = document.querySelector(`[data-post-key="${postKey}"]`);
+    if (notification) {
+        notification.style.display = 'none';
+    }
+}
+
+function showNotificationByKey(postKey) {
+    const notification = document.querySelector(`[data-post-key="${postKey}"]`);
+    if (notification) {
+        notification.style.display = 'flex';
+    }
+}
+
+function removeNotification(postKey, index) {
+    const notification = document.querySelector(`[data-post-key="${postKey}"]`);
+    if (notification) {
+        notification.remove();
+        displayedNotifications.delete(postKey);
+    }
+}
+// Remove notification from dropdown (backup name : removeNotification)
+function removeNotificationId(postId) {
+    const notificationElement = document.querySelector(`.stored-notification[data-post-id="${postId}"]`);
+    if (notificationElement) {
+        notificationElement.remove();
+        
+        // Update allNotifications array
+        const index = allNotifications.findIndex(n => n.postId == postId);
+        if (index !== -1) {
+            // Only decrease count if status was pending
+            if (allNotifications[index].status === 'pending') {
+                pendingCount--;
+                updateNotificationCount();
+            }
+            allNotifications.splice(index, 1);
+        }
+    }
+    
+    // Show empty message if no notifications left
+    const storedNotifications = document.getElementById('storedNotifications');
+    if (storedNotifications.children.length === 0) {
+        const emptyMessage = document.createElement('div');
+        emptyMessage.className = 'empty-notifications';
+        emptyMessage.textContent = 'No pending posts';
+        storedNotifications.appendChild(emptyMessage);
+    }
+}
+// Update notification status
+function updateNotificationStatus(postId, newStatus) {
+    const notification = allNotifications.find(n => n.postId == postId);
+    if (notification) {
+        // If status changed from pending to something else, decrease count
+        if (notification.status === 'pending' && newStatus !== 'pending') {
+            pendingCount--;
+            updateNotificationCount();
+        }
+        
+        notification.status = newStatus;
+        
+        // Remove the notification if it's approved or rejected
+        if (newStatus === 'approved' || newStatus === 'rejected') {
+            removeNotificationId(postId);
+        }
+    }
+}
+
+// Update notification badge count
+function updateNotificationCount() {
+    const countElement = document.getElementById('notificationCount');
+    countElement.textContent = pendingCount;
+    countElement.style.display = pendingCount > 0 ? 'flex' : 'none';
+}
+
+function clearAllNotifications() {
+    const container = document.getElementById('notificationContainer');
+    if (container) {
+        container.innerHTML = '';
+    }
+}
+
+async function showPostForApproval(post) {
+    const modal = document.getElementById('approvalModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const postPlatform = document.getElementById('postPlatform');
+    const postTime = document.getElementById('postTime');
+    const postStatus = document.getElementById('postStatus');
+    const postCounter = document.getElementById('postCounter');
+    const modalContent = document.getElementById('modalContent');
+    const regenerateBtn = document.getElementById('regenerateBtn');
+
+    const approveBtn = document.getElementById('approveBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const backBtn = document.getElementById('backBtn');
+    const rejectBtn = document.getElementById('rejectBtn');
+    // RESET ALL BUTTON STATES FIRST
+    approveBtn.disabled = false;
+    approveBtn.innerHTML = '<i class="fas fa-check"></i> Approve';
+    approveBtn.style.backgroundColor = ''; // Reset to default
+    
+    rejectBtn.disabled = false;
+    rejectBtn.innerHTML = '<i class="fas fa-times"></i> Reject';
+    rejectBtn.style.backgroundColor = ''; // Reset to default
+    
+    regenerateBtn.disabled = false;
+    
+    nextBtn.disabled = true;
+    nextBtn.classList.add('disabled');
+
+    modalTitle.textContent = `${post.content_type} Approval`;
+    postPlatform.textContent = `Platform: ${post.platform}`;
+    postTime.textContent = `Scheduled: ${post.scheduled_time}`;
+    postStatus.textContent = post.is_past_due ? 'PAST DUE' : 'UPCOMING';
+    postStatus.style.color = post.is_past_due ? '#f44336' : '#4CAF50';
+    
+    // Calculate remaining posts
+    const remainingPosts = currentPosts.length - currentPostIndex - 1;
+    const pastDuePosts = currentPosts.filter((p, index) => index > currentPostIndex && p.is_past_due).length;
+    
+    let counterText = `Post ${currentPostIndex + 1} of ${currentPosts.length}`;
+    if (remainingPosts > 0) {
+        counterText += ` (${remainingPosts} remaining`;
+        if (pastDuePosts > 0) {
+            counterText += `, ${pastDuePosts} past due`;
+        }
+        counterText += ')';
+    }
+    postCounter.textContent = counterText;
+    
+
+    
+    if (remainingPosts === 0) {
+        nextBtn.innerHTML = '<i class="fas fa-check-circle"></i> Done';
+    } else {
+        nextBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Next';
+    }
+    
+    backBtn.style.display = currentPostIndex === 0 ? 'none' : 'flex';
+    
+    approveBtn.disabled = false;
+    approveBtn.innerHTML = '<i class="fas fa-check"></i> Approve';
+    nextBtn.disabled = true;
+    nextBtn.classList.add('disabled');
+    
+    const isStory = post.content_type?.toLowerCase().includes('story') || 
+                    post.content_type?.toLowerCase().includes('instagram story') ||
+                    (post.platform?.toLowerCase() === 'instagram' && post.content_type?.toLowerCase().includes('story')) ||
+                    post.content_type?.toLowerCase() === 'instagram stories' ||
+                    post.content_type?.toLowerCase() === 'stories';
+    
+    let contentHtml = '';
+    const isTextPost = post.content_type?.toLowerCase().includes('text');
+    
+    if (!isStory) {
+        const fieldTitle = post.platform?.toLowerCase() === 'facebook' && isTextPost ? 
+                         'Facebook Status:' : 'Caption:';
+        
+        contentHtml += `
+            <div class="caption-section">
+                <h4>${fieldTitle}</h4>
+                <textarea id="modalCaption" rows="4">${(post.caption || '') + ' ' + (post.hashtags || '')}</textarea>
+            </div>
+        `;
+    }
+
+    // Only add upload section if it's not a text post
+    if (!isTextPost) {
+        contentHtml += `
+            <div class="upload-section" style="margin-bottom: 15px;">
+                <label class="btn-upload" id="btn-upload">
+                    <i class="fas fa-cloud-upload-alt"></i> Upload Your ${post.content_type.includes('Video') ? 'Video' : 'Image'}
+                    <input type="file" id="customUpload" accept="${post.content_type.includes('Video') ? 'video/*' : 'image/*'}" style="display: none;">
+                </label>
+                <span id="uploadStatus" style="margin-left: 10px; font-size: 12px; color: #666; display:none;"></span>
+            </div>
+        `;
+    }
+    
+    if (isTextPost) {
+        if (!isStory) {
+            contentHtml += `
+                <div id="modalPreview" class="preview-container">
+                    <div class="text-preview">
+                        <p class="preview-text">${(post.caption || '') + ' ' + (post.hashtags || '')}</p>
+                    </div>
+                    <p class="success-message">Text content ready for posting!</p>
+                </div>
+            `;
+        } else {
+            contentHtml += `
+                <div id="modalPreview" class="preview-container">
+                    <div class="story-preview">
+                        <i class="fas fa-book-open" style="font-size: 48px; color: #007bff; margin-bottom: 12px;"></i>
+                        <p class="success-message">Story content ready for posting!</p>
+                    </div>
+                </div>
+            `;
+        }
+        regenerateBtn.style.display = 'none';
+    } else {
+        contentHtml += `
+            <div id="modalPreview" class="preview-container">
+                <div class="loading-spinner"></div>
+                <p>Generating content...</p>
+            </div>
+        `;
+        regenerateBtn.style.display = 'inline-flex';
+    }
+    
+    modalContent.innerHTML = contentHtml;
+    modal.style.display = 'block';
+    
+    // Only add event listener if upload button exists
+    const uploadInput = document.getElementById('customUpload');
+    if (uploadInput) {
+        uploadInput.addEventListener('change', function(e) {
+            handleFileUpload(e, post.id, post.content_type.includes('Video'));
+        });
+    }
+    
+    if (!isTextPost) {
+        await generatePostContent(post.id);
+    }
+}
+
+async function handleFileUpload(event, contentId, isVideo) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const previewDiv = document.getElementById('modalPreview');
+    const uploadStatus = document.getElementById('uploadStatus');
+    const approveBtn = document.getElementById('approveBtn');
+    const regenerateBtn = document.getElementById('regenerateBtn');
+    const rejectBtn = document.getElementById('rejectBtn');
+    const backBtn = document.getElementById('backBtn');
+    const uploadBtn = document.getElementById('btn-upload');
+    
+
+    // Show loading state
+    previewDiv.innerHTML = '<div class="loading-spinner"></div><p>Uploading file...</p>';
+    uploadStatus.textContent = 'Uploading...';
+    approveBtn.disabled = true;
+    regenerateBtn.disabled = true;
+    rejectBtn.disabled = true;
+    backBtn.disabled = true;
+    
+    uploadBtn.style.cursor = 'not-allowed';
+    uploadBtn.style.opacity = '0.5';
+
+
+    try {
+        // Create a FormData object to send the file
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('content_id', contentId);
+        formData.append('is_video', isVideo);
+
+        // Send to backend endpoint that will handle Cloudinary upload
+        const response = await fetch('/upload_custom_media', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error('Upload failed');
+        }
+
+        const data = await response.json();
+        
+        // Display the uploaded media
+        if (isVideo) {
+            previewDiv.innerHTML = `
+                <video controls class="preview-video">
+                    <source src="${data.media_url}" type="video/mp4">
+                </video>
+                <p class="success-message">Custom video uploaded successfully!</p>
+            `;
+        } else {
+            previewDiv.innerHTML = `
+                <img src="${data.media_url}" class="preview-image">
+                <p class="success-message">Custom image uploaded successfully!</p>
+            `;
+        }
+
+        uploadStatus.textContent = 'Upload complete!';
+        uploadStatus.style.color = '#28a745';
+
+        // Enable approve button since we have media now
+        approveBtn.disabled = false;
+    } catch (error) {
+        console.error('Upload error:', error);
+        previewDiv.innerHTML = `
+            <p class="error-message">Upload failed: ${error.message}</p>
+            <button onclick="document.getElementById('customUpload').click()" class="btn-retry">
+                <i class="fas fa-redo"></i> Try Again
+            </button>
+        `;
+        uploadStatus.textContent = 'Upload failed';
+        uploadStatus.style.color = '#dc3545';
+    } finally {
+        regenerateBtn.disabled = false;
+        rejectBtn.disabled = false;
+        backBtn.disabled = false;
+
+        uploadBtn.style.cursor = 'pointer';
+        uploadBtn.style.opacity = '1';
+
+    }
+}
+
+async function generatePostContent(contentId) {
+    const previewDiv = document.getElementById('modalPreview');
+    const currentPost = currentPosts[currentPostIndex];
+    const approveBtn = document.getElementById('approveBtn');
+    const regenerateBtn = document.getElementById('regenerateBtn');
+    const backBtn = document.getElementById('backBtn');
+    const rejectBtn = document.getElementById('rejectBtn');   
+
+    const uploadBtn = document.getElementById('btn-upload');
+
+    approveBtn.disabled = true;
+    regenerateBtn.disabled = true;
+    backBtn.disabled = true;
+    rejectBtn.disabled = true;
+
+    uploadBtn.style.cursor = 'not-allowed';
+    uploadBtn.style.opacity = '0.5';
+
+    try {
+        if (!currentPost.content_type.includes('Text')) {
+            const response = await fetch(`/generate_for_post_type/${contentId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to generate content');
+            }
+            
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            if (data.image_url) {
+                previewDiv.innerHTML = `
+                    <img src="${data.image_url}" class="preview-image">
+                    <p class="success-message">Content generated successfully!</p>
+                `;
+            } else if (data.video_url) {
+                previewDiv.innerHTML = `
+                    <video controls class="preview-video">
+                        <source src="${data.video_url}" type="video/mp4">
+                    </video>
+                    <p class="success-message">Video ready for posting!</p>
+                `;
+            }
+        }
+        
+    } catch (error) {
+        previewDiv.innerHTML = `
+            <p class="error-message">Error: ${error.message}</p>
+            <button onclick="generatePostContent(${contentId})" class="btn-retry">
+                <i class="fas fa-redo"></i> Try Again
+            </button>
+        `;
+    } finally {
+        approveBtn.disabled = false;
+        regenerateBtn.disabled = false;
+        backBtn.disabled = false;
+        rejectBtn.disabled = false;
+
+        uploadBtn.style.cursor = 'pointer';
+        uploadBtn.style.opacity = '1';
+    }
+}
+
+// FIXED: Remove approved posts from local array and refresh data
+async function approveCurrentPost() {
+    const modal = document.getElementById('approvalModal');
+    const currentPost = currentPosts[currentPostIndex];
+    const captionTextarea = document.getElementById('modalCaption');
+    const caption = captionTextarea ? captionTextarea.value : '';
+    
+    const approveBtn = document.getElementById('approveBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const regenerateBtn = document.getElementById('regenerateBtn');
+    const backBtn = document.getElementById('backBtn');
+    const rejectBtn = document.getElementById('rejectBtn');
+    const uploadBtn = document.getElementById('btn-upload');
+
+    regenerateBtn.disabled = true;
+    approveBtn.disabled = true;
+    approveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Approving...';
+    backBtn.disabled = true;
+    rejectBtn.disabled = true;
+
+    if (uploadBtn) {
+        uploadBtn.style.cursor = 'not-allowed';
+        uploadBtn.style.opacity = '0.5';
+    }
+
+    try {
+        const approveResponse = await fetch(`/approve_post/${currentPost.id}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                caption: caption,
+                post_id: currentPost.id,
+                expected_content_type: currentPost.content_type,
+                expected_platform: currentPost.platform
+            })
+        });
+
+        if (!approveResponse.ok) {
+            throw new Error('Failed to approve post');
+        }
+
+        const responseData = await approveResponse.json();
+        const isLinkedIn = currentPost.platform.toLowerCase() === 'linkedin';
+        
+        // For LinkedIn, show immediate success since we know it's posted
+        if (isLinkedIn) {
+            showSuccessMessage('Content Posted Successfully on LinkedIn!');
+            approveBtn.innerHTML = '<i class="fas fa-check"></i> Approved';
+            approveBtn.style.backgroundColor = '#28a745';
+            nextBtn.disabled = false;
+            nextBtn.classList.remove('disabled');
+            
+            // Remove the notification
+            if (currentModalPostKey) {
+                removeNotification(currentModalPostKey, currentPostIndex);
+                displayedNotifications.delete(currentModalPostKey);
+                currentModalPostKey = null;
+            }
+            
+            // Remove from current posts
+            currentPosts.splice(currentPostIndex, 1);
+            
+            // Update UI
+            const remainingPosts = currentPosts.length - currentPostIndex - 1;
+            if (remainingPosts === 0 || currentPosts.length === 0) {
+                nextBtn.innerHTML = '<i class="fas fa-check-circle"></i> Done';
+            } else {
+                nextBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Next';
+            }
+            
+            return;
+        }
+
+        // For other platforms (Facebook, Instagram)
+        approveBtn.innerHTML = '<i class="fas fa-check"></i> Approved';
+        onPostApproved(currentPost.id);
+    
+        nextBtn.disabled = false;
+        nextBtn.classList.remove('disabled');
+        
+        if (currentPost.is_past_due) {
+            showSuccessMessage('Post Approved, This is a past due post, I will post it for you immediately!');
+            
+            setTimeout(() => {
+                showPostingMessage('Publishing your post now... it may take some time!');
+            }, 2000);
+
+            const postResponse = await fetch(`/check_approved_posts/{{ strategy.company_id }}`);
+            const postData = await postResponse.json();
+            if (postData.error) {
+                throw new Error(postData.error);
+            }
+
+            setTimeout(() => {
+                showSuccessMessage('Content Posted Successfully!');
+                showPostSuccessNotification({
+                    platform: currentPost.platform,
+                    content_type: currentPost.content_type,
+                    scheduled_time: currentPost.scheduled_time,
+                    was_past_due: true
+                });
+            }, 1000);
+        } else {
+            showSuccessMessage('Post approved successfully! I will post it for you automatically at the scheduled time.');
+        }
+        
+        // Remove the approved post from local array
+        currentPosts.splice(currentPostIndex, 1);
+        
+        // Adjust index if needed
+        if (currentPostIndex > 0) {
+            currentPostIndex--;
+        }
+
+        // Update next button text
+        const remainingPosts = currentPosts.length - currentPostIndex - 1;
+        if (remainingPosts === 0 || currentPosts.length === 0) {
+            nextBtn.innerHTML = '<i class="fas fa-check-circle"></i> Done';
+        } else {
+            nextBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Next';
+        }
+        
+    } catch (error) {
+        console.error('Approval error:', error);
+        showErrorMessage(`Approval failed: ${error.message}`);
+        approveBtn.disabled = false;
+        approveBtn.innerHTML = '<i class="fas fa-check"></i> Approve';
+    } finally {
+        // Update back button visibility
+        setTimeout(() => {
+            backBtn.style.display = currentPostIndex === 0 ? 'none' : 'flex';
+        }, 50);
+    }
+}
+
+function showErrorMessage(message) {
+    const existingError = document.querySelector('.approval-error');
+    if (existingError) {
+        existingError.remove();
+    }
+    
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'approval-error';
+    errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+    
+    const modalContent = document.getElementById('modalContent');
+    modalContent.appendChild(errorDiv);
+    
+    setTimeout(() => {
+        if (errorDiv.parentNode) {
+            errorDiv.remove();
+        }
+    }, 5000);
+}
+
+async function regenerateCurrentPost() {
+    const currentPost = currentPosts[currentPostIndex];
+    const previewDiv = document.getElementById('modalPreview');
+    const approveBtn = document.getElementById('approveBtn');
+    const regenerateBtn = document.getElementById('regenerateBtn');
+    
+    if (!currentPost.content_type.includes('Text')) {
+        approveBtn.disabled = true;
+        regenerateBtn.disabled = true;
+        
+        previewDiv.innerHTML = `
+            <div class="loading-spinner"></div>
+            <p>Regenerating content...</p>
+        `;
+        
+        await generatePostContent(currentPost.id);
+    }
+}
+
+// FIXED: Better next post logic with data refresh
+async function nextCurrentPost() {
+    const modal = document.getElementById('approvalModal');
+    // ADD these lines at the beginning of your nextCurrentPost function:
+    if (currentModalPostKey) {
+        showNotificationByKey(currentModalPostKey);
+    }
+    // Check if there are more posts in the current array
+    if (currentPostIndex < currentPosts.length - 1) {
+        currentPostIndex++;
+        // ADD these lines when setting new post (after currentPostIndex++ or when showing posts):
+        const newPost = currentPosts[currentPostIndex];
+        currentModalPostKey = `${newPost.id}_${newPost.status}_${newPost.scheduled_time}`;
+        hideNotificationByKey(currentModalPostKey);
+        showPostForApproval(currentPosts[currentPostIndex]);
+    } else {
+        // No more posts in current array, refresh and check
+        const refreshed = await refreshPostsData();
+        
+        if (!refreshed || currentPosts.length === 0) {
+            // No posts available, close modal
+            modal.style.display = 'none';
+            currentPosts = [];
+            currentPostIndex = 0;
+        } else {
+            // Check if there are any posts to show
+            if (currentPostIndex < currentPosts.length) {
+                showPostForApproval(currentPosts[currentPostIndex]);
+            } else {
+                // Start from beginning if index is out of bounds
+                currentPostIndex = 0;
+                if (currentPosts.length > 0) {
+                    showPostForApproval(currentPosts[currentPostIndex]);
+                } else {
+                    modal.style.display = 'none';
+                }
+            }
+        }
+    }
+
+    // ADD THIS AT THE END - Always check back button after navigation
+    const backBtn = document.getElementById('backBtn');
+    backBtn.style.display = currentPostIndex === 0 ? 'none' : 'flex';
+    
+}
+
+function showSuccessMessage(message) {
+    const existingMessage = document.querySelector('.approval-success');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+    
+    const successDiv = document.createElement('div');
+    successDiv.className = 'approval-success';
+    successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+    
+    const modalContent = document.getElementById('modalContent');
+    modalContent.appendChild(successDiv);
+    
+    setTimeout(() => {
+        if (successDiv.parentNode) {
+            successDiv.remove();
+        }
+    }, 20000);
+}
+
+function showPostingMessage(message) {
+    const existingMessage = document.querySelector('.approval-success');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+    
+    const successDiv = document.createElement('div');
+    successDiv.className = 'approval-success';
+    successDiv.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${message}`;
+    
+    const modalContent = document.getElementById('modalContent');
+    modalContent.appendChild(successDiv);
+}
+
+/*async function checkApprovedPosts() {
+    try {
+        const response = await fetch(`/check_approved_posts/{{ strategy.company_id }}`);
+        const data = await response.json();
+        
+        if (data.posts_posted && data.posts_posted > 0) {
+            console.log(`Background bot posted ${data.posts_posted} posts`);
+        }
+    } catch (error) {
+        console.error('Background check error:', error);
+    }
+}*/
+
+// Modified function to replace in your existing code
+async function checkApprovedPosts() {
+    try {
+        const response = await fetch(`/check_approved_posts/{{ strategy.company_id }}`);
+        const data = await response.json();
+        
+        if (data.posts_posted && data.posts_posted > 0) {
+            console.log(`Background bot posted ${data.posts_posted} posts`);
+            
+            // Show success notification for posted content
+            if (data.posted_posts && data.posted_posts.length > 0) {
+                data.posted_posts.forEach(post => {
+                    showPostSuccessNotification({
+                        platform: post.platform,
+                        content_type: post.content_type,
+                        scheduled_time: post.scheduled_time,
+                        was_past_due: post.was_past_due || false
+                    });
+                });
+            } else {
+                // Fallback if detailed post info not available
+                showPostSuccessNotification({
+                    platform: 'Social Media',
+                    content_type: 'Content',
+                    scheduled_time: 'Recently',
+                    was_past_due: false
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Background check error:', error);
+    }
+}
+
+
+// Add these new functions to your existing JavaScript
+
+function showPostSuccessNotification(postInfo) {
+    const container = document.getElementById('topNotificationContainer');
+    if (!container) return;
+
+    const notification = document.createElement('div');
+    notification.className = 'top-notification success-notification';
+    
+    const currentTime = new Date().toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    
+    const statusText = postInfo.was_past_due ? 'PAST DUE - POSTED NOW' : 'POSTED ON TIME';
+    const statusClass = postInfo.was_past_due ? 'past-due-status' : 'on-time-status';
+    
+    notification.innerHTML = `
+        <div class="top-notification-content">
+            <div class="notification-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="notification-details">
+                <div class="notification-title">
+                    <i class="fas fa-rocket"></i>
+                    Post Successfully Published!
+                </div>
+                <div class="notification-info">
+                    <span class="platform-badge">${postInfo.platform}</span>
+                    <span class="content-type">${postInfo.content_type}</span>
+                </div>
+                <div class="notification-timing">
+                    <div class="scheduled-time">
+                        <i class="fas fa-clock"></i>
+                        Scheduled: ${postInfo.scheduled_time}
+                    </div>
+                    <div class="posted-time">
+                        <i class="fas fa-share"></i>
+                        Posted: ${currentTime}
+                    </div>
+                </div>
+                <div class="notification-status ${statusClass}">
+                    <i class="fas ${postInfo.was_past_due ? 'fa-exclamation-triangle' : 'fa-check'}"></i>
+                    ${statusText}
+                </div>
+            </div>
+        </div>
+        <div class="notification-progress">
+            <div class="progress-bar"></div>
+        </div>
+    `;
+    
+    container.appendChild(notification);
+    
+    // Trigger animation
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        notification.classList.add('hide');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 1000);
+    }, 10000);
+    
+    // Play success sound
+    playSuccessSound();
+}
+
+function playSuccessSound() {
+    // Create a subtle success sound using Web Audio API
+    const sound = document.getElementById('notificationSuccessSound');
+    if (sound) {
+        sound.currentTime = 0;
+        sound.play().catch(e => console.log("Audio play failed:", e));
+    }
+}
+
+
+// send email 
+// Resend Emails Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const resendEmailsBtn = document.getElementById('resendEmailsBtn');
+    
+    if (resendEmailsBtn) {
+        resendEmailsBtn.addEventListener('click', function() {
+            resendAllEmails();
+        });
+    }
+});
+
+// Enhanced resend emails function
+async function resendAllEmails() {
+    const resendBtn = document.getElementById('resendEmailsBtn');
+    const companyId = {{ strategy.company_id }};
+    
+    // Create status message element if it doesn't exist
+    let statusMessage = document.querySelector('.email-status-message');
+    if (!statusMessage) {
+        statusMessage = document.createElement('div');
+        statusMessage.className = 'email-status-message';
+        resendBtn.parentElement.appendChild(statusMessage);
+    }
+    
+    // Disable button and show loading state
+    resendBtn.disabled = true;
+    resendBtn.classList.add('loading');
+    resendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    
+    // Clear previous status
+    statusMessage.className = 'email-status-message';
+    statusMessage.textContent = '';
+    
+    try {
+        const response = await fetch(`/send_launch_emails/${companyId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            statusMessage.className = 'email-status-message success';
+            statusMessage.innerHTML = `
+                <i class="fas fa-check-circle"></i> 
+                Success!
+            `;
+            
+            // Show the email notification
+            showEmailNotification("Marketing emails re-sent successfully to influencers");
+            
+            // Refresh the influencers display to update sent status
+            setTimeout(() => {
+                fetchStrategyData(); // This will refresh the influencers section
+            }, 1000);
+            
+        } else {
+            throw new Error(data.message || 'Failed to send emails');
+        }
+        
+    } catch (error) {
+        console.error('Error resending emails:', error);
+        statusMessage.className = 'email-status-message error';
+        statusMessage.innerHTML = `
+            <i class="fas fa-exclamation-circle"></i> 
+            Failed to send emails: ${error.message}
+        `;
+    } finally {
+        // Re-enable button
+        resendBtn.disabled = false;
+        resendBtn.classList.remove('loading');
+        resendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Resend All Emails';
+        
+        // Auto-hide status message after 5 seconds
+        setTimeout(() => {
+            statusMessage.className = 'email-status-message';
+            statusMessage.textContent = '';
+        }, 5000);
+    }
+}
+
+// send mails auto
+function sendEmails(companyId) {
+    fetch(`/send_launch_emails/${companyId}`, {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showEmailNotification("Marketing E-Mails sent successfully to influencers");
+        }
+    })
+    .catch(error => console.error('Email error:', error));
+}
+
+function showEmailNotification(message) {
+    // Play notification sound
+    try {
+        const successSound = document.getElementById('notificationSuccessSound');
+        if (successSound) {
+            successSound.currentTime = 0;
+            successSound.play();
+        }
+    } catch (error) {
+        console.log('Sound error:', error);
+    }
+    
+    // Create notification
+    let notification = document.createElement('div');
+    notification.className = 'email-notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    // Show animation
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 100);
+    
+    // Hide after 4 seconds
+    setTimeout(() => {
+        notification.classList.add('hide');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 400);
+    }, 4000);
+}
+
+// After your post success notification:
+setTimeout(() => {
+    sendEmails({{ strategy.company_id }});
+}, 5000);
+
+</script>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Fetch and display strategy data
+        fetchStrategyData();
+
+        // Calendar navigation
+        document.getElementById('prev-month').addEventListener('click', function() {
+            navigateCalendar(-1);
+        });
+        document.getElementById('next-month').addEventListener('click', function() {
+            navigateCalendar(1);
+        });
+    });
+
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    let allEvents = [];
+
+    function fetchStrategyData() {
+    const strategyId = {{ strategy.id }};
+    
+    fetch(`/get_strategy_content/${strategyId}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Raw events data:', data.events);
+            
+            // FIXED: Proper date parsing
+            allEvents = data.events.map(event => {
+                console.log('Processing event:', event);
+                
+                let eventDate;
+                
+                // Handle different date formats
+                if (event.date && event.date.trim()) {
+                    try {
+                        // Handle format like "00 month 0000" (with special spaces)
+                        const cleanDate = event.date.replace(/ /g, ' ').trim(); // Replace special spaces
+                        
+                        // Try parsing as "00 month 0000"
+                        eventDate = new Date(cleanDate);
+                        
+                        // If invalid, try other formats
+                        if (isNaN(eventDate.getTime())) {
+                            // Try "Month 00, 0000" format
+                            const parts = cleanDate.split(' ');
+                            if (parts.length === 3) {
+                                const [day, month, year] = parts;
+                                eventDate = new Date(`${month} ${day}, ${year}`);
+                            }
+                        }
+                        
+                        // If still invalid, use the string as-is
+                        if (isNaN(eventDate.getTime())) {
+                            eventDate = null;
+                        }
+                    } catch (e) {
+                        console.error('Error parsing date:', e);
+                        eventDate = null;
+                    }
+                }
+                
+                return {
+                    name: event.name,
+                    date: eventDate, // This will be either a valid Date object or null
+                    rawDate: event.date, // Keep the original date string
+                    description: event.description,
+                    location: event.place || 'Location not specified',
+                    participation: event.description || 'Details to be confirmed'
+                };
+            });
+            
+            console.log('Processed events:', allEvents);
+            
+            // Display calendar with events
+            displayEventsCalendar(allEvents);
+            
+            // Display marketing blueprint
+            displayBlueprintTable(data.blueprint);
+
+            // Display influencers
+            displayInfluencers(data.influencers)
+            
+            // Display recommendations
+            displayRecommendations(data.recommendations);
+        })
+        .catch(error => {
+            console.error('Error fetching strategy data:', error);
+        });
+}
+
+function displayEventsCalendar(events) {
+    // Group events by date
+    const eventsByDate = {};
+    events.forEach(event => {
+        if (event.date && !isNaN(event.date.getTime())) {
+            const dateKey = `${event.date.getFullYear()}-${event.date.getMonth()}-${event.date.getDate()}`;
+            if (!eventsByDate[dateKey]) {
+                eventsByDate[dateKey] = [];
+            }
+            eventsByDate[dateKey].push(event);
+        }
+    });
+
+    // Render calendar
+    renderCalendar(currentMonth, currentYear, eventsByDate);
+
+    // SIMPLE FIX: Show events for current month instead of just upcoming events
+    const monthEvents = events.filter(event => {
+        if (!event.date || isNaN(event.date.getTime())) return false;
+        return event.date.getMonth() === currentMonth && event.date.getFullYear() === currentYear;
+    });
+
+    // Render calendar
+    renderCalendar(currentMonth, currentYear, eventsByDate);
+
+    // Render upcoming events list
+    renderUpcomingEvents(events);
+    if (monthEvents.length > 0) {
+        // Use the existing showEventsForDay function to display all month events
+        showEventsForDay(monthEvents);
+    } else {
+        // Show no events message
+        const container = document.getElementById('upcoming-events-container');
+        container.innerHTML = '<p class="no-events">No events this month.</p>';
+    }
+}
+
+    function renderCalendar(month, year, eventsByDate) {
+        const calendarGrid = document.getElementById('calendar-grid');
+        calendarGrid.innerHTML = '';
+        
+        // Set month header
+        const monthNames = ["January", "February", "March", "April", "May", "June", 
+                          "July", "August", "September", "October", "November", "December"];
+        document.getElementById('current-month').textContent = `${monthNames[month]} ${year}`;
+        
+        // Get first day of month and total days
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        
+        // Create day headers
+        const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        dayNames.forEach(day => {
+            const dayHeader = document.createElement('div');
+            dayHeader.className = 'calendar-day-header';
+            dayHeader.textContent = day;
+            calendarGrid.appendChild(dayHeader);
+        });
+        
+        // Add empty cells for days before the first day of the month
+        for (let i = 0; i < firstDay; i++) {
+            const emptyCell = document.createElement('div');
+            emptyCell.className = 'calendar-day empty';
+            calendarGrid.appendChild(emptyCell);
+        }
+        
+        // Add cells for each day of the month
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayCell = document.createElement('div');
+            dayCell.className = 'calendar-day';
+            dayCell.textContent = day;
+            
+            const dateKey = `${year}-${month}-${day}`;
+            if (eventsByDate[dateKey]) {
+                dayCell.classList.add('has-event');
+                dayCell.innerHTML = `${day}<span class="event-dot"></span>`;
+                
+                // Add click event to show events for this day
+                dayCell.addEventListener('click', () => {
+                    showEventsForDay(eventsByDate[dateKey]);
+                });
+            }
+            
+            // Highlight today
+            const today = new Date();
+            if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                dayCell.classList.add('today');
+            }
+            
+            calendarGrid.appendChild(dayCell);
+        }
+    }
+
+function renderUpcomingEvents(events) {
+    const container = document.getElementById('upcoming-events-container');
+    container.innerHTML = '';
+    
+    // Make sure we have valid events data
+    if (!events || !Array.isArray(events) || events.length === 0) {
+        container.innerHTML = '<p class="no-events">No upcoming events scheduled.</p>';
+        return;
+    }
+    
+    // Filter and sort events properly
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const upcomingEvents = events
+        .filter(event => {
+            // Use the date if available, otherwise show the event anyway
+            if (event.date && !isNaN(event.date.getTime())) {
+                return event.date >= today;
+            }
+            return true; // Show events without valid dates
+        })
+        .sort((a, b) => {
+            // Sort by date, events without dates go to the end
+            if (!a.date || isNaN(a.date.getTime())) return 1;
+            if (!b.date || isNaN(b.date.getTime())) return -1;
+            return a.date - b.date;
+        })
+        .slice(0, 3); // Show only next 3 events
+    
+    if (upcomingEvents.length === 0) {
+        container.innerHTML = '<p class="no-events">No upcoming events scheduled.</p>';
+        return;
+    }
+    
+    // Render each event
+    upcomingEvents.forEach(event => {
+        const eventElement = document.createElement('div');
+        eventElement.className = 'upcoming-event';
+        
+        // Format date - use raw date string if available, otherwise format the Date object
+        let dateStr;
+        if (event.rawDate) {
+            dateStr = event.rawDate; // Use the original date string like "13 April 2025"
+        } else if (event.date && !isNaN(event.date.getTime())) {
+            const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+            dateStr = event.date.toLocaleDateString('en-US', options);
+        } else {
+            dateStr = 'Date to be confirmed';
+        }
+        
+        // Process description - split by "|" and create tags
+        let descriptionHTML = '';
+        if (event.description) {
+            const descriptionParts = event.description.split('|').map(part => part.trim()).filter(part => part);
+            if (descriptionParts.length > 0) {
+                if (descriptionParts.length === 1) {
+                    // Single description - show as paragraph
+                    descriptionHTML = `
+                    <div class="strategic-value-header"> - Strategic Value: </div>
+                    <div class="event-description-single">${descriptionParts[0]}</div>`;
+                } else {
+                    // Multiple descriptions - show as tags
+                    descriptionHTML = `
+                        <div class="event-description-tags">
+                            ${descriptionParts.map(part => `<span class="description-tag">${part}</span>`).join('')}
+                        </div>
+                    `;
+                }
+            }
+        }
+        
+        eventElement.innerHTML = `
+            <div class="event-header">
+                <div class="event-date"><i class="fas fa-calendar-alt"></i>${dateStr}</div>
+                <div class="event-badge">Upcoming</div>
+            </div>
+            <div class="event-title">${event.name}</div>
+            <div class="event-location">
+                <i class="fa-solid fa-location-dot"></i> 
+                <span class="location-text">${event.location}</span>
+            </div>
+            ${descriptionHTML}
+        `;
+        
+        container.appendChild(eventElement);
+    });
+}
+
+ function showEventsForDay(events) {
+    const container = document.getElementById('upcoming-events-container');
+    container.innerHTML = '';
+    
+    events.forEach(event => {
+        const eventElement = document.createElement('div');
+        eventElement.className = 'event-detail';
+        const eventDateSmall = event.date && !isNaN(event.date.getTime()) ? 
+        event.date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : 'Date TBC';
+        // Process description for tags
+        let descriptionHTML = '';
+        if (event.description) {
+            const descriptionParts = event.description.split('|').map(part => part.trim()).filter(part => part);
+            if (descriptionParts.length > 0) {
+                descriptionHTML = `
+                    <div class="strategic-value-header"> - Strategic Value: </div>
+                    <div class="event-description-tags">
+                        ${descriptionParts.map(part => `<span class="description-tag">${part}</span>`).join('')}
+                    </div>
+                `;
+            }
+        }
+        // Remove the numbering from event names (like "1. ", "2. ", etc.)
+        const cleanName = event.name.replace(/^\d+\.\s*/, '');
+        eventElement.innerHTML = `
+            <div class="event-info">
+                <div class="event-title">- ${cleanName} <span class="event-date-small"> <i class="fas fa-calendar-day"></i> ${eventDateSmall}</div>
+                <div class="event-location">
+                    <i class="fa-solid fa-location-dot"></i> 
+                    <span class="location-text">${event.location}</span>
+                </div>
+                ${descriptionHTML}
+            </div>
+        `;
+        
+        container.appendChild(eventElement);
+    });
+}
+
+    function navigateCalendar(months) {
+        currentMonth += months;
+        
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        } else if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        
+        // Re-render calendar with new month/year
+        displayEventsCalendar(allEvents);
+    }
+
+    function displayBlueprintTable(data) {
+        const tableBody = document.getElementById('blueprint-content');
+        tableBody.innerHTML = '';
+        
+        if (data.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="5" class="no-data">No marketing blueprint data available</td></tr>';
+            return;
+        }
+        
+        data.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${row.dates || '-'}</td>
+                <td>${row.theme || '-'}</td>
+                <td>${row.actions || '-'}</td>
+                <td>${row.platforms || '-'}</td>
+                <td>${row.targets || '-'}</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    function displayRecommendations(data) {
+    const sections = {
+        'growth': document.getElementById('growth-content'),
+        'content': document.getElementById('content-content'),
+        'advantage': document.getElementById('advantage-content'),
+        'outreach': document.getElementById('outreach-content'),
+        'budget': document.getElementById('budget-content')
+    };
+    
+    for (const [sectionId, element] of Object.entries(sections)) {
+        if (data[sectionId] && data[sectionId].length > 0) {
+            // Create a <ul> element for the list
+            const ul = document.createElement('ul');
+            ul.className = 'recommendation-list';
+            
+            // Add each recommendation as a list item
+            data[sectionId].forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                ul.appendChild(li);
+            });
+            
+            element.innerHTML = '';
+            element.appendChild(ul);
+        } else {
+            element.innerHTML = '<p class="no-data">No recommendations available for this section</p>';
+        }
+    }
+}
+
+// old
+/*function displayInfluencers(influencers) {
+    const container = document.getElementById('influencers-container');
+    container.innerHTML = '';
+    
+    if (influencers.length === 0) {
+        container.innerHTML = '<p class="no-data">No influencers recommended for this strategy</p>';
+        return;
+    }
+    
+    // Platform data for styling
+    const platforms = {
+    'instagram': { icon: 'fab fa-instagram', color: '#E1306C', bgColor: 'rgba(225, 48, 108, 0.1)' },
+    'facebook': { icon: 'fab fa-facebook-f', color: '#1877F2', bgColor: 'rgba(24, 119, 242, 0.1)' },
+    'tiktok': { icon: 'fab fa-tiktok', color: '#000000', bgColor: 'rgba(0, 0, 0, 0.1)' },
+    'linkedin': { icon: 'fab fa-linkedin-in', color: '#0077B5', bgColor: 'rgba(0, 119, 181, 0.1)' },
+    'X': { icon: 'fa-brands fa-x-twitter', color: '#e9e9e9ff', bgColor: 'rgba(57, 61, 63, 0.1)' },
+    'snapchat': { icon: 'fab fa-snapchat-ghost', color: '#FFFC00', bgColor: 'rgba(255, 252, 0, 0.1)' },
+    'telegram': { icon: 'fab fa-telegram-plane', color: '#0088CC', bgColor: 'rgba(0, 136, 204, 0.1)' },
+    'default': { icon: 'fas fa-share-alt', color: '#6c757d', bgColor: 'rgba(108, 117, 125, 0.1)' }
+    };
+
+    influencers.forEach((influencer, index) => {
+        // Detect platform
+        const platformText = influencer.followers.toLowerCase();
+        let platform = 'default';
+        if (platformText.includes('instagram')) platform = 'instagram';
+        else if (platformText.includes('facebook')) platform = 'facebook';
+        else if (platformText.includes('tiktok')) platform = 'tiktok';
+        else if (platformText.includes('linkedin')) platform = 'linkedin';
+        else if (platformText.includes('X')) platform = 'X';
+        else if (platformText.includes('snapchat')) platform = 'snapchat';
+        else if (platformText.includes('telegram')) platform = 'telegram';
+
+        const platformData = platforms[platform];
+        
+        const card = document.createElement('div');
+        card.className = 'influencer-card';
+        card.innerHTML = `
+            <div class="influencer-header" style="background: ${platformData.bgColor}">
+                <div class="influencer-info">
+                    <h3 class="influencer-name">${influencer.name}</h3>
+                    <div class="influencer-handle" style="color: ${platformData.color}">
+                        <i class="${platformData.icon}"></i> ${influencer.handle}
+                    </div>
+                </div>
+          <div class="influencer-platform" style="background: ${platformData.color}; color: white;">
+               Platfrom : <i class="${platformData.icon}"></i>
+            </div>
+            </div>
+            <div class="influencer-details">
+                <div class="detail-row">
+                    <span class="detail-label">Niche:</span>
+                    <span class="detail-value">${influencer.niche}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Budget:</span>
+                    <span class="detail-value budget-value">
+                        ${influencer.budget}
+                    </span>
+                </div>
+                <div class="detail-row email-row" data-index="${index}">
+                    <span class="detail-label">Email:</span>
+                    <span class="detail-value email-value">${influencer.email}</span>
+                    <button class="email-button ${influencer.email_sent ? 'sent' : ''}" 
+                            style="background: ${platformData.color}">
+                        ${influencer.email_sent ? '<i class="fas fa-check"></i> Sent' : 'Send Email'}
+                    </button>
+                </div>
+                <div class="email-status ${influencer.email_sent ? 'show' : ''}">
+                    <i class="fas fa-check-circle"></i> Marketing email sent!
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(card);
+    });
+    
+    // Add click event for email buttons
+    document.querySelectorAll('.email-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const index = this.closest('.email-row').dataset.index;
+            influencers[index].email_sent = true;
+            
+            // Update UI
+            this.classList.add('sent');
+            this.innerHTML = '<i class="fas fa-check"></i> Sent';
+            this.closest('.email-row').nextElementSibling.classList.add('show');
+            
+            // Animation
+            this.closest('.influencer-card').classList.add('email-sent-animation');
+            setTimeout(() => {
+                this.closest('.influencer-card').classList.remove('email-sent-animation');
+            }, 1000);
+        });
+    });
+}*/
+
+// new display influencers
+function displayInfluencers(influencers) {
+    const container = document.getElementById('influencers-container');
+    container.innerHTML = '';
+    
+    if (influencers.length === 0) {
+        container.innerHTML = '<p class="no-data">No influencers recommended for this strategy</p>';
+        return;
+    }
+    
+    // Platform data for styling
+    const platforms = {
+    'instagram': { icon: 'fab fa-instagram', color: '#E1306C', bgColor: 'rgba(225, 48, 108, 0.1)' },
+    'facebook': { icon: 'fab fa-facebook-f', color: '#1877F2', bgColor: 'rgba(24, 119, 242, 0.1)' },
+    'tiktok': { icon: 'fab fa-tiktok', color: '#000000', bgColor: 'rgba(0, 0, 0, 0.1)' },
+    'linkedin': { icon: 'fab fa-linkedin-in', color: '#0077B5', bgColor: 'rgba(0, 119, 181, 0.1)' },
+    'X': { icon: 'fa-brands fa-x-twitter', color: '#e9e9e9ff', bgColor: 'rgba(57, 61, 63, 0.1)' },
+    'snapchat': { icon: 'fab fa-snapchat-ghost', color: '#FFFC00', bgColor: 'rgba(255, 252, 0, 0.1)' },
+    'telegram': { icon: 'fab fa-telegram-plane', color: '#0088CC', bgColor: 'rgba(0, 136, 204, 0.1)' },
+    'default': { icon: 'fas fa-share-alt', color: '#6c757d', bgColor: 'rgba(108, 117, 125, 0.1)' }
+    };
+
+    influencers.forEach((influencer, index) => {
+        // Detect platform
+        const platformText = influencer.followers.toLowerCase();
+        let platform = 'default';
+        if (platformText.includes('instagram')) platform = 'instagram';
+        else if (platformText.includes('facebook')) platform = 'facebook';
+        else if (platformText.includes('tiktok')) platform = 'tiktok';
+        else if (platformText.includes('linkedin')) platform = 'linkedin';
+        else if (platformText.includes('X')) platform = 'X';
+        else if (platformText.includes('snapchat')) platform = 'snapchat';
+        else if (platformText.includes('telegram')) platform = 'telegram';
+
+        const platformData = platforms[platform];
+        
+        const card = document.createElement('div');
+        card.className = 'influencer-card';
+        card.innerHTML = `
+            <div class="influencer-header" style="background: ${platformData.bgColor}">
+                <div class="influencer-info">
+                    <h3 class="influencer-name">${influencer.name}</h3>
+                    <div class="influencer-handle" style="color: ${platformData.color}">
+                        <i class="${platformData.icon}"></i> ${influencer.handle}
+                    </div>
+                </div>
+                <div class="influencer-platform" style="background: ${platformData.color}; color: white;">
+                    Platform: <i class="${platformData.icon}"></i>
+                </div>
+            </div>
+            <div class="influencer-details">
+                <div class="detail-row">
+                    <span class="detail-label">Niche:</span>
+                    <span class="detail-value">${influencer.niche}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Budget:</span>
+                    <span class="detail-value budget-value">
+                        ${influencer.budget}
+                    </span>
+                </div>
+                <div class="detail-row email-row" data-index="${index}">
+                    <span class="detail-label">Email:</span>
+                    <span class="detail-value email-value">${influencer.email}</span>
+                    <button class="email-button ${influencer.email_sent ? 'sent' : ''}" 
+                            style="background: ${platformData.color}">
+                        ${influencer.email_sent ? '<i class="fas fa-check"></i> Sent' : 'Send Email'}
+                    </button>
+                </div>
+                
+                <!-- Add View & Edit Email Button -->
+                <div class="influencer-actions">
+                    <button class="btn-view-email" data-index="${index}">
+                        <i class="fas fa-edit"></i> View & Edit Email
+                    </button>
+                </div>
+                
+                <div class="email-status ${influencer.email_sent ? 'show' : ''}">
+                    <i class="fas fa-check-circle"></i> Marketing email sent!
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(card);
+    });
+    
+    // Add click event for email buttons
+    document.querySelectorAll('.email-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const index = this.closest('.email-row').dataset.index;
+            influencers[index].email_sent = true;
+            
+            // Update UI
+            this.classList.add('sent');
+            this.innerHTML = '<i class="fas fa-check"></i> Sent';
+            this.closest('.email-row').nextElementSibling.classList.add('show');
+            
+            // Animation
+            this.closest('.influencer-card').classList.add('email-sent-animation');
+            setTimeout(() => {
+                this.closest('.influencer-card').classList.remove('email-sent-animation');
+            }, 1000);
+        });
+    });
+    
+    // Add click event for View & Edit Email buttons
+    document.querySelectorAll('.btn-view-email').forEach(button => {
+        button.addEventListener('click', function() {
+            const index = this.dataset.index;
+            openEmailEditor(influencers[index], index);
+        });
+    });
+}
+
+function displayRecommendations(data) {
+    const sections = {
+        'growth': document.getElementById('growth-content'),
+        'content': document.getElementById('content-content'),
+        'advantage': document.getElementById('advantage-content'),
+        'outreach': document.getElementById('outreach-content'),
+        'budget': document.getElementById('budget-content')
+    };
+    
+    for (const [sectionId, element] of Object.entries(sections)) {
+        if (data[sectionId] && data[sectionId].length > 0) {
+            const ul = document.createElement('ul');
+            ul.className = 'recommendation-list';
+            
+            data[sectionId].forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                ul.appendChild(li);
+            });
+            
+            element.innerHTML = '';
+            element.appendChild(ul);
+        } else {
+            element.innerHTML = '<p class="no-data">No recommendations available</p>';
+        }
+    }
+}
+// Scroll animation trigger
+document.addEventListener('DOMContentLoaded', function() {
+    // Initial page load animation
+    setTimeout(() => {
+        document.querySelector('.launch-container').style.opacity = 1;
+    }, 100);
+
+    // Scroll animations
+    const animateOnScroll = function() {
+        const sections = document.querySelectorAll('section');
+        
+        sections.forEach(section => {
+            const sectionTop = section.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+            
+            if (sectionTop < windowHeight - 100) {
+                section.classList.add('animate');
+            }
+        });
+    };
+
+    // Run once on load
+    animateOnScroll();
+    
+    // Then on scroll
+    window.addEventListener('scroll', animateOnScroll);
+});
+// Fullscreen image functionality - works with existing HTML structure
+document.addEventListener('DOMContentLoaded', function() {
+    const fullscreenModal = document.getElementById('fullscreenModal');
+    const fullscreenImage = document.getElementById('fullscreenImage');
+    const closeFullscreen = document.querySelector('.close-fullscreen');
+    
+    // Function to auto-wrap preview images with overlay
+    function wrapPreviewImages() {
+        const previewImages = document.querySelectorAll('.preview-image:not(.wrapped)');
+        
+        previewImages.forEach(function(img) {
+            // Skip if already wrapped
+            if (img.classList.contains('wrapped')) return;
+            
+            // Mark as wrapped to prevent double-wrapping
+            img.classList.add('wrapped');
+            
+            // Create a wrapper div for the image
+            const wrapper = document.createElement('div');
+            wrapper.style.position = 'relative';
+            wrapper.style.display = 'inline-block';
+            wrapper.style.width = 'fit-content';
+            
+            // Insert wrapper before image and move image inside
+            img.parentElement.insertBefore(wrapper, img);
+            wrapper.appendChild(img);
+            
+            // Create overlay element
+            const overlay = document.createElement('div');
+            overlay.className = 'preview-image-overlay';
+            
+            // Create zoom icon
+            const zoomIcon = document.createElement('i');
+            zoomIcon.className = 'fa fa-expand zoom-icon';
+            
+            // Append icon to overlay
+            overlay.appendChild(zoomIcon);
+            
+            // Append overlay to wrapper (same level as image)
+            wrapper.appendChild(overlay);
+            
+            // Add hover events to show/hide overlay
+            wrapper.addEventListener('mouseenter', function() {
+                overlay.style.opacity = '1';
+            });
+            
+            wrapper.addEventListener('mouseleave', function() {
+                overlay.style.opacity = '0';
+            });
+        });
+    }
+    
+    // Open fullscreen - only when specifically clicking on image or overlay
+    document.addEventListener('click', function(e) {
+        // Direct click on image
+        if (e.target.classList.contains('preview-image')) {
+            e.stopPropagation();
+            openFullscreenImage(e.target.src);
+        }
+        
+        // Click on zoom icon
+        else if (e.target.classList.contains('zoom-icon')) {
+            e.stopPropagation();
+            const wrapper = e.target.closest('div');
+            const img = wrapper.querySelector('.preview-image');
+            if (img) {
+                openFullscreenImage(img.src);
+            }
+        }
+        
+        // Click on overlay
+        else if (e.target.classList.contains('preview-image-overlay')) {
+            e.stopPropagation();
+            const img = e.target.parentElement.querySelector('.preview-image');
+            if (img) {
+                openFullscreenImage(img.src);
+            }
+        }
+    });
+    
+    // Close fullscreen modal
+    closeFullscreen.addEventListener('click', closeFullscreenModal);
+    
+    // Close when clicking outside the image
+    fullscreenModal.addEventListener('click', function(e) {
+        if (e.target === fullscreenModal) {
+            closeFullscreenModal();
+        }
+    });
+    
+    // Close with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && fullscreenModal.classList.contains('show')) {
+            closeFullscreenModal();
+        }
+    });
+    
+    // Initial wrap
+    wrapPreviewImages();
+    
+    // Observer to detect new images and auto-wrap them
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.addedNodes.length > 0) {
+                // Small delay to ensure DOM is ready
+                setTimeout(wrapPreviewImages, 100);
+            }
+        });
+    });
+    
+    // Start observing
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+});
+
+function openFullscreenImage(imageUrl) {
+    const fullscreenModal = document.getElementById('fullscreenModal');
+    const fullscreenImage = document.getElementById('fullscreenImage');
+    
+    fullscreenImage.src = imageUrl;
+    fullscreenModal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeFullscreenModal() {
+    const fullscreenModal = document.getElementById('fullscreenModal');
+    
+    fullscreenModal.classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+// Content mgmt table js : 
+// Content Management Functions
+let currentEditingContentId = null;
+let contentMediaFile = null;
+let hashtagsArray = [];
+
+// Initialize content management
+function initializeContentManagement() {
+    loadContentItems();
+    setupContentEventListeners();
+    setupPaginationEventListeners(); // Add this line
+    populateTimeOptions();
+    setupModalClose();
+}
+// Setup modal close functionality
+
+function setupModalClose() {
+    const modal = document.getElementById('contentEditorModal');
+    const closeBtn = document.querySelector('.close_mgmt');
+    
+    // Close modal when clicking on X
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        // Reload content to ensure table is properly displayed
+        loadContentItems();
+    });
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            // Reload content to ensure table is properly displayed
+            loadContentItems();
+        }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+            modal.style.display = 'none';
+            // Reload content to ensure table is properly displayed
+            loadContentItems();
+        }
+    });
+}
+
+// Load content items from server
+// Add these variables at the top
+let allContentItems = [];
+let currentPage = 1;
+const itemsPerPage = 5;
+
+// Replace the existing loadContentItems function
+async function loadContentItems() {
+    try {
+        showLoadingState(true);
+        const response = await fetch(`/get_content_items/{{ strategy.id }}`);
+        
+        // Check if response is OK before parsing JSON
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Check if data contains content_items
+        if (!data.content_items) {
+            throw new Error('Invalid response format from server');
+        }
+        
+        allContentItems = data.content_items;
+        currentPage = 1;
+        renderPaginatedContent();
+    } catch (error) {
+        console.error('Error loading content:', error);
+        showErrorMessage(`Error: ${error.message}`);
+        
+        // Set empty array to prevent slice() error
+        allContentItems = [];
+        renderPaginatedContent();
+    } finally {
+        showLoadingState(false);
+    }
+}
+
+// Show/hide loading state
+function showLoadingState(show) {
+    const tableBody = document.getElementById('contentTableBody');
+    if (show) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="7" class="no-content">
+                    <i class="fas fa-spinner fa-spin"></i> Loading content...
+                </td>
+            </tr>
+        `;
+    }
+}
+
+// Render content items in table
+function renderContentTable(contentItems) {
+    const tableBody = document.getElementById('contentTableBody');
+    tableBody.innerHTML = '';
+    
+    if (!contentItems || contentItems.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="7" class="no-content">
+                    <i class="fas fa-inbox"></i> No content items found
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    contentItems.forEach(item => {
+        const row = document.createElement('tr');
+        row.dataset.id = item.id;
+        
+        // Determine media type icon
+        let mediaIcon = 'fa-image';
+        if (item.content_type.includes('Video') || item.content_type.includes('Reel')) {
+            mediaIcon = 'fa-video';
+        } else if (item.content_type.includes('Story')) {
+            mediaIcon = 'fa-book-open';
+        } else if (item.content_type.includes('Text')) {
+            mediaIcon = 'fa-align-left';
+            item.content_type='Text Posts - Article'
+        }
+        
+        // Determine status badge
+        let statusClass = '';
+        let statusText = item.status || 'pending';
+        if (statusText === 'approved') statusClass = 'status-approved';
+        if (statusText === 'posted') statusClass = 'status-posted';
+        if (statusText === 'rejected') statusClass = 'status-rejected';
+        
+        // Format scheduled time
+        const scheduledTime = item.best_time ? formatScheduledTime(item.best_time) : 'Not scheduled';
+        
+        row.innerHTML = `
+            <td>
+                <i class="fas ${mediaIcon}"></i> ${item.content_type}
+            </td>
+            <td>${item.platform}</td>
+            <td class="caption-cell" title="${item.caption || ''}">${item.caption || 'No caption'}</td>
+            <td>
+                ${item.media_link ? 
+                    `<a href="${item.media_link}" target="_blank" class="media-link">
+                        <i class="fas fa-eye"></i> View Media
+                    </a>` : 
+                    'No media'}
+            </td>
+            <td>${scheduledTime}</td>
+            <td>
+                <span class="status-badge ${statusClass}">${statusText}</span>
+            </td>
+            <td class="actions-cell">
+               <button class="btn-view" data-id="${item.id}" title="View">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn-edit" data-id="${item.id}">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn-delete" data-id="${item.id}">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+    
+    // Add event listeners to action buttons
+    document.querySelectorAll('.btn-edit').forEach(btn => {
+        btn.addEventListener('click', () => editContentItem(btn.dataset.id));
+    });
+    
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', () => deleteContentItem(btn.dataset.id));
+    });
+}
+
+// Format scheduled time for display
+function formatScheduledTime(timeString) {
+    if (!timeString) return 'Not scheduled';
+    
+    try {
+        // If it's already in the display format (contains a comma), return as is
+        if (timeString.includes(',')) {
+            return timeString;
+        }
+        
+        // Otherwise, it's in the database format (e.g., "Tuesday 2PM")
+        const [dayName, timePart] = timeString.split(' ');
+        if (!timePart) return dayName;
+        
+        return `${dayName} ${timePart}`;
+    } catch (e) {
+        return timeString;
+    }
+}
+
+// Setup event listeners for content management
+function setupContentEventListeners() {
+    // Add content button
+    document.getElementById('addContentBtn').addEventListener('click', () => {
+        currentEditingContentId = null;
+        document.getElementById('contentModalTitle').textContent = 'Add New Content';
+        document.getElementById('contentForm').reset();
+        document.getElementById('mediaPreview').innerHTML = '';
+        document.getElementById('mediaFileName').textContent = 'No file selected';
+        document.getElementById('hashtagsPreview').innerHTML = '';
+        hashtagsArray = [];
+        contentMediaFile = null;
+        
+        // Hide status field for new content
+        document.getElementById('statusField').style.display = 'none';
+        
+        document.getElementById('contentEditorModal').style.display = 'block';
+        
+        // Reset all field visibility
+        hideAllContentFields();
+    });
+    
+    // Cancel button - reload content to ensure table is properly displayed
+    document.getElementById('cancelContentBtn').addEventListener('click', () => {
+        document.getElementById('contentEditorModal').style.display = 'none';
+        // Reload content to ensure table is properly displayed
+        loadContentItems();
+    });
+    
+    // Platform change - update content types
+    document.getElementById('contentPlatform').addEventListener('change', function() {
+        updateContentTypes();
+        hideAllContentFields();
+    });
+    
+    // Content type change - update fields visibility
+    document.getElementById('contentType').addEventListener('change', function() {
+        updateFieldsVisibility();
+    });
+    
+    // File upload
+    document.getElementById('contentMedia').addEventListener('change', handleMediaUpload);
+    
+    // Form submission
+    document.getElementById('contentForm').addEventListener('submit', saveContentItem);
+    
+    // Filter change
+    document.getElementById('contentFilter').addEventListener('change', filterContentItems);
+    
+    // Hashtags input handling
+    setupHashtagsInput();
+    
+    // Initialize date picker
+    flatpickr("#contentScheduledDate", {
+        dateFormat: "F j, Y", // Shows: August 26, 2025
+        minDate: "today",
+        onChange: function(selectedDates, dateStr, instance) {
+            // You can add additional logic here if needed
+        }
+    });
+    
+    // Setup modal close functionality
+    setupModalClose();
+}
+
+
+// Setup hashtags input functionality
+function setupHashtagsInput() {
+    const hashtagsInput = document.getElementById('contentHashtags');
+    const hashtagsPreview = document.getElementById('hashtagsPreview');
+    
+    hashtagsInput.addEventListener('keydown', function(e) {
+        if ((e.key === 'Enter' || e.key === ' ') && this.value.trim()) {
+            e.preventDefault();
+            addHashtag(this.value.trim());
+            this.value = '';
+        }
+    });
+    
+    hashtagsInput.addEventListener('blur', function() {
+        if (this.value.trim()) {
+            addHashtag(this.value.trim());
+            this.value = '';
+        }
+    });
+}
+
+// Add a hashtag to the array and display
+function addHashtag(tag) {
+    if (!tag) return;
+    
+    // Remove any existing # symbols
+    tag = tag.replace(/^#+/, '');
+    
+    if (tag && !hashtagsArray.includes(tag)) {
+        hashtagsArray.push(tag);
+        
+        const hashtagElement = document.createElement('div');
+        hashtagElement.className = 'hashtag';
+        hashtagElement.innerHTML = `
+            #${tag}
+            <button type="button" class="hashtag-remove" data-tag="${tag}">&times;</button>
+        `;
+        
+        hashtagsPreview.appendChild(hashtagElement);
+        
+        // Add event listener to remove button
+        hashtagElement.querySelector('.hashtag-remove').addEventListener('click', function() {
+            const tagToRemove = this.dataset.tag;
+            hashtagsArray = hashtagsArray.filter(t => t !== tagToRemove);
+            hashtagElement.remove();
+        });
+    }
+}
+
+// Hide all content fields initially
+function hideAllContentFields() {
+    
+    document.getElementById('textContentFields').style.display = 'none';
+    document.getElementById('regularCaptionFields').style.display = 'none';
+    document.getElementById('mediaUploadSection').style.display = 'none';
+}
+
+// Update fields visibility based on content type
+// Update the updateFieldsVisibility function
+function updateFieldsVisibility() {
+    const contentType = document.getElementById('contentType').value;
+    const platform = document.getElementById('contentPlatform').value;
+    hideAllContentFields();
+    
+    if (contentType.includes('Text')) {
+        // Text post - show only "What's New?" field
+        document.getElementById('textContentFields').style.display = 'block';
+    } 
+    else if (contentType.includes('Stor')) {
+        // Story - show only media upload, hide caption and hashtags
+        document.getElementById('regularCaptionFields').style.display = 'none';
+        document.getElementById('mediaUploadSection').style.display = 'block';
+    }
+    else {
+        // Other types - show regular caption, hashtags, and media upload
+        document.getElementById('regularCaptionFields').style.display = 'block';
+        document.getElementById('mediaUploadSection').style.display = 'block';
+    }
+}
+
+// Populate time options for the time select (only full hours)
+function populateTimeOptions() {
+    const timeSelect = document.getElementById('contentScheduledTime');
+    timeSelect.innerHTML = '<option value="">Select time</option>';
+    
+    // Add times in 1-hour increments, only full hours
+    for (let hour = 0; hour < 24; hour++) {
+        const timeString = formatTimeForDisplay(hour, 0);
+        timeSelect.innerHTML += `<option value="${timeString}">${timeString}</option>`;
+    }
+}
+
+// Format time for display (e.g., "9AM", "2PM")
+function formatTimeForDisplay(hour, minute) {
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+    return `${displayHour}${period}`;
+}
+
+// Update content types based on platform
+function updateContentTypes() {
+    const platform = document.getElementById('contentPlatform').value;
+    const typeSelect = document.getElementById('contentType');
+    
+    typeSelect.innerHTML = '<option value="">Select Type</option>';
+    
+    if (platform.trim().toLowerCase() === 'instagram') {
+        typeSelect.innerHTML += `
+            <option value="Feed Image Posts">Feed Image Post</option>
+            <option value="Instagram Stories">Story</option>
+            <option value="Instagram Reels">Reel</option>
+        `;
+        // Instagram No text posts
+    } else if (platform.trim().toLowerCase() === 'facebook') {
+        typeSelect.innerHTML += `
+            <option value="Image Posts">Image Post</option>
+            <option value="Video Posts">Video Post</option>
+            <option value="Text Posts (Status Updates / Announcements)">Text Post</option>
+        `;
+    } else if (platform.trim().toLowerCase() === 'linkedin') {
+        typeSelect.innerHTML += `
+            <option value="Image Posts">Image Post</option>
+            <option value="Video Posts">Video Post</option>
+            <option value="Text Posts">Text Post</option>
+        `;
+    } else if (platform.trim().toLowerCase() === 'tiktok') {
+        typeSelect.innerHTML += `
+            <option value="TikTok Videos">Video</option>
+            <option value="Image Posts">Image Post</option>
+        `;
+        // TikTok No text posts
+    }
+}
+
+// Handle media upload
+function handleMediaUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    contentMediaFile = file;
+    document.getElementById('mediaFileName').textContent = file.name;
+    
+    const preview = document.getElementById('mediaPreview');
+    preview.innerHTML = '';
+    
+    if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            preview.innerHTML = `<img src="${e.target.result}" class="preview-thumbnail">`;
+        };
+        reader.readAsDataURL(file);
+    } else if (file.type.startsWith('video/')) {
+        preview.innerHTML = `
+            <video controls class="preview-thumbnail">
+                <source src="${URL.createObjectURL(file)}" type="${file.type}">
+            </video>
+        `;
+    }
+}
+
+// Save content item
+// Update the saveContentItem function to extract day name
+// Update the saveContentItem function to include status
+// Update the saveContentItem function to handle Story content
+// Update the saveContentItem function to handle status correctly
+async function saveContentItem(e) {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    const contentId = document.getElementById('contentId').value;
+    const platform = document.getElementById('contentPlatform').value;
+    const contentType = document.getElementById('contentType').value;
+    const scheduledDate = document.getElementById('contentScheduledDate').value;
+    const scheduledTime = document.getElementById('contentScheduledTime').value;
+    const isEditing = !!contentId;
+    
+    // Validate required fields
+    if (!platform || !contentType) {
+        showErrorMessage('Please fill in all required fields');
+        return;
+    }
+    
+    // Extract day name from the full date for database storage
+    let dayName = '';
+    if (scheduledDate) {
+        const dateObj = new Date(scheduledDate);
+        dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' }); // Gets "Tuesday"
+    }
+    
+    // Combine day name and time for scheduled time in database
+    const scheduled = dayName && scheduledTime ? `${dayName} ${scheduledTime}` : '';
+    
+    // Get the appropriate caption based on content type
+    let caption = '';
+    let hashtags = '';
+    
+    if (contentType.includes('Text')) {
+        caption = document.getElementById('contentCaption').value;
+    } else if (!contentType.includes('Story')) {
+        caption = document.getElementById('regularCaption').value;
+        // Format hashtags with # prefix
+        hashtags = hashtagsArray.map(tag => `#${tag}`).join(' ');
+    }
+    
+    // Get status - only for editing, new content gets 'approved'
+    let status = 'approved'; // Default for new content
+    
+  
+    if (contentMediaFile) {
+        formData.append('media', contentMediaFile);
+    }
+
+    if (isEditing) {
+        status = document.getElementById('contentStatus').value;
+    }
+    
+    formData.append('platform', platform);
+    formData.append('content_type', contentType);
+    formData.append('caption', caption);
+    formData.append('hashtags', hashtags);
+    formData.append('best_time', scheduled);
+    formData.append('status', status); // Add status to form data
+    formData.append('strategy_id', '{{ strategy.id }}');
+    
+    try {
+        const saveBtn = document.getElementById('saveContentBtn');
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+        
+        const endpoint = contentId ? `/update_content_item/${contentId}` : '/create_content_item';
+        const method = contentId ? 'PUT' : 'POST';
+        
+        const response = await fetch(endpoint, {
+            method: method,
+            body: formData
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.detail || 'Failed to save content');
+        }
+        
+        const data = await response.json();
+        showCrudSuccessMessage(contentId ? 'Content updated successfully!' : 'Content created successfully!');
+        
+        // Close modal and refresh table
+        document.getElementById('contentEditorModal').style.display = 'none';
+        loadContentItems();
+    } catch (error) {
+        console.error('Error saving content:', error);
+        showErrorMessage(`Error: ${error.message}`);
+    } finally {
+        const saveBtn = document.getElementById('saveContentBtn');
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = 'Save Content';
+    }
+}
+
+
+/* nex function to check the content type
+function setContentTypeValue(contentType) {
+    const typeSelect = document.getElementById('contentType');
+    
+    // Map database values to standardized dropdown values
+    const contentTypesMap = {
+        // Instagram mappings
+        'Reels (Video)': 'Instagram Reels',
+        'Instagram Story': 'Instagram Stories',
+        'Stories': 'Instagram Stories',
+        
+        // Facebook mappings  
+        'Facebook Videos': 'Video Posts',
+        'Facebook Images': 'Image Posts',
+        
+        // Add other mappings as needed
+    };
+    
+    // Get the standardized value
+    const standardizedType = contentTypesMap[contentType] || contentType;
+    
+    // Try to find the exact match
+    for (let option of typeSelect.options) {
+        if (option.value === standardizedType) {
+            typeSelect.value = standardizedType;
+            return;
+        }
+    }
+    
+    // If no exact match, try case-insensitive
+    for (let option of typeSelect.options) {
+        if (option.value.toLowerCase() === standardizedType.toLowerCase()) {
+            typeSelect.value = option.value;
+            return;
+        }
+    }
+    
+    // If still no match, log warning and set to first available option
+    console.warn(`Could not find matching content type for: ${contentType} (mapped to: ${standardizedType})`);
+    if (typeSelect.options.length > 1) {
+        typeSelect.value = typeSelect.options[1].value;
+    }
+}*/
+
+
+// Edit content item
+// Update editContentItem function to convert day name back to full date
+// Update editContentItem function to handle Story content
+async function editContentItem(contentId) {
+    try {
+        showLoadingState(true);
+        const response = await fetch(`/get_content_item/${contentId}`);
+        const data = await response.json();
+        
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        
+        currentEditingContentId = contentId;
+        document.getElementById('contentModalTitle').textContent = 'Edit Content';
+        document.getElementById('contentId').value = contentId;
+        document.getElementById('contentPlatform').value = data.platform;
+        
+        // Show status field for editing
+        document.getElementById('statusField').style.display = 'block';
+        document.getElementById('contentStatus').value = data.status || 'pending';
+        
+        // Update content types based on platform
+        updateContentTypes();
+        
+        // Need to wait a tick for the options to populate
+        setTimeout(() => {
+            document.getElementById('contentType').value = data.content_type;
+            
+            // Set the appropriate caption field based on content type
+            if (data.content_type.includes('Text')) {
+                document.getElementById('contentCaption').value = data.caption || '';
+            } else if (!data.content_type.includes('Story')) {
+                // For non-Story content, set caption and hashtags
+                document.getElementById('regularCaption').value = data.caption || '';
+                
+                // Parse and display hashtags
+                hashtagsArray = [];
+                document.getElementById('hashtagsPreview').innerHTML = '';
+                
+                if (data.hashtags) {
+                    const tags = data.hashtags.split(/\s+/).filter(tag => tag);
+                    tags.forEach(tag => {
+                        // Remove # symbol for storage
+                        const cleanTag = tag.replace(/^#+/, '');
+                        if (cleanTag) {
+                            addHashtag(cleanTag);
+                        }
+                    });
+                }
+            }
+            // For Story content, don't set caption or hashtags
+            
+            // Parse scheduled time if it exists and convert day name to full date
+            if (data.best_time) {
+                try {
+                    const [dayName, timePart] = data.best_time.split(' ');
+                    
+                    // Convert day name to a full date (next occurrence of that day)
+                    if (dayName) {
+                        const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                        const dayIndex = daysOfWeek.findIndex(day => day.toLowerCase() === dayName.toLowerCase());
+                        
+                        if (dayIndex !== -1) {
+                            const today = new Date();
+                            const daysUntilNext = (dayIndex - today.getDay() + 7) % 7 || 7;
+                            const nextDate = new Date(today);
+                            nextDate.setDate(today.getDate() + daysUntilNext);
+                            
+                            // Format as "August 26, 2025"
+                            const formattedDate = nextDate.toLocaleDateString('en-US', {
+                                month: 'long',
+                                day: 'numeric',
+                                year: 'numeric'
+                            });
+                            
+                            document.getElementById('contentScheduledDate').value = formattedDate;
+                        }
+                    }
+                    
+                    // Format time for display (remove :00 if present)
+                    const displayTime = timePart ? timePart.replace(':00', '') : '';
+                    document.getElementById('contentScheduledTime').value = displayTime;
+                } catch (e) {
+                    console.error('Error parsing scheduled time:', e);
+                }
+            }
+            
+            // Update fields visibility based on content type
+            updateFieldsVisibility();
+            
+            const preview = document.getElementById('mediaPreview');
+            preview.innerHTML = '';
+            
+            if (data.media_link) {
+                if (data.content_type.includes('Video') || data.content_type.includes('Reel')) {
+                    preview.innerHTML = `
+                        <video controls class="preview-thumbnail">
+                            <source src="${data.media_link}" type="video/mp4">
+                        </video>
+                    `;
+                } else {
+                    preview.innerHTML = `<img src="${data.media_link}" class="preview-thumbnail">`;
+                }
+                document.getElementById('mediaFileName').textContent = 'Current media';
+            } else {
+                document.getElementById('mediaFileName').textContent = 'No file selected';
+            }
+            
+            document.getElementById('contentEditorModal').style.display = 'block';
+        }, 50);
+    } catch (error) {
+        console.error('Error loading content:', error);
+        showErrorMessage(`Error: ${error.message}`);
+    } finally {
+        showLoadingState(false);
+    }
+}
+/* New editContentItem
+async function editContentItem(contentId) {
+    try {
+        showLoadingState(true);
+        const response = await fetch(`/get_content_item/${contentId}`);
+        const data = await response.json();
+        
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        
+        currentEditingContentId = contentId;
+        document.getElementById('contentModalTitle').textContent = 'Edit Content';
+        document.getElementById('contentId').value = contentId;
+        document.getElementById('contentPlatform').value = data.platform;
+        
+        // Show status field for editing
+        document.getElementById('statusField').style.display = 'block';
+        document.getElementById('contentStatus').value = data.status || 'pending';
+        
+        // Update content types based on platform
+        updateContentTypes();
+        
+        // Use a small delay to ensure dropdown is populated
+        setTimeout(() => {
+            // Use the new mapping function
+            setContentTypeValue(data.content_type);
+            
+            // Set other form fields
+            if (data.content_type.includes('Text')) {
+                document.getElementById('contentCaption').value = data.caption || '';
+            } else if (!data.content_type.includes('Story')) {
+                document.getElementById('regularCaption').value = data.caption || '';
+                
+                // Parse and display hashtags
+                hashtagsArray = [];
+                document.getElementById('hashtagsPreview').innerHTML = '';
+                
+                if (data.hashtags) {
+                    const tags = data.hashtags.split(/\s+/).filter(tag => tag);
+                    tags.forEach(tag => {
+                        const cleanTag = tag.replace(/^#+/, '');
+                        if (cleanTag) {
+                            addHashtag(cleanTag);
+                        }
+                    });
+                }
+            }
+            
+            // Parse scheduled time
+            if (data.best_time) {
+                try {
+                    const [dayName, timePart] = data.best_time.split(' ');
+                    if (dayName) {
+                        const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                        const dayIndex = daysOfWeek.findIndex(day => day.toLowerCase() === dayName.toLowerCase());
+                        
+                        if (dayIndex !== -1) {
+                            const today = new Date();
+                            const daysUntilNext = (dayIndex - today.getDay() + 7) % 7 || 7;
+                            const nextDate = new Date(today);
+                            nextDate.setDate(today.getDate() + daysUntilNext);
+                            
+                            const formattedDate = nextDate.toLocaleDateString('en-US', {
+                                month: 'long',
+                                day: 'numeric',
+                                year: 'numeric'
+                            });
+                            
+                            document.getElementById('contentScheduledDate').value = formattedDate;
+                        }
+                    }
+                    
+                    const displayTime = timePart ? timePart.replace(':00', '') : '';
+                    document.getElementById('contentScheduledTime').value = displayTime;
+                } catch (e) {
+                    console.error('Error parsing scheduled time:', e);
+                }
+            }
+            
+            // Setup media preview
+            const preview = document.getElementById('mediaPreview');
+            preview.innerHTML = '';
+            
+            if (data.media_link) {
+                if (data.content_type.includes('Video') || data.content_type.includes('Reel')) {
+                    preview.innerHTML = `
+                        <video controls class="preview-thumbnail">
+                            <source src="${data.media_link}" type="video/mp4">
+                        </video>
+                    `;
+                } else {
+                    preview.innerHTML = `<img src="${data.media_link}" class="preview-thumbnail">`;
+                }
+                document.getElementById('mediaFileName').textContent = 'Current media';
+            } else {
+                document.getElementById('mediaFileName').textContent = 'No file selected';
+            }
+            
+            // Update fields visibility
+            updateFieldsVisibility();
+            
+            document.getElementById('contentEditorModal').style.display = 'block';
+        }, 100);
+        
+    } catch (error) {
+        console.error('Error loading content:', error);
+        showErrorMessage(`Error: ${error.message}`);
+    } finally {
+        showLoadingState(false);
+    }
+}*/
+
+// Delete content item
+async function deleteContentItem(contentId) {
+    if (!confirm('Are you sure you want to delete this content item? This action cannot be undone.')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/delete_content_item/${contentId}`, {
+            method: 'DELETE'
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to delete content');
+        }
+        
+        showCrudSuccessMessage('Content deleted successfully!');
+        loadContentItems();
+    } catch (error) {
+        console.error('Error deleting content:', error);
+        showErrorMessage(`Error: ${error.message}`);
+    }
+}
+
+// Filter content items
+// Update the filterContentItems function to work with pagination
+// Update the filterContentItems function to handle errors
+async function filterContentItems() {
+    const filterValue = document.getElementById('contentFilter').value.toLowerCase();
+    
+    try {
+        const response = await fetch(`/get_content_items/{{ strategy.id }}`);
+        
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (!data.content_items) {
+            throw new Error('Invalid response format from server');
+        }
+        
+        if (filterValue === 'all') {
+            allContentItems = data.content_items;
+        } else {
+            allContentItems = data.content_items.filter(item => 
+                item.platform.toLowerCase().includes(filterValue)
+            );
+        }
+        
+        currentPage = 1;
+        renderPaginatedContent();
+    } catch (error) {
+        console.error('Error filtering content:', error);
+        showErrorMessage(`Error: ${error.message}`);
+        allContentItems = [];
+        renderPaginatedContent();
+    }
+}
+// Show success message
+function showCrudSuccessMessage(message) {
+    // Similar implementation for success messages
+    const existingSuccess = document.querySelectorAll('.success-toast');
+    existingSuccess.forEach(success => success.remove());
+    
+    const successDiv = document.createElement('div');
+    successDiv.className = 'success-toast';
+    successDiv.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()">&times;</button>
+    `;
+    
+    document.body.appendChild(successDiv);
+    
+    setTimeout(() => {
+        if (successDiv.parentNode) {
+            successDiv.parentNode.removeChild(successDiv);
+        }
+    }, 3000);
+}
+
+// Show error message
+// Replace the simple alert with a better error display
+function showErrorMessage(message) {
+    // Remove any existing error messages
+    const existingErrors = document.querySelectorAll('.error-toast');
+    existingErrors.forEach(error => error.remove());
+    
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-toast';
+    errorDiv.innerHTML = `
+        <i class="fas fa-exclamation-circle"></i>
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()">&times;</button>
+    `;
+    
+    document.body.appendChild(errorDiv);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (errorDiv.parentNode) {
+            errorDiv.parentNode.removeChild(errorDiv);
+        }
+    }, 5000);
+}
+// New function to render paginated content
+function renderPaginatedContent() {
+    // Ensure allContentItems is always an array
+    if (!Array.isArray(allContentItems)) {
+        allContentItems = [];
+    }
+    
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentItems = allContentItems.slice(startIndex, endIndex);
+    
+    renderContentTable(currentItems);
+    renderPagination();
+}
+
+// New pagination rendering function
+function renderPagination() {
+    const totalPages = Math.ceil(allContentItems.length / itemsPerPage);
+    const paginationInfo = document.getElementById('paginationInfo');
+    const paginationNumbers = document.getElementById('paginationNumbers');
+    const prevBtn = document.getElementById('prevPageBtn');
+    const nextBtn = document.getElementById('nextPageBtn');
+    
+    // Update info text
+    const startItem = ((currentPage - 1) * itemsPerPage) + 1;
+    const endItem = Math.min(currentPage * itemsPerPage, allContentItems.length);
+    paginationInfo.textContent = `Showing ${startItem}-${endItem} of ${allContentItems.length} items`;
+    
+    // Update previous/next buttons
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.disabled = currentPage === totalPages;
+    
+    // Generate page numbers
+    paginationNumbers.innerHTML = '';
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    // Adjust start if we're near the end
+    if (endPage - startPage + 1 < maxVisiblePages) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.className = `btn-page ${i === currentPage ? 'active' : ''}`;
+        pageBtn.textContent = i;
+        pageBtn.addEventListener('click', () => goToPage(i));
+        paginationNumbers.appendChild(pageBtn);
+    }
+    
+    // Show/hide pagination container
+    const paginationContainer = document.querySelector('.pagination-container');
+    paginationContainer.style.display = totalPages > 1 ? 'flex' : 'none';
+}
+
+// New function to go to specific page
+function goToPage(page) {
+    currentPage = page;
+    renderPaginatedContent();
+}
+
+// Add pagination event listeners
+function setupPaginationEventListeners() {
+    document.getElementById('prevPageBtn').addEventListener('click', () => {
+        if (currentPage > 1) {
+            goToPage(currentPage - 1);
+        }
+    });
+    
+    document.getElementById('nextPageBtn').addEventListener('click', () => {
+        if (currentPage < Math.ceil(allContentItems.length / itemsPerPage)) {
+            goToPage(currentPage + 1);
+        }
+    });
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', initializeContentManagement);
+
+// Sidebar functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Create menu toggle button
+    /*const menuToggle = document.createElement('button');
+    menuToggle.className = 'menu-toggle';
+    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+    document.body.appendChild(menuToggle);
+    
+    // Toggle sidebar
+    menuToggle.addEventListener('click', function() {
+        document.querySelector('.sidebar').classList.toggle('show');
+        document.querySelector('.main-content-wrapper').classList.toggle('sidebar-open');
+    });*/
+    
+    // Section navigation
+    const sidebarButtons = document.querySelectorAll('.sidebar-btn');
+    const contentSections = document.querySelectorAll('.content-section');
+    
+    sidebarButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetSection = this.dataset.section;
+            
+            // Update active button
+            sidebarButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show target section, hide others
+            contentSections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === `${targetSection}-section`) {
+                    section.classList.add('active');
+                }
+            });
+            
+            // Close sidebar on mobile after selection //show
+            if (window.innerWidth < 992) {
+                document.querySelector('.sidebar').classList.remove('active');
+                document.querySelector('.main-content-wrapper').classList.remove('sidebar-open');
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        });
+    });
+    
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth < 992 && 
+            !e.target.closest('.sidebar') && 
+            !e.target.closest('.menu-toggle') &&
+            document.querySelector('.sidebar').classList.contains('show')) {
+            document.querySelector('.sidebar').classList.remove('show');
+            document.querySelector('.main-content-wrapper').classList.remove('sidebar-open');
+        }
+    });
+    
+    // Initialize the first section as active
+    document.getElementById('dashboard-section').classList.add('active');
+});
+
+/// For content view
+// Minimal view content function
+async function viewContent(contentId) {
+    try {
+        const response = await fetch(`/get_content_item/${contentId}`);
+        const content = await response.json();
+        
+        // Combine caption and hashtags
+        let textContent = content.caption || '';
+        if (content.hashtags) {
+            textContent += (textContent ? '\n\n' : '') + content.hashtags;
+        }
+        
+        // Update modal
+        document.getElementById('previewPlatform').textContent = content.platform;
+        document.getElementById('previewType').textContent = content.content_type;
+        document.getElementById('previewText').textContent = textContent || 'No content';
+        document.getElementById('previewSchedule').textContent = content.best_time || 'Not scheduled';
+        document.getElementById('previewStatus').textContent = content.status;
+        
+        // Handle media
+        const mediaContainer = document.getElementById('previewMedia');
+        if (content.media_link) {
+            if (content.content_type.includes('Video')) {
+                mediaContainer.innerHTML = `<video controls src="${content.media_link}" style="max-width:100%; max-height:300px; border-radius:8px;"></video>`;
+            } else {
+                mediaContainer.innerHTML = `<img src="${content.media_link}" style="max-width:100%; max-height:300px; border-radius:8px; cursor:pointer;" onclick="openFullscreen('${content.media_link}')">`;
+            }
+        } else {
+            mediaContainer.innerHTML = '<div class="no-media">No media</div>';
+        }
+        
+        document.getElementById('viewModal').style.display = 'block';
+        
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+}
+
+// Handle view button clicks
+document.addEventListener('click', (e) => {
+    if (e.target.closest('.btn-view')) {
+        viewContent(e.target.closest('.btn-view').dataset.id);
+    }
+    const modal = document.getElementById('viewModal');
+    if (e.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+
+// Close modal
+document.querySelector('#viewModal .close').onclick = () => {
+    document.getElementById('viewModal').style.display = 'none';
+};
+
+// Fullscreen function
+// Simple fullscreen with red X on hover
+function openFullscreen(url) {
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100%; 
+        background: black; 
+        z-index: 10000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    `;
+    
+    modal.innerHTML = `
+        <span style="
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            z-index: 10001;
+            transition: color 0.2s;
+        " 
+        onmouseover="this.style.color='red'" 
+        onmouseout="this.style.color='white'"
+        onclick="this.parentElement.remove()">&times;</span>
+        
+        <img src="${url}" style="max-width: 90%; max-height: 90%;">
+    `;
+    
+    // Close when clicking background
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            document.body.removeChild(modal);
+        }
+    };
+    
+    document.body.appendChild(modal);
+}
+</script>
+
+
+<!-- Update emails-->
+<script>
+    // Email Editor Modal Functions
+let currentEditingInfluencerIndex = null;
+let currentEditingInfluencer = null;
+
+// Initialize email editor modal
+function initializeEmailEditor() {
+    const modal = document.getElementById('emailEditorModal');
+    const closeBtn = document.getElementById('closeEmailModal');
+    const cancelBtn = document.getElementById('cancelEmailBtn');
+    const saveBtn = document.getElementById('saveEmailBtn');
+    
+    // Close modal events
+    closeBtn.addEventListener('click', closeEmailModal);
+    cancelBtn.addEventListener('click', closeEmailModal);
+    
+    // Save email event
+    saveBtn.addEventListener('click', saveEmailContent);
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeEmailModal();
+        }
+    });
+    
+    // Close with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+            closeEmailModal();
+        }
+    });
+}
+
+// Open email editor modal
+function openEmailEditor(influencer, index) {
+    currentEditingInfluencer = influencer;
+    currentEditingInfluencerIndex = index;
+    
+    const modal = document.getElementById('emailEditorModal');
+    const influencerName = document.getElementById('influencerName');
+    const influencerEmail = document.getElementById('influencerEmail');
+    const emailContent = document.getElementById('emailContent');
+    
+    // Populate modal fields
+    influencerName.value = influencer.name;
+    influencerEmail.value = influencer.email;
+    
+    // Get the email content - from backend
+    // placeholder cause of isssues
+    const emailText = influencer.email_text || 
+        `Dear ${influencer.name},
+
+I hope this message finds you well. I'm reaching out from our marketing team because we believe your content aligns perfectly with our brand values and target audience.
+
+We would love to explore a potential collaboration opportunity with you. Your expertise in ${influencer.niche} and your engaged following make you an ideal partner for our upcoming campaign.
+
+Would you be interested in discussing this further? We'd be happy to share more details about our brand and the collaboration possibilities.
+
+Looking forward to hearing from you!
+
+Best regards,
+Marketing Team`;
+
+    emailContent.value = emailText;
+    
+    // Show modal
+    modal.style.display = 'block';
+}
+
+// Close email editor modal
+function closeEmailModal() {
+    const modal = document.getElementById('emailEditorModal');
+    modal.style.display = 'none';
+    currentEditingInfluencer = null;
+    currentEditingInfluencerIndex = null;
+}
+
+// Save email content
+async function saveEmailContent() {
+    if (!currentEditingInfluencer || currentEditingInfluencerIndex === null) {
+        showErrorMessage('No influencer selected for editing');
+        return;
+    }
+    
+    const emailContent = document.getElementById('emailContent').value;
+    const saveBtn = document.getElementById('saveEmailBtn');
+    
+    if (!emailContent.trim()) {
+        showErrorMessage('Please enter email content');
+        return;
+    }
+    
+    // Show loading state
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    
+    try {
+        // Save to backend - you'll need to implement this endpoint
+        const response = await fetch(`/save_influencer_email/{{ strategy.id }}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                influencer_index: currentEditingInfluencerIndex,
+                email_content: emailContent,
+                influencer_name: currentEditingInfluencer.name,
+                influencer_email: currentEditingInfluencer.email
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to save email content');
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showSuccessMessage('Email content saved successfully!');
+            
+            // Update the influencer data locally
+            if (window.allInfluencers && window.allInfluencers[currentEditingInfluencerIndex]) {
+                window.allInfluencers[currentEditingInfluencerIndex].email_text = emailContent;
+            }
+            
+            closeEmailModal();
+        } else {
+            throw new Error(data.error || 'Failed to save email content');
+        }
+        
+    } catch (error) {
+        console.error('Error saving email content:', error);
+        showErrorMessage(`Failed to save email: ${error.message}`);
+    } finally {
+        // Reset button state
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = 'Save Email';
+    }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initializeEmailEditor();
+    
+    // Store influencers globally for access
+    window.allInfluencers = [];
+});
+
+</script>
+
+</body>
+</html>

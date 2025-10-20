@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Chahbander - AI Marketing Assistant</title>
+    <link rel="icon" type="image/x-icon" href="static/imgs/icons/fav-icon-nobg.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/css/Index.css" />
+
+</head>
+<body>
+    <!-- Header -->
+  <!-- <header id="header">
+    <a href="#hero" class="logo"> CHAHBANDER</a> -->
+    <header id="header">
+        <a href="/" class="logo">
+            <img src="static/imgs/logo/logo_black.png" alt="Chahbander" class="logo-img">
+        </a>
+    <div class="menu-toggle" id="menu-toggle">
+        <div class="hamburger"></div>
+    </div>
+    <div class="nav-container" id="nav-container">
+        <div class="nav-center">
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#why">Why Chahbander?</a></li>
+                <li><a href="#clients">Clients</a></li>
+            </ul>
+        </div>
+        <div class="auth-buttons">
+            <a href="/login" class="btn btn-login">Login</a>
+            <a href="/signup" class="btn btn-signup">Sign Up</a>
+        </div>
+    </div>
+</header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+
+        <!-- Animated particles -->
+        <div id="particles-hero" class="particles-container"></div>
+
+        <div class="hero-content">
+            <h1 data-aos="fade-up">Revolutionize Your Marketing with Chahbander</h1>
+            <p data-aos="fade-up" data-aos-delay="100">Chahbander is your intelligent marketing assistant that creates automated marketing strategies, and campaign plans tailored to your business.</p>
+            <div class="hero-buttons">
+                <a href="/signup" class="btn btn-primary">Get Started</a>
+                <a href="#features" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+        <div class="hero-image-container" data-aos="fade-left" data-aos-delay="300">
+            <img src="/static/imgs/ai-img.png" alt="AI Marketing Assistant" class="hero-image">
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="section-title" data-aos="fade-up">
+            <h2>About Chahbander</h2>
+            <p>Chahbander is an AI-powered marketing strategist that helps businesses of all sizes create effective marketing plans in minutes.</p>
+        </div>
+        <div class="about-content" data-aos="fade-up">
+            <div class="about-text">
+                <h3>Your Personal Marketing Expert</h3>
+                <p>Chahbander analyzes your business, target audience, and goals to generate comprehensive marketing strategies that would normally take weeks to develop.</p>
+                <p>Using advanced AI and machine learning, Chahbander stays up-to-date with the latest marketing trends and platform algorithms to give you the most effective recommendations.</p>
+                
+                <div class="about-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div>
+                            <h4>Lightning Fast</h4>
+                            <p>Generate complete marketing strategies in minutes, not weeks.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div>
+                            <h4>Data-Driven</h4>
+                            <p>Strategies based on real marketing data and trends.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-image" data-aos="fade-left" data-aos-delay="100">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Marketing Strategy">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section features" id="features">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Powerful Features</h2>
+            <p>Chahbander provides everything you need to create and execute successful marketing campaigns.</p>
+        </div>
+        <div class="features-grid">
+            <div data-aos="fade-up" data-aos-delay="100" class="feature-card">
+                <i class="fas fa-calendar-alt"></i>
+                <h3>Events Matching</h3>
+                <p>Automatically generated monthly content calendars tailored to your audience and platforms.</p>
+            </div>
+            <div data-aos="fade-up" data-aos-delay="200" class="feature-card">
+                <i class="fas fa-bullseye"></i>
+                <h3>Audience Targeting</h3>
+                <p>Detailed analysis of your ideal customers and how to reach them effectively.</p>
+            </div>
+            <div data-aos="fade-up" data-aos-delay="300" class="feature-card">
+                <i class="fas fa-chart-pie"></i>
+                <h3>Budget Planning</h3>
+                <p>Smart allocation of your marketing budget across channels for maximum ROI.</p>
+            </div>
+            <div data-aos="fade-up" data-aos-delay="400" class="feature-card">
+                <i class="fas fa-users"></i>
+                <h3>Influencer Matching</h3>
+                <p>Find and connect with the perfect influencers for your brand.</p>
+            </div>
+            <div data-aos="fade-up" data-aos-delay="500" class="feature-card">
+                <i class="fas fa-lightbulb"></i>
+                <h3>Automated Content</h3>
+                <p>Never run out of engaging content ideas and automated content creation and posting.</p>
+            </div>
+            <div data-aos="fade-up" data-aos-delay="600" class="feature-card">
+                <i class="fa-solid fa-chart-simple"></i>
+                <h3>Performance Tracking</h3>
+                <p>Monitor your campaign results and get optimization recommendations.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Section -->
+    <section class="section why-choose" id="why">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Why Choose Chahbander?</h2>
+            <p>Discover how Chahbander can transform your marketing efforts.</p>
+        </div>
+        <div class="reasons">
+            <div class="reason" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-clock"></i>
+                <h3>Save Time</h3>
+                <p>What used to take weeks of research and planning now takes minutes with Chahbander's AI-powered recommendations.</p>
+            </div>
+            <div class="reason" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-chart-line"></i>
+                <h3>Stay Ahead</h3>
+                <p>Chahbander continuously learns from the latest marketing trends to keep your strategies effective.</p>
+            </div>
+            <div class="reason" data-aos="fade-up" data-aos-delay="300">
+                <i class="fas fa-database"></i>
+                <h3>Data-Backed</h3>
+                <p>All recommendations are based on real marketing data and proven strategies.</p>
+            </div>
+            <div class="reason" data-aos="fade-up" data-aos-delay="400">
+                <i class="fas fa-magic"></i>
+                <h3>Easy to Use</h3>
+                <p>No marketing degree needed - Chahbander makes professional strategies accessible to everyone.</p>
+            </div>
+            <div class="reason" data-aos="fade-up" data-aos-delay="500">
+                <i class="fas fa-cogs"></i>
+                <h3>Customized</h3>
+                <p>Every strategy is tailored to your specific business, goals, and audience.</p>
+            </div>
+            <div class="reason" data-aos="fade-up" data-aos-delay="600">
+                <i class="fas fa-wallet"></i>
+                <h3>Affordable</h3>
+                <p>Get expert-level marketing strategy at a fraction of the cost of hiring an agency.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clients Section -->
+    <section class="section clients" id="clients">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Our Happy Clients</h2>
+            <p>Businesses that transformed their marketing with Chahbander.</p>
+        </div>
+        <div class="client-carousel" data-aos="fade-up">
+            <div class="client-slides" id="client-slides">
+                <div class="client-slide">
+                    <div class="client-card">
+                        <img src="/static/imgs/icons/client.png" alt="Client Logo" class="client-logo">
+                        <h4 class="client-name">TechStart Inc.</h4>
+                        <p class="client-testimonial">"Chahbander helped us increase our social media engagement by 300% in just 2 months!"</p>
+                    </div>
+                </div>
+                <div class="client-slide">
+                    <div class="client-card">
+                        <img src="/static/imgs/icons/client.png" alt="Client Logo" class="client-logo">
+                        <h4 class="client-name">FashionForward</h4>
+                        <p class="client-testimonial">"Our influencer campaigns have never been more effective since using Chahbander's recommendations."</p>
+                    </div>
+                </div>
+                <div class="client-slide">
+                    <div class="client-card">
+                        <img src="/static/imgs/icons/client.png" alt="Client Logo" class="client-logo">
+                        <h4 class="client-name">GreenEats</h4>
+                        <p class="client-testimonial">"The content calendar feature alone has saved us 20 hours per month in planning."</p>
+                    </div>
+                </div>
+                <div class="client-slide">
+                    <div class="client-card">
+                        <img src="/static/imgs/icons/client.png" alt="Client Logo" class="client-logo">
+                        <h4 class="client-name">FitLife</h4>
+                        <p class="client-testimonial">"Chahbander's budget allocation suggestions helped us reduce wasted ad spend by 45%."</p>
+                    </div>
+                </div>
+                <div class="client-slide">
+                    <div class="client-card">
+                        <img src="/static/imgs/icons/client.png" alt="Client Logo" class="client-logo">
+                        <h4 class="client-name">CreativeMinds</h4>
+                        <p class="client-testimonial">"Never run out of content ideas again - Chahbander is a game changer for our small team."</p>
+                    </div>
+                </div>
+                <div class="client-slide">
+                    <div class="client-card">
+                        <img src="/static/imgs/icons/client.png" alt="Client Logo" class="client-logo">
+                        <h4 class="client-name">LocalBites</h4>
+                        <p class="client-testimonial">"Our restaurant's social media presence has never been stronger thanks to Chahbander."</p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-nav">
+                <br/>
+                <div class="carousel-dot active" data-slide="0"></div>
+                <div class="carousel-dot" data-slide="1"></div>
+                <div class="carousel-dot" data-slide="2"></div>
+                <div class="carousel-dot" data-slide="3"></div>
+                <div class="carousel-dot" data-slide="4"></div>
+                <div class="carousel-dot" data-slide="5"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <h2 data-aos="fade-up">Ready to Transform Your Marketing?</h2>
+        <p data-aos="fade-up" data-aos-delay="100">Join thousands of businesses using Chahbander to create winning marketing strategies in minutes.</p>
+        <a href="/signup" class="btn" data-aos="fade-up" data-aos-delay="100">Get Started</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+
+        <!-- Animated particles -->
+        <div id="particles-footer" class="particles-container"></div>
+        
+        <div class="footer-content" data-aos="fade-up" data-aos-delay="200">
+            <div class="footer-column">
+                <h3>Chahbander</h3>
+                <p>Your AI-powered marketing assistant that helps you create data-driven strategies and campaigns.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#why">Why Chahbander?</a></li>
+                    <li><a href="#clients">Clients</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Case Studies</a></li>
+                    <li><a href="#">Marketing Guides</a></li>
+                    <li><a href="#">Help Center</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contact</h3>
+                <ul class="footer-links">
+                    <li><a href="mailto:hello@Chahbander.ai">hello@Chahbander.ai</a></li>
+                    <li><a href="tel:+1234567890">+216 12345678</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Chahbander AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="back-to-top">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+
+    <!-- JavaScript -->
+
+     <!-- AOS JS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            mirror: false
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="/static/js/Index.js"></script>
+
+</body>
+</html>

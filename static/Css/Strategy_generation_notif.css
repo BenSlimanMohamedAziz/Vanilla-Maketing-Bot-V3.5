@@ -1,0 +1,192 @@
+/* Strategy Generation Notification */
+.strategy-notification {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 380px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(25, 84, 172, 0.514);
+    z-index: 10000;
+    transform: translateY(120%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.strategy-notification.visible {
+    transform: translateY(0);
+}
+
+.strategy-notification.success {
+    border-left: 4px solid #28a745;
+}
+
+.strategy-notification.error {
+    border-left: 4px solid #dc3545;
+}
+
+.notification-content {
+    padding: 16px;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.notification-title {
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #333;
+}
+
+.notification-title i {
+    color: #007bff;
+}
+
+.success .notification-title i {
+    color: #28a745;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #999;
+    font-size: 16px;
+    padding: 4px;
+    transition: color 0.2s;
+}
+
+.notification-close:hover {
+    color: #d31515;
+}
+
+.notification-body {
+    margin-bottom: 12px;
+}
+
+.progress-container {
+    height: 6px;
+    background: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 3px;
+}
+
+.status-text {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.step-indicator {
+    font-size: 12px;
+    color: #999;
+    font-style: italic;
+}
+
+.notification-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid #e9ecef;
+}
+
+.loading-spinner-small {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #e9ecef;
+    border-top-color: #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.time-estimate {
+    font-size: 11px;
+    color: #999;
+}
+
+.notification-footer .btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+
+.notification-footer .btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.notification-footer .btn-primary:hover {
+    background: #0056b3;
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+    .strategy-notification {
+        left: 10px;
+        right: 10px;
+        width: auto;
+        bottom: 10px;
+    }
+}
+/* Add these styles to your existing Strategy_generation_notif.css */
+
+.strategy-notification.persistent {
+    border-left: 4px solid #07ff6e; /* Yellow for pending action */
+}
+
+.strategy-notification.persistent .notification-title i {
+    color: #0bb119;
+}
+
+.strategy-notification.persistent .progress-bar {
+    background: linear-gradient(90deg, #07ff13, #2bff00);
+}
+
+.strategy-notification.persistent .time-estimate {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+/* Make notification more prominent for persistent state */
+.strategy-notification.persistent {
+    box-shadow: 0 8px 32px rgba(7, 255, 48, 0.3);
+    border: 1px solid rgba(7, 255, 69, 0.2);
+}
+
+/* Pulse animation for persistent notification */
+@keyframes pulse-persistent {
+    0% { box-shadow: 0 8px 32px rgba(7, 255, 201, 0.3); }
+    50% { box-shadow: 0 8px 32px rgba(7, 255, 90, 0.6); }
+    100% { box-shadow: 0 8px 32px rgba(7, 255, 61, 0.3); }
+}
+
+.strategy-notification.persistent {
+    animation: pulse-persistent 2s infinite;
+}
